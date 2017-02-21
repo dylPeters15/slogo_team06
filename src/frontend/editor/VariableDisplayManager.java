@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,7 +20,6 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Duration;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -148,31 +145,6 @@ class VariableDisplayManager {
 		setDelegate(delegate);
 		populateLanguageMap();
 		setLanguage(language);
-
-		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-				e -> step(SECOND_DELAY));
-		Timeline animation = new Timeline();
-		animation.setCycleCount(Timeline.INDEFINITE);
-		animation.getKeyFrames().add(frame);
-		animation.play();
-	}
-
-	public static final double FRAMES_PER_SECOND = 0.5;
-	public static final double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-	public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-
-	public void step(double secondDelay) {
-		System.out.println("Printing all vars:");
-		for (Variable var : variables) {
-			System.out.println("Name: " + var.nameProperty().get());
-			System.out.println("Object: "
-					+ var.objectProperty().get().toString());
-			System.out.println("Object also: "
-					+ var.objectProperty().get().getClass());
-			System.out.println("Representation: "
-					+ var.valueRepresentationProperty().get());
-		}
-		System.out.println("\n");
 	}
 
 	/**
