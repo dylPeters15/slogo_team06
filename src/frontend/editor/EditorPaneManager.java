@@ -33,15 +33,43 @@ import javafx.scene.Parent;
  * @author Dylan Peters
  *
  */
-public interface EditorPaneManager extends EditorMenuBarDelegate,
+public class EditorPaneManager implements EditorMenuBarDelegate,
 		VariableDisplayDelegate, TerminalDisplayDelegate {
+	private static final String DEFAULT_LANGUAGE = "english";
+	private static final double DEFAULT_WIDTH = 600;
+	private static final double DEFAULT_HEIGHT = 600;
 
-	// Constructors that will be present when this interface is turned into a
-	// class:
-	// public EditorPaneManager();
-	// public EditorPaneManager(String language);
-	// public EditorPaneManager(double width, double height);
-	// public EditorPaneManager(double width, double height, String language);
+	/**
+	  * Creates a new instance of EditorPaneManager. Sets all values to default.
+	  */
+	 public EditorPaneManager(){
+		 this(DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorPaneManager. Sets all values except language to default.
+	  * @param language the language with which to display the text in the editor pane.
+	  */
+	 public EditorPaneManager(String language){
+		 this(DEFAULT_WIDTH,DEFAULT_HEIGHT,language);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorPaneManager. Sets all values except width and height to default.
+	  * @param width the width to display the editor pane.
+	  * @param height the height to display the editor pane.
+	  */
+	 public EditorPaneManager(double width, double height){
+		 this(width,height,DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorPaneManager. Sets all values except width, height, and language to default.
+	  * @param width the width to display the editor pane.
+	  * @param height the height to display the editor pane.
+	  * @param language the language with which to display the text in the editor pane.
+	  */
+	 public EditorPaneManager(double width, double height, String language);
 
 	/**
 	 * Sets the width of the Parent object that holds all of the UI components.

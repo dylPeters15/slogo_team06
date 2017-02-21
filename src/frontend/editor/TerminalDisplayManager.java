@@ -22,15 +22,39 @@ import javafx.scene.Node;
  * @author Dylan Peters
  *
  */
-interface TerminalDisplayManager {
+class TerminalDisplayManager {
+	private static final String DEFAULT_LANGUAGE = "english";
 
-	// Constructors that will be present when this interface is turned into a
-	// class:
-	// TerminalDisplayManager();
-	// TerminalDisplayManager(String language);
-	// TerminalDisplayManager(TerminalDisplayDelegate delegate);
-	// TerminalDisplayManager(TerminalDisplayDelegate delegate, String
-	// language);
+	/**
+	  * Creates a new instance of TerminalDisplayManager. Sets all values to default.
+	  */
+	 TerminalDisplayManager(){
+		 this(DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of TerminalDisplayManager. Sets all values except language to default.
+	  * @param language the language with which to display the text in the terminal display
+	  */
+	 TerminalDisplayManager(String language){
+		 this(null,language);
+	 }
+	 
+	 /**
+	  * Creates a new instance of TerminalDisplayManager. Sets all values except delegate to default.
+	  * @param delegate the object implementing the TerminalDisplayDelegate interface that this class will use to call delegated methods.
+	  */
+	 TerminalDisplayManager(TerminalDisplayDelegate delegate){
+		 this(delegate,DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of TerminalDisplayManager. Sets all values except delegate and language to default.
+	  * @param delegate the object implementing the TerminalDisplayDelegate interface that this class will use to call delegated methods.
+	  * @param language the language with which to display the text in the terminal display
+	  */
+	 TerminalDisplayManager(TerminalDisplayDelegate delegate, String
+	 language);
 
 	/**
 	 * Changes the language that the Terminal Display uses to display its

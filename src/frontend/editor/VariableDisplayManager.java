@@ -21,15 +21,39 @@ import javafx.scene.Node;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayManager {
+class VariableDisplayManager {
+	private static final String DEFAULT_LANGUAGE = "english";
 
-	// Constructors that will be present when this interface is turned into a
-	// class:
-	// VariableDisplayManager();
-	// VariableDisplayManager(String language);
-	// VariableDisplayManager(VariableDisplayDelegate delegate);
-	// VariableDisplayManager(VariableDisplayDelegate delegate, String
-	// language);
+	/**
+	  * Creates a new instance of VariableDisplayManager. Sets all values to default.
+	  */
+	 VariableDisplayManager(){
+		 this(DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of VariableDisplayManager. Sets all values except language to default.
+	  * @param language the language with which to display the text in the variable display.
+	  */
+	 VariableDisplayManager(String language){
+		 this(null,language);
+	 }
+	 
+	 /**
+	  * Creates a new instance of VariableDisplayManager. Sets all values except delegate to default.
+	  * @param delegate the object implementing the VariableDisplayDelegate interface that this class will use to call delegated methods.
+	  */
+	 VariableDisplayManager(VariableDisplayDelegate delegate){
+		 this(delegate,DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of VariableDisplayManager. Sets all values except delegate and language to default.
+	  * @param delegate the object implementing the VariableDisplayDelegate interface that this class will use to call delegated methods.
+	  * @param language the language with which to display the text in the variable display.
+	  */
+	 VariableDisplayManager(VariableDisplayDelegate delegate, String
+	 language);
 
 	/**
 	 * Sets the language that this class uses to display its contents. It will

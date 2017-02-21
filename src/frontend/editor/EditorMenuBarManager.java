@@ -21,15 +21,39 @@ import javafx.scene.Node;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarManager {
+class EditorMenuBarManager {
+	private static final String DEFAULT_LANGUAGE = "english";
 
-	// Constructors that will be present when this interface is turned into a
-	// class:
-	// public EditorMenuBarManager();
-	// public EditorMenuBarManager(String language);
-	// public EditorMenuBarManager(EditorMenuBarDelegate delegate);
-	// public EditorMenuBarManager(EditorMenuBarDelegate delegate, String
-	// language);
+	/**
+	 * Creates a new instance of EditorMenuBarManager. Sets all values to default.
+	 */
+	 public EditorMenuBarManager(){
+		 this(DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorMenuBarManager. Sets all values except language to default.
+	  * @param language the language to use in the display of the menu bar.
+	  */
+	 public EditorMenuBarManager(String language){
+		 this(null,language);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorMenuBarManager. Sets all values except delegate to default.
+	  * @param delegate the object implementing the EditorMenuBarDelegate interface that this class will use to call delegated methods.
+	  */
+	 public EditorMenuBarManager(EditorMenuBarDelegate delegate){
+		 this(delegate,DEFAULT_LANGUAGE);
+	 }
+	 
+	 /**
+	  * Creates a new instance of EditorMenuBarManager. Sets all values except delegate and language to default.
+	  * @param delegate the object implementing the EditorMenuBarDelegate interface that this class will use to call delegated methods.
+	  * @param language the language to use in the display of the menu bar.
+	  */
+	 public EditorMenuBarManager(EditorMenuBarDelegate delegate, String
+	 language);
 
 	/**
 	 * Sets the delegate of this instance to the object passed. The delegate's
