@@ -7,16 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Duration;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -40,6 +46,7 @@ class VariableDisplayManager {
 
 		private StringProperty nameProperty;
 		private ObjectProperty<Object> objectProperty;
+		private StringProperty valueRepresentationProperty;
 
 		Variable(String name) {
 			this(name, null);
@@ -48,6 +55,10 @@ class VariableDisplayManager {
 		Variable(String name, Object value) {
 			nameProperty = new SimpleStringProperty(name);
 			objectProperty = new SimpleObjectProperty<>(value);
+			valueRepresentationProperty = new SimpleStringProperty(
+					objectProperty.toString());
+			objectProperty.addListener(listener -> valueRepresentationProperty
+					.set(objectProperty.get().toString()));
 		}
 
 		public StringProperty nameProperty() {
@@ -56,6 +67,10 @@ class VariableDisplayManager {
 
 		public ObjectProperty<Object> objectProperty() {
 			return objectProperty;
+		}
+
+		public StringProperty valueRepresentationProperty() {
+			return valueRepresentationProperty;
 		}
 
 		@Override
@@ -81,7 +96,7 @@ class VariableDisplayManager {
 	private VariableDisplayDelegate delegate;
 
 	private TableColumn<Variable, String> names;
-	private TableColumn<Variable, Object> values;
+	private TableColumn<Variable, String> values;
 	private TableView<Variable> table;
 	private ObservableList<Variable> variables;
 
@@ -133,6 +148,31 @@ class VariableDisplayManager {
 		setDelegate(delegate);
 		populateLanguageMap();
 		setLanguage(language);
+
+		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
+				e -> step(SECOND_DELAY));
+		Timeline animation = new Timeline();
+		animation.setCycleCount(Timeline.INDEFINITE);
+		animation.getKeyFrames().add(frame);
+		animation.play();
+	}
+
+	public static final double FRAMES_PER_SECOND = 0.5;
+	public static final double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+	public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+
+	public void step(double secondDelay) {
+		System.out.println("Printing all vars:");
+		for (Variable var : variables) {
+			System.out.println("Name: " + var.nameProperty().get());
+			System.out.println("Object: "
+					+ var.objectProperty().get().toString());
+			System.out.println("Object also: "
+					+ var.objectProperty().get().getClass());
+			System.out.println("Representation: "
+					+ var.valueRepresentationProperty().get());
+		}
+		System.out.println("\n");
 	}
 
 	/**
@@ -260,11 +300,41 @@ class VariableDisplayManager {
 		names.setCellValueFactory(new PropertyValueFactory<Variable, String>(
 				"name"));
 		table.getColumns().add(names);
-		values = new TableColumn<Variable, Object>();
-		values.setCellValueFactory(new PropertyValueFactory<Variable, Object>(
-				"object"));
+
+		values = new TableColumn<Variable, String>();
+		values.setCellValueFactory(new PropertyValueFactory<Variable, String>(
+				"valueRepresentation"));
+		values.setCellFactory(TextFieldTableCell.forTableColumn());
+		values.setOnEditCommit(new EventHandler<CellEditEvent<Variable, String>>() {
+			@Override
+			public void handle(CellEditEvent<Variable, String> event) {
+				Variable varChanged = variables.get(event.getTablePosition()
+						.getRow());
+				try {
+					if (varChanged.objectProperty().get() instanceof String) {
+						varChanged.objectProperty().set(event.getNewValue());
+					} else if (varChanged.objectProperty().get() instanceof Integer) {
+						varChanged.objectProperty().set(
+								Integer.parseInt(event.getNewValue()));
+					} else if (varChanged.objectProperty().get() instanceof Float) {
+						varChanged.objectProperty().set(
+								Float.parseFloat(event.getNewValue()));
+					} else if (varChanged.objectProperty().get() instanceof Double) {
+						varChanged.objectProperty().set(
+								Double.parseDouble(event.getNewValue()));
+					}
+				} catch (Exception e) {
+					variables.remove(varChanged);
+					variables.add(varChanged);
+					variables.sort(null);
+				}
+
+			}
+		});
+		
 		table.getColumns().add(values);
 		variables.add(new Variable("", ""));
+		table.setEditable(true);
 	}
 
 	private void populateLanguageMap() {
