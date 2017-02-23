@@ -229,6 +229,7 @@ class TerminalDisplayManager {
 		vbox.getChildren().clear();
 		for (TextInputArea textInputArea : textInputAreas) {
 			vbox.getChildren().add(textInputArea.getRegion());
+			textInputArea.getRegion().setOnMouseClicked(event -> runCommands(textInputArea.getText()));
 			textInputArea.getRegion().prefWidthProperty()
 					.bind(scrollPane.widthProperty());
 			textInputArea.getRegion().prefHeightProperty()
@@ -237,6 +238,7 @@ class TerminalDisplayManager {
 		}
 		if (textInputAreas.size() > 0) {
 			textInputAreas.get(textInputAreas.size() - 1).greyOut(false);
+			textInputAreas.get(textInputAreas.size() - 1).getRegion().setOnMouseClicked(event -> {});
 		}
 		scrollPane.layout();
 		scrollPane.setVvalue(1.0);
