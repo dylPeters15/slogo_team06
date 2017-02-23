@@ -39,6 +39,10 @@ class EditorMenuBarManager {
 					"Italiano", "Português", "Russkiy", "Español");
 	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
 
+	private ObservableList<String> styles = FXCollections.observableArrayList(
+			"Default Theme", "Dark Theme");
+	private Map<String, String> styleMap = new HashMap<String, String>();
+
 	private ResourceBundle myResources;
 	private String language;
 
@@ -88,13 +92,14 @@ class EditorMenuBarManager {
 	 */
 	EditorMenuBarManager(EditorMenuBarDelegate delegate, String language) {
 		populateLanguageMap();
+		populateStyleMap();
 		setDelegate(delegate);
 		setLanguage(language);
 		myMenuBar = new HBox();
 		populateMenuBar();
-//		myMenuBar.setBackground(new Background(new BackgroundFill(
-//				 (Paint) Color.color(0.8, 0.8, 0.8, 1),
-//				 new CornerRadii(0), new Insets(0))));
+		// myMenuBar.setBackground(new Background(new BackgroundFill(
+		// (Paint) Color.color(0.8, 0.8, 0.8, 1),
+		// new CornerRadii(0), new Insets(0))));
 	}
 
 	/**
@@ -160,6 +165,12 @@ class EditorMenuBarManager {
 		return myMenuBar;
 	}
 
+	private void setStyleSheet(String styleSheet) {
+		if (delegate != null) {
+			delegate.setStyleSheet(styleMap.get(styleSheet));
+		}
+	}
+
 	private void populateMenuBar() {
 		if (myMenuBar == null) {
 			myMenuBar = new HBox();
@@ -183,6 +194,15 @@ class EditorMenuBarManager {
 		Button help = new Button(myResources.getString("Help"));
 		help.setOnMousePressed(event -> help());
 		myMenuBar.getChildren().add(help);
+
+		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
+		if (styles.size() > 0) {
+			styleSheetSelector.setValue(styles.get(0));
+		}
+		styleSheetSelector
+				.setOnAction(event -> setStyleSheet(styleSheetSelector
+						.getValue()));
+		myMenuBar.getChildren().add(styleSheetSelector);
 
 	}
 
@@ -213,6 +233,11 @@ class EditorMenuBarManager {
 		languageToPropertyName.put("Português", "Portuguese");
 		languageToPropertyName.put("Russkiy", "Russian");
 		languageToPropertyName.put("Español", "Spanish");
+	}
+
+	private void populateStyleMap() {
+		styleMap.put("Default Theme", "resources/default.css");
+		styleMap.put("Dark Theme", "resources/darktheme.css");
 	}
 
 }

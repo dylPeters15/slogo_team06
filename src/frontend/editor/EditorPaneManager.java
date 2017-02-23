@@ -42,13 +42,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private static final double DEFAULT_WIDTH = 600;
 	private static final double DEFAULT_HEIGHT = 600;
 	private static final String DEFAULT_LANGUAGE = "English";
-//	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
+	// private static final String DEFAULT_RESOURCE_PACKAGE =
+	// "resources.languages/";
 
 	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
 
-//	private ResourceBundle myResources;
+	// private ResourceBundle myResources;
 	private String language;
-	
+
 	private BorderPane borderPane;
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
@@ -102,7 +104,6 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		initialize();
 		populateLanguageMap();
 		setLanguage(language);
-		borderPane.getStylesheets().add("resources/default.css");
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            width of the Parent object that holds all of the UI
 	 *            components.
 	 */
-	public void setWidth(double width){
+	public void setWidth(double width) {
 		borderPane.setPrefWidth(width);
 	}
 
@@ -121,7 +122,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * 
 	 * @return width of the Parent object that holds all of the UI components.
 	 */
-	public double getWidth(){
+	public double getWidth() {
 		return borderPane.getWidth();
 	}
 
@@ -132,7 +133,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            height of the Parent object that holds all of the UI
 	 *            components.
 	 */
-	public void setHeight(double height){
+	public void setHeight(double height) {
 		borderPane.setPrefHeight(height);
 	}
 
@@ -141,7 +142,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * 
 	 * @return height of the Parent object that holds all of the UI components.
 	 */
-	public double getHeight(){
+	public double getHeight() {
 		return borderPane.getHeight();
 	}
 
@@ -153,10 +154,10 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	public void setLanguage(String language){
+	public void setLanguage(String language) {
 		this.language = language;
-//		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-//				+ languageToPropertyName.get(language));
+		// myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+		// + languageToPropertyName.get(language));
 		terminalDisplayManager.setLanguage(language);
 		editorMenuBarManager.setLanguage(language);
 		variableDisplayManager.setLanguage(language);
@@ -169,7 +170,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * 
 	 * @return a string representing the language to be displayed
 	 */
-	public String getLanguage(){
+	public String getLanguage() {
 		return language;
 	}
 
@@ -182,7 +183,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @return Parent containing all the UI components that allow the user to
 	 *         interact with the Editor portion of the program
 	 */
-	public Parent getParent(){
+	public Parent getParent() {
 		return borderPane;
 	}
 
@@ -199,7 +200,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            the language to display the program in
 	 */
-	public void didSelectLanguage(String language){
+	public void didSelectLanguage(String language) {
 		setLanguage(language);
 	}
 
@@ -211,8 +212,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * user-defined commands. This method displays all the commands the user has
 	 * defined by printing them in the terminal portion of the display.
 	 */
-	public void seeUserDefinedCommands(){
-		
+	public void seeUserDefinedCommands() {
+
 	}
 
 	/**
@@ -223,8 +224,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * a list of all possible commands, as well as basic protocol about how to
 	 * use the program by printing it to the terminal portion of the display.
 	 */
-	public void help(){
-		
+	public void help() {
+
 	}
 
 	// VariableDisplayDelegate methods:
@@ -237,8 +238,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * VariableDisplayManager. It changes the value of the variable in the
 	 * model, then updates the VariableDisplayManager to reflect the change.
 	 */
-	public void didChangeVariable(String variable, Object value){
-		
+	public void didChangeVariable(String variable, Object value) {
+
 	}
 
 	// TerminalDisplayDelegate methods:
@@ -257,8 +258,13 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param command
 	 *            the command the user has entered to be executed.
 	 */
-	public void processCommand(String command){
-		
+	public void processCommand(String command) {
+
+	}
+
+	public void setStyleSheet(String styleSheet) {
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(styleSheet);
 	}
 
 	private void populateLanguageMap() {
@@ -271,15 +277,17 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		languageToPropertyName.put("Russkiy", "Russian");
 		languageToPropertyName.put("Español", "Spanish");
 	}
-	
-	private void initialize(){
+
+	private void initialize() {
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this);
 		editorMenuBarManager = new EditorMenuBarManager(this);
 		variableDisplayManager = new VariableDisplayManager(this);
-		
+
 		borderPane.setCenter(terminalDisplayManager.getTerminalDisplay());
 		borderPane.setRight(variableDisplayManager.getVariableDisplay());
 		borderPane.setTop(editorMenuBarManager.getMenuBar());
+
+		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
 }
