@@ -263,6 +263,9 @@ class VariableDisplayManager {
 		table.getColumns().add(values);
 		variables.add(new Variable("asdf", 3));
 		table.setEditable(true);
+		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+
 	}
 
 	private void populateLanguageMap() {

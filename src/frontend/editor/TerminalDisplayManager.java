@@ -115,16 +115,19 @@ class TerminalDisplayManager {
 		this.language = language;
 		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
 				+ languageToPropertyName.get(language));
-		 prompt = myResources.getString("Prompt");
-		 if (run != null){
-			 run.setText(myResources.getString("Run"));
-		 }
-		 if (clear != null){
-			 clear.setText(myResources.getString("Clear"));
-		 }
-		 if (clearAll != null){
-			 clearAll.setText(myResources.getString("ClearAll"));
-		 }
+		prompt = myResources.getString("Prompt");
+		if (run != null) {
+			run.setText(myResources.getString("Run"));
+		}
+		if (clear != null) {
+			clear.setText(myResources.getString("Clear"));
+		}
+		if (clearAll != null) {
+			clearAll.setText(myResources.getString("ClearAll"));
+		}
+		if (textInputAreas != null && textInputAreas.size() > 0){
+			textInputAreas.get(textInputAreas.size()-1).setPrompt(prompt);
+		}
 	}
 
 	/**
@@ -229,7 +232,13 @@ class TerminalDisplayManager {
 		vbox.getChildren().clear();
 		for (TextInputArea textInputArea : textInputAreas) {
 			vbox.getChildren().add(textInputArea.getRegion());
-			textInputArea.getRegion().setOnMouseClicked(event -> runCommands(textInputArea.getText()));
+			textInputArea.getRegion().setOnMouseClicked(
+					event -> textInputAreas.get(textInputAreas.size() - 1)
+							.setText(
+									textInputAreas.get(
+											textInputAreas.size() - 1)
+											.getText()
+											+ textInputArea.getText()));
 			textInputArea.getRegion().prefWidthProperty()
 					.bind(scrollPane.widthProperty());
 			textInputArea.getRegion().prefHeightProperty()
@@ -238,7 +247,9 @@ class TerminalDisplayManager {
 		}
 		if (textInputAreas.size() > 0) {
 			textInputAreas.get(textInputAreas.size() - 1).greyOut(false);
-			textInputAreas.get(textInputAreas.size() - 1).getRegion().setOnMouseClicked(event -> {});
+			textInputAreas.get(textInputAreas.size() - 1).getRegion()
+					.setOnMouseClicked(event -> {
+					});
 		}
 		scrollPane.layout();
 		scrollPane.setVvalue(1.0);
@@ -296,22 +307,24 @@ class TerminalDisplayManager {
 		buttonSplitPane.getItems().add(clearAll);
 
 	}
-	
-	private void clearAllPressed(){
+
+	private void clearAllPressed() {
 		textInputAreas.clear();
 		TextInputArea textInput = new TextInputArea();
 		textInput.setPrompt(prompt);
 		textInputAreas.add(textInput);
 	}
-	
-	private void clearButtonPressed(){
-		if (textInputAreas.size() > 0){
-			textInputAreas.get(textInputAreas.size()-1).setText("");
+
+	private void clearButtonPressed() {
+		if (textInputAreas.size() > 0) {
+			textInputAreas.get(textInputAreas.size() - 1).setText("");
 		}
 	}
 
 	private void runButtonPressed() {
-		if (textInputAreas.size() > 0 && !textInputAreas.get(textInputAreas.size() - 1).getText().isEmpty()) {
+		if (textInputAreas.size() > 0
+				&& !textInputAreas.get(textInputAreas.size() - 1).getText()
+						.isEmpty()) {
 			runCommands(textInputAreas.get(textInputAreas.size() - 1).getText());
 			TextInputArea textInput = new TextInputArea();
 			textInput.setPrompt(prompt);

@@ -35,11 +35,24 @@ class TextInputArea {
 		textArea.prefHeightProperty().bind(stackPane.heightProperty());
 		textArea.translateXProperty().bind(stackPane.translateXProperty());
 		textArea.translateYProperty().bind(stackPane.translateYProperty());
+		textArea.setWrapText(true);
 		stackPane.getChildren().add(textArea);
 		glassPane = new Pane();
 		glassPane.setBackground(new Background(new BackgroundFill(
 				 (Paint) Color.color(0.5, 0.5, 0.5, 0.4),
 				 new CornerRadii(0), new Insets(0))));
+		stackPane.setOnMouseEntered(event -> glassPane.setBackground(new Background(new BackgroundFill(
+				 (Paint) Color.color(0.8, 0.8, 0.8, 0.4),
+				 new CornerRadii(0), new Insets(0)))));
+		stackPane.setOnMouseExited(eevent -> glassPane.setBackground(new Background(new BackgroundFill(
+				 (Paint) Color.color(0.5, 0.5, 0.5, 0.4),
+				 new CornerRadii(0), new Insets(0)))));
+		stackPane.setOnMousePressed(event -> glassPane.setBackground(new Background(new BackgroundFill(
+				 (Paint) Color.color(0.1, 0.8, 0.2, 0.4),
+				 new CornerRadii(0), new Insets(0)))));
+		stackPane.setOnMouseReleased(event -> glassPane.setBackground(new Background(new BackgroundFill(
+				 (Paint) Color.color(0.5, 0.5, 0.5, 0.4),
+				 new CornerRadii(0), new Insets(0)))));
 		glassPane.prefWidthProperty().bind(stackPane.widthProperty());
 		glassPane.prefHeightProperty().bind(stackPane.heightProperty());
 		glassPane.translateXProperty().bind(stackPane.translateXProperty());
