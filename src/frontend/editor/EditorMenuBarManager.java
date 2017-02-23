@@ -92,6 +92,9 @@ class EditorMenuBarManager {
 		setLanguage(language);
 		myMenuBar = new HBox();
 		populateMenuBar();
+//		myMenuBar.setBackground(new Background(new BackgroundFill(
+//				 (Paint) Color.color(0.8, 0.8, 0.8, 1),
+//				 new CornerRadii(0), new Insets(0))));
 	}
 
 	/**

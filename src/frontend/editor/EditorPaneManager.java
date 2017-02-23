@@ -102,6 +102,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		initialize();
 		populateLanguageMap();
 		setLanguage(language);
+		borderPane.getStylesheets().add("resources/default.css");
 	}
 
 	/**
