@@ -3,7 +3,19 @@
  */
 package frontend.editor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.VBox;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -23,38 +35,73 @@ import javafx.scene.Node;
  *
  */
 class TerminalDisplayManager {
-	private static final String DEFAULT_LANGUAGE = "english";
+	private static final String DEFAULT_LANGUAGE = "English";
+	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+
+	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
+
+	private ResourceBundle myResources;
+	private String language;
+
+	private TerminalDisplayDelegate delegate;
+
+	private String prompt;
+
+	private SplitPane overallSplitPane;
+	private ScrollPane scrollPane;
+	private VBox vbox;
+	private ObservableList<TextInputArea> textInputAreas;
+	private Button run, clear, clearAll;
 
 	/**
-	  * Creates a new instance of TerminalDisplayManager. Sets all values to default.
-	  */
-	 TerminalDisplayManager(){
-		 this(DEFAULT_LANGUAGE);
-	 }
-	 
-	 /**
-	  * Creates a new instance of TerminalDisplayManager. Sets all values except language to default.
-	  * @param language the language with which to display the text in the terminal display
-	  */
-	 TerminalDisplayManager(String language){
-		 this(null,language);
-	 }
-	 
-	 /**
-	  * Creates a new instance of TerminalDisplayManager. Sets all values except delegate to default.
-	  * @param delegate the object implementing the TerminalDisplayDelegate interface that this class will use to call delegated methods.
-	  */
-	 TerminalDisplayManager(TerminalDisplayDelegate delegate){
-		 this(delegate,DEFAULT_LANGUAGE);
-	 }
-	 
-	 /**
-	  * Creates a new instance of TerminalDisplayManager. Sets all values except delegate and language to default.
-	  * @param delegate the object implementing the TerminalDisplayDelegate interface that this class will use to call delegated methods.
-	  * @param language the language with which to display the text in the terminal display
-	  */
-	 TerminalDisplayManager(TerminalDisplayDelegate delegate, String
-	 language);
+	 * Creates a new instance of TerminalDisplayManager. Sets all values to
+	 * default.
+	 */
+	TerminalDisplayManager() {
+		this(DEFAULT_LANGUAGE);
+	}
+
+	/**
+	 * Creates a new instance of TerminalDisplayManager. Sets all values except
+	 * language to default.
+	 * 
+	 * @param language
+	 *            the language with which to display the text in the terminal
+	 *            display
+	 */
+	TerminalDisplayManager(String language) {
+		this(null, language);
+	}
+
+	/**
+	 * Creates a new instance of TerminalDisplayManager. Sets all values except
+	 * delegate to default.
+	 * 
+	 * @param delegate
+	 *            the object implementing the TerminalDisplayDelegate interface
+	 *            that this class will use to call delegated methods.
+	 */
+	TerminalDisplayManager(TerminalDisplayDelegate delegate) {
+		this(delegate, DEFAULT_LANGUAGE);
+	}
+
+	/**
+	 * Creates a new instance of TerminalDisplayManager. Sets all values except
+	 * delegate and language to default.
+	 * 
+	 * @param delegate
+	 *            the object implementing the TerminalDisplayDelegate interface
+	 *            that this class will use to call delegated methods.
+	 * @param language
+	 *            the language with which to display the text in the terminal
+	 *            display
+	 */
+	TerminalDisplayManager(TerminalDisplayDelegate delegate, String language) {
+		setDelegate(delegate);
+		populateLanguageMap();
+		setLanguage(language);
+		initialize();
+	}
 
 	/**
 	 * Changes the language that the Terminal Display uses to display its
@@ -64,7 +111,21 @@ class TerminalDisplayManager {
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	void setLanguage(String language);
+	void setLanguage(String language) {
+		this.language = language;
+		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ languageToPropertyName.get(language));
+		 prompt = myResources.getString("Prompt");
+		 if (run != null){
+			 run.setText(myResources.getString("Run"));
+		 }
+		 if (clear != null){
+			 clear.setText(myResources.getString("Clear"));
+		 }
+		 if (clearAll != null){
+			 clearAll.setText(myResources.getString("ClearAll"));
+		 }
+	}
 
 	/**
 	 * Gets the language that this class uses to display its contents. This
@@ -73,7 +134,9 @@ class TerminalDisplayManager {
 	 * 
 	 * @return a string representing the language to be displayed
 	 */
-	String getLanguage();
+	String getLanguage() {
+		return language;
+	}
 
 	/**
 	 * Sets the delegate of this instance to the object passed. The delegate's
@@ -83,7 +146,9 @@ class TerminalDisplayManager {
 	 *            the object implementing the TerminalDisplayDelegate interface
 	 *            that this class will use as its delegate
 	 */
-	void setDelegate(TerminalDisplayDelegate delegate);
+	void setDelegate(TerminalDisplayDelegate delegate) {
+		this.delegate = delegate;
+	}
 
 	/**
 	 * Gets the delegate of this instance to the object passed. The delegate's
@@ -93,7 +158,9 @@ class TerminalDisplayManager {
 	 * @return the object implementing the TerminalDisplayDelegate interface
 	 *         that this class will use as its delegate
 	 */
-	TerminalDisplayDelegate getDelegate();
+	TerminalDisplayDelegate getDelegate() {
+		return delegate;
+	}
 
 	/**
 	 * Gets the display object that this class is manipulating and setting up.
@@ -103,7 +170,9 @@ class TerminalDisplayManager {
 	 * @return Node containing all the UI components that allow the user to
 	 *         interact with the program
 	 */
-	Node getTerminalDisplay();
+	Node getTerminalDisplay() {
+		return overallSplitPane;
+	}
 
 	/**
 	 * This method allows other classes to print text to the terminal display.
@@ -114,7 +183,9 @@ class TerminalDisplayManager {
 	 * @param text
 	 *            the text to print to the Terminal display.
 	 */
-	void printText(String text);
+	void printText(String text) {
+		textInputAreas.add(new TextInputArea(text));
+	}
 
 	/**
 	 * Prints the commands to the screen and executes them. This allows other
@@ -123,7 +194,11 @@ class TerminalDisplayManager {
 	 * @param commands
 	 *            commands to print and execute
 	 */
-	void runCommands(String commands);
+	void runCommands(String commands) {
+		// if (model != null) {
+		// model.interpret(commands);
+		// }
+	}
 
 	/**
 	 * Returns all of the text currently held in the Terminal Display, including
@@ -131,6 +206,115 @@ class TerminalDisplayManager {
 	 * 
 	 * @return all text currently in the Terminal Display.
 	 */
-	String getText();
+	String getText() {
+		String text = "";
+		for (TextInputArea textInputArea : textInputAreas) {
+			text += textInputArea.getText();
+		}
+		return text;
+	}
+
+	private void populateLanguageMap() {
+		languageToPropertyName.put("Zhōngwén", "Chinese");
+		languageToPropertyName.put("English", "English");
+		languageToPropertyName.put("Français", "French");
+		languageToPropertyName.put("Deutsche", "German");
+		languageToPropertyName.put("Italiano", "Italian");
+		languageToPropertyName.put("Português", "Portuguese");
+		languageToPropertyName.put("Russkiy", "Russian");
+		languageToPropertyName.put("Español", "Spanish");
+	}
+
+	private void textInputAreasDidChange() {
+		vbox.getChildren().clear();
+		for (TextInputArea textInputArea : textInputAreas) {
+			vbox.getChildren().add(textInputArea.getRegion());
+			textInputArea.getRegion().prefWidthProperty()
+					.bind(scrollPane.widthProperty());
+			textInputArea.getRegion().prefHeightProperty()
+					.bind(overallSplitPane.heightProperty().multiply(0.25));
+			textInputArea.greyOut(true);
+		}
+		if (textInputAreas.size() > 0) {
+			textInputAreas.get(textInputAreas.size() - 1).greyOut(false);
+		}
+		scrollPane.layout();
+		scrollPane.setVvalue(1.0);
+	}
+
+	private void initialize() {
+
+		overallSplitPane = new SplitPane();
+		overallSplitPane.setOrientation(Orientation.HORIZONTAL);
+		overallSplitPane.setPrefSize(800, 600);
+		overallSplitPane.setDividerPositions(0.9);
+
+		scrollPane = new ScrollPane();
+		overallSplitPane.getItems().add(scrollPane);
+
+		vbox = new VBox();
+		vbox.prefWidthProperty().bind(scrollPane.widthProperty());
+		scrollPane.setContent(vbox);
+
+		textInputAreas = FXCollections.observableArrayList();
+		textInputAreas.addListener(new ListChangeListener<TextInputArea>() {
+
+			@Override
+			public void onChanged(
+					ListChangeListener.Change<? extends TextInputArea> change) {
+				textInputAreasDidChange();
+			}
+		});
+		TextInputArea textInput = new TextInputArea();
+		textInput.setPrompt(prompt);
+		textInputAreas.add(textInput);
+
+		SplitPane buttonSplitPane = new SplitPane();
+		overallSplitPane.getItems().add(buttonSplitPane);
+		buttonSplitPane.setOrientation(Orientation.VERTICAL);
+		buttonSplitPane.setDividerPositions(1.0 / 3, 2.0 / 3);
+
+		run = new Button(myResources.getString("Run"));
+		run.setPrefWidth(Double.MAX_VALUE);
+		run.setPrefHeight(Double.MAX_VALUE);
+		run.setWrapText(true);
+		run.setOnAction(event -> runButtonPressed());
+		buttonSplitPane.getItems().add(run);
+		clear = new Button(myResources.getString("Clear"));
+		clear.setPrefWidth(Double.MAX_VALUE);
+		clear.setPrefHeight(Double.MAX_VALUE);
+		clear.setWrapText(true);
+		clear.setOnAction(event -> clearButtonPressed());
+		buttonSplitPane.getItems().add(clear);
+		clearAll = new Button(myResources.getString("ClearAll"));
+		clearAll.setPrefWidth(Double.MAX_VALUE);
+		clearAll.setPrefHeight(Double.MAX_VALUE);
+		clearAll.setWrapText(true);
+		clearAll.setOnAction(event -> clearAllPressed());
+		buttonSplitPane.getItems().add(clearAll);
+
+	}
+	
+	private void clearAllPressed(){
+		textInputAreas.clear();
+		TextInputArea textInput = new TextInputArea();
+		textInput.setPrompt(prompt);
+		textInputAreas.add(textInput);
+	}
+	
+	private void clearButtonPressed(){
+		if (textInputAreas.size() > 0){
+			textInputAreas.get(textInputAreas.size()-1).setText("");
+		}
+	}
+
+	private void runButtonPressed() {
+		if (textInputAreas.size() > 0 && !textInputAreas.get(textInputAreas.size() - 1).getText().isEmpty()) {
+			runCommands(textInputAreas.get(textInputAreas.size() - 1).getText());
+			TextInputArea textInput = new TextInputArea();
+			textInput.setPrompt(prompt);
+			textInputAreas.add(textInput);
+		}
+	}
 
 }

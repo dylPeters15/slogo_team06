@@ -38,50 +38,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
  *
  */
 class VariableDisplayManager {
-
-	public class Variable implements Comparable<Variable> {
-
-		private StringProperty nameProperty;
-		private ObjectProperty<Object> objectProperty;
-		private StringProperty valueRepresentationProperty;
-
-		Variable(String name) {
-			this(name, null);
-		}
-
-		Variable(String name, Object value) {
-			nameProperty = new SimpleStringProperty(name);
-			objectProperty = new SimpleObjectProperty<>(value);
-			valueRepresentationProperty = new SimpleStringProperty(
-					objectProperty.toString());
-			objectProperty.addListener(listener -> valueRepresentationProperty
-					.set(objectProperty.get().toString()));
-		}
-
-		public StringProperty nameProperty() {
-			return nameProperty;
-		}
-
-		public ObjectProperty<Object> objectProperty() {
-			return objectProperty;
-		}
-
-		public StringProperty valueRepresentationProperty() {
-			return valueRepresentationProperty;
-		}
-
-		@Override
-		public int compareTo(Variable other) {
-			return this.nameProperty().get()
-					.compareTo(other.nameProperty().get());
-		}
-
-		public boolean equals(Variable other) {
-			return this.nameProperty().get().equals(other.nameProperty().get());
-		}
-
-	}
-
 	private static final String DEFAULT_LANGUAGE = "English";
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 
@@ -303,9 +259,9 @@ class VariableDisplayManager {
 
 			}
 		});
-		
+
 		table.getColumns().add(values);
-		variables.add(new Variable("", ""));
+		variables.add(new Variable("asdf", 3));
 		table.setEditable(true);
 	}
 
@@ -318,6 +274,49 @@ class VariableDisplayManager {
 		languageToPropertyName.put("Português", "Portuguese");
 		languageToPropertyName.put("Russkiy", "Russian");
 		languageToPropertyName.put("Español", "Spanish");
+	}
+
+	public class Variable implements Comparable<Variable> {
+
+		private StringProperty nameProperty;
+		private ObjectProperty<Object> objectProperty;
+		private StringProperty valueRepresentationProperty;
+
+		Variable(String name) {
+			this(name, null);
+		}
+
+		Variable(String name, Object value) {
+			nameProperty = new SimpleStringProperty(name);
+			objectProperty = new SimpleObjectProperty<>(value);
+			valueRepresentationProperty = new SimpleStringProperty(
+					objectProperty.get().toString());
+			objectProperty.addListener(listener -> valueRepresentationProperty
+					.set(objectProperty.get().toString()));
+		}
+
+		public StringProperty nameProperty() {
+			return nameProperty;
+		}
+
+		public ObjectProperty<Object> objectProperty() {
+			return objectProperty;
+		}
+
+		public StringProperty valueRepresentationProperty() {
+			return valueRepresentationProperty;
+		}
+
+		@Override
+		public int compareTo(Variable other) {
+			return this.nameProperty().get()
+					.compareTo(other.nameProperty().get());
+		}
+
+		public boolean equals(Variable other) {
+			return this.nameProperty().get().equals(other.nameProperty().get());
+		}
+
 	}
 
 }

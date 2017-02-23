@@ -3,7 +3,11 @@
  */
 package frontend.editor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.scene.Parent;
+import javafx.scene.layout.BorderPane;
 
 /**
  * This class will be of public visibility, so it will be visible to any class
@@ -35,41 +39,70 @@ import javafx.scene.Parent;
  */
 public class EditorPaneManager implements EditorMenuBarDelegate,
 		VariableDisplayDelegate, TerminalDisplayDelegate {
-	private static final String DEFAULT_LANGUAGE = "english";
 	private static final double DEFAULT_WIDTH = 600;
 	private static final double DEFAULT_HEIGHT = 600;
+	private static final String DEFAULT_LANGUAGE = "English";
+//	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+
+	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
+
+//	private ResourceBundle myResources;
+	private String language;
+	
+	private BorderPane borderPane;
+	private TerminalDisplayManager terminalDisplayManager;
+	private EditorMenuBarManager editorMenuBarManager;
+	private VariableDisplayManager variableDisplayManager;
 
 	/**
-	  * Creates a new instance of EditorPaneManager. Sets all values to default.
-	  */
-	 public EditorPaneManager(){
-		 this(DEFAULT_LANGUAGE);
-	 }
-	 
-	 /**
-	  * Creates a new instance of EditorPaneManager. Sets all values except language to default.
-	  * @param language the language with which to display the text in the editor pane.
-	  */
-	 public EditorPaneManager(String language){
-		 this(DEFAULT_WIDTH,DEFAULT_HEIGHT,language);
-	 }
-	 
-	 /**
-	  * Creates a new instance of EditorPaneManager. Sets all values except width and height to default.
-	  * @param width the width to display the editor pane.
-	  * @param height the height to display the editor pane.
-	  */
-	 public EditorPaneManager(double width, double height){
-		 this(width,height,DEFAULT_LANGUAGE);
-	 }
-	 
-	 /**
-	  * Creates a new instance of EditorPaneManager. Sets all values except width, height, and language to default.
-	  * @param width the width to display the editor pane.
-	  * @param height the height to display the editor pane.
-	  * @param language the language with which to display the text in the editor pane.
-	  */
-	 public EditorPaneManager(double width, double height, String language);
+	 * Creates a new instance of EditorPaneManager. Sets all values to default.
+	 */
+	public EditorPaneManager() {
+		this(DEFAULT_LANGUAGE);
+	}
+
+	/**
+	 * Creates a new instance of EditorPaneManager. Sets all values except
+	 * language to default.
+	 * 
+	 * @param language
+	 *            the language with which to display the text in the editor
+	 *            pane.
+	 */
+	public EditorPaneManager(String language) {
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, language);
+	}
+
+	/**
+	 * Creates a new instance of EditorPaneManager. Sets all values except width
+	 * and height to default.
+	 * 
+	 * @param width
+	 *            the width to display the editor pane.
+	 * @param height
+	 *            the height to display the editor pane.
+	 */
+	public EditorPaneManager(double width, double height) {
+		this(width, height, DEFAULT_LANGUAGE);
+	}
+
+	/**
+	 * Creates a new instance of EditorPaneManager. Sets all values except
+	 * width, height, and language to default.
+	 * 
+	 * @param width
+	 *            the width to display the editor pane.
+	 * @param height
+	 *            the height to display the editor pane.
+	 * @param language
+	 *            the language with which to display the text in the editor
+	 *            pane.
+	 */
+	public EditorPaneManager(double width, double height, String language) {
+		initialize();
+		populateLanguageMap();
+		setLanguage(language);
+	}
 
 	/**
 	 * Sets the width of the Parent object that holds all of the UI components.
@@ -78,14 +111,18 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            width of the Parent object that holds all of the UI
 	 *            components.
 	 */
-	public void setWidth(double width);
+	public void setWidth(double width){
+		borderPane.setPrefWidth(width);
+	}
 
 	/**
 	 * Gets the width of the Parent object that holds all of the UI components.
 	 * 
 	 * @return width of the Parent object that holds all of the UI components.
 	 */
-	public double getWidth();
+	public double getWidth(){
+		return borderPane.getWidth();
+	}
 
 	/**
 	 * Sets the height of the Parent object that holds all of the UI components.
@@ -94,14 +131,18 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            height of the Parent object that holds all of the UI
 	 *            components.
 	 */
-	public void setHeight(double height);
+	public void setHeight(double height){
+		borderPane.setPrefHeight(height);
+	}
 
 	/**
 	 * Gets the height of the Parent object that holds all of the UI components.
 	 * 
 	 * @return height of the Parent object that holds all of the UI components.
 	 */
-	public double getHeight();
+	public double getHeight(){
+		return borderPane.getHeight();
+	}
 
 	/**
 	 * Sets the language that this class uses to display its contents. It will
@@ -111,7 +152,14 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	public void setLanguage(String language);
+	public void setLanguage(String language){
+		this.language = language;
+//		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+//				+ languageToPropertyName.get(language));
+		terminalDisplayManager.setLanguage(language);
+		editorMenuBarManager.setLanguage(language);
+		variableDisplayManager.setLanguage(language);
+	}
 
 	/**
 	 * Gets the language that this class uses to display its contents. This
@@ -120,7 +168,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * 
 	 * @return a string representing the language to be displayed
 	 */
-	public String getLanguage();
+	public String getLanguage(){
+		return language;
+	}
 
 	/**
 	 * Gets the display object that this class is manipulating and setting up.
@@ -131,7 +181,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @return Parent containing all the UI components that allow the user to
 	 *         interact with the Editor portion of the program
 	 */
-	public Parent getParent();
+	public Parent getParent(){
+		return borderPane;
+	}
 
 	// EditorMenuBarDelegate methods:
 
@@ -146,7 +198,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            the language to display the program in
 	 */
-	void didSelectLanguage(String language);
+	public void didSelectLanguage(String language){
+		setLanguage(language);
+	}
 
 	/**
 	 * This is the implementation of the method in the EditorMenuBarDelegate
@@ -156,7 +210,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * user-defined commands. This method displays all the commands the user has
 	 * defined by printing them in the terminal portion of the display.
 	 */
-	void seeUserDefinedCommands();
+	public void seeUserDefinedCommands(){
+		
+	}
 
 	/**
 	 * This is the implementation of the method in the EditorMenuBarDelegate
@@ -166,7 +222,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * a list of all possible commands, as well as basic protocol about how to
 	 * use the program by printing it to the terminal portion of the display.
 	 */
-	void help();
+	public void help(){
+		
+	}
 
 	// VariableDisplayDelegate methods:
 
@@ -178,7 +236,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * VariableDisplayManager. It changes the value of the variable in the
 	 * model, then updates the VariableDisplayManager to reflect the change.
 	 */
-	void didChangeVariable(String variable, Object value);
+	public void didChangeVariable(String variable, Object value){
+		
+	}
 
 	// TerminalDisplayDelegate methods:
 
@@ -196,5 +256,29 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param command
 	 *            the command the user has entered to be executed.
 	 */
-	void processCommand(String command);
+	public void processCommand(String command){
+		
+	}
+
+	private void populateLanguageMap() {
+		languageToPropertyName.put("Zhōngwén", "Chinese");
+		languageToPropertyName.put("English", "English");
+		languageToPropertyName.put("Français", "French");
+		languageToPropertyName.put("Deutsche", "German");
+		languageToPropertyName.put("Italiano", "Italian");
+		languageToPropertyName.put("Português", "Portuguese");
+		languageToPropertyName.put("Russkiy", "Russian");
+		languageToPropertyName.put("Español", "Spanish");
+	}
+	
+	private void initialize(){
+		borderPane = new BorderPane();
+		terminalDisplayManager = new TerminalDisplayManager(this);
+		editorMenuBarManager = new EditorMenuBarManager(this);
+		variableDisplayManager = new VariableDisplayManager(this);
+		
+		borderPane.setCenter(terminalDisplayManager.getTerminalDisplay());
+		borderPane.setRight(variableDisplayManager.getVariableDisplay());
+		borderPane.setTop(editorMenuBarManager.getMenuBar());
+	}
 }
