@@ -5,6 +5,7 @@ package frontend.editor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -42,14 +43,10 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private static final double DEFAULT_WIDTH = 600;
 	private static final double DEFAULT_HEIGHT = 600;
 	private static final String DEFAULT_LANGUAGE = "English";
+	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
-	// private static final String DEFAULT_RESOURCE_PACKAGE =
-	// "resources.languages/";
 
 	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
-
-	// private ResourceBundle myResources;
-	private String language;
 
 	private BorderPane borderPane;
 	private TerminalDisplayManager terminalDisplayManager;
@@ -101,8 +98,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            pane.
 	 */
 	public EditorPaneManager(double width, double height, String language) {
-		initialize();
 		populateLanguageMap();
+		initialize(language);
 		setLanguage(language);
 	}
 
@@ -155,23 +152,12 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            a string representing the language to be displayed
 	 */
 	public void setLanguage(String language) {
-		this.language = language;
-		// myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-		// + languageToPropertyName.get(language));
-		terminalDisplayManager.setLanguage(language);
-		editorMenuBarManager.setLanguage(language);
-		variableDisplayManager.setLanguage(language);
-	}
-
-	/**
-	 * Gets the language that this class uses to display its contents. This
-	 * class will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @return a string representing the language to be displayed
-	 */
-	public String getLanguage() {
-		return language;
+		ResourceBundle myResources = ResourceBundle
+				.getBundle(DEFAULT_RESOURCE_PACKAGE
+						+ languageToPropertyName.get(language));
+		terminalDisplayManager.setLanguageResourceBundle(myResources);
+		editorMenuBarManager.setLanguageResourceBundle(myResources);
+		variableDisplayManager.setLanguageResourceBundle(myResources);
 	}
 
 	/**
@@ -278,15 +264,18 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		languageToPropertyName.put("Español", "Spanish");
 	}
 
-	private void initialize() {
+	private void initialize(String language) {
+		ResourceBundle myResources = ResourceBundle
+				.getBundle(DEFAULT_RESOURCE_PACKAGE
+						+ languageToPropertyName.get(language));
 		borderPane = new BorderPane();
-		terminalDisplayManager = new TerminalDisplayManager(this);
-		editorMenuBarManager = new EditorMenuBarManager(this);
-		variableDisplayManager = new VariableDisplayManager(this);
+		terminalDisplayManager = new TerminalDisplayManager(this,myResources);
+		editorMenuBarManager = new EditorMenuBarManager(this,myResources);
+		variableDisplayManager = new VariableDisplayManager(this,myResources);
 
-		borderPane.setCenter(terminalDisplayManager.getTerminalDisplay());
-		borderPane.setRight(variableDisplayManager.getVariableDisplay());
-		borderPane.setTop(editorMenuBarManager.getMenuBar());
+		borderPane.setCenter(terminalDisplayManager.getRegion());
+		borderPane.setRight(variableDisplayManager.getRegion());
+		borderPane.setTop(editorMenuBarManager.getRegion());
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
