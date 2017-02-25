@@ -8,6 +8,6 @@ package backend.states;
 
 public class State {
 	
-	private TurtleModel turtleModel;
+	private ActorModel actorModel;
 	
 }
