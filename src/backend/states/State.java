@@ -1,5 +1,7 @@
 package backend.states;
 
+import java.util.Map;
+
 /**
  * @author Tavo
  *
@@ -8,6 +10,16 @@ package backend.states;
 
 public class State {
 	
-	private ActorModel actorModel;
+	private ActorModel actor;
+
+	public ActorModel getActor() {
+		return actor;
+	}
+
+	public void setActor(ActorModel actorModel) {
+		this.actor = actorModel;
+	}
+	
+	
 	
 }
