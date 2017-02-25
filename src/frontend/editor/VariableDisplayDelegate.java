@@ -36,7 +36,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayDelegate {
+interface VariableDisplayDelegate extends EditorPaneManagerChildDelegate{
 
 	/**
 	 * This method is called when the user changes the value of a variable in

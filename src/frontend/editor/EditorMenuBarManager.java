@@ -9,10 +9,10 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -30,32 +30,16 @@ import javafx.scene.layout.HBox;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager {
-	private static final String DEFAULT_LANGUAGE = "English";
-	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
-
+class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate> {
 	private ObservableList<String> languages = FXCollections
 			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
 					"Italiano", "Português", "Russkiy", "Español");
-	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
 
 	private ObservableList<String> styles = FXCollections.observableArrayList(
 			"Default Theme", "Dark Theme");
-	private Map<String, String> styleMap = new HashMap<String, String>();
-
-	private ResourceBundle myResources;
-	private String language;
+	private Map<String, String> styleMap;
 
 	private HBox myMenuBar;
-	private EditorMenuBarDelegate delegate;
-
-	/**
-	 * Creates a new instance of EditorMenuBarManager. Sets all values to
-	 * default.
-	 */
-	EditorMenuBarManager() {
-		this(DEFAULT_LANGUAGE);
-	}
 
 	/**
 	 * Creates a new instance of EditorMenuBarManager. Sets all values except
@@ -64,20 +48,8 @@ class EditorMenuBarManager {
 	 * @param language
 	 *            the language to use in the display of the menu bar.
 	 */
-	EditorMenuBarManager(String language) {
+	EditorMenuBarManager(ResourceBundle language) {
 		this(null, language);
-	}
-
-	/**
-	 * Creates a new instance of EditorMenuBarManager. Sets all values except
-	 * delegate to default.
-	 * 
-	 * @param delegate
-	 *            the object implementing the EditorMenuBarDelegate interface
-	 *            that this class will use to call delegated methods.
-	 */
-	EditorMenuBarManager(EditorMenuBarDelegate delegate) {
-		this(delegate, DEFAULT_LANGUAGE);
 	}
 
 	/**
@@ -90,67 +62,9 @@ class EditorMenuBarManager {
 	 * @param language
 	 *            the language to use in the display of the menu bar.
 	 */
-	EditorMenuBarManager(EditorMenuBarDelegate delegate, String language) {
-		populateLanguageMap();
-		populateStyleMap();
-		setDelegate(delegate);
-		setLanguage(language);
-		myMenuBar = new HBox();
-		populateMenuBar();
-		// myMenuBar.setBackground(new Background(new BackgroundFill(
-		// (Paint) Color.color(0.8, 0.8, 0.8, 1),
-		// new CornerRadii(0), new Insets(0))));
-	}
-
-	/**
-	 * Sets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with one or more of the
-	 * Control components in the EditorMenuBar.
-	 * 
-	 * @param delegate
-	 *            the object implementing the EditorMenuBarDelegate interface
-	 *            that this class will use as its delegate
-	 */
-	void setDelegate(EditorMenuBarDelegate delegate) {
-		this.delegate = delegate;
-	}
-
-	/**
-	 * Gets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with one or more of the
-	 * Control components in the EditorMenuBar.
-	 * 
-	 * @return the object implementing the EditorMenuBarDelegate interface that
-	 *         this class will use as its delegate
-	 */
-	EditorMenuBarDelegate getDelegate() {
-		return delegate;
-	}
-
-	/**
-	 * Changes the language that the menu bar uses to display its contents. The
-	 * menu bar will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @param language
-	 *            a string representing the language to be displayed
-	 */
-	void setLanguage(String language) {
-		this.language = language;
-		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-				+ languageToPropertyName.get(language));
-		populateMenuBar();
-	}
-
-	/**
-	 * Gets the language that the menu bar uses to display its contents. The
-	 * menu bar will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @return a string representing the language to be displayed
-	 */
-	String getLanguage() {
-		return language;
+	EditorMenuBarManager(EditorMenuBarDelegate delegate, ResourceBundle language) {
+		super(delegate, language);
+		populateMenuBar(language);
 	}
 
 	/**
@@ -161,40 +75,41 @@ class EditorMenuBarManager {
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	Node getMenuBar() {
+	@Override
+	Region getRegion() {
 		return myMenuBar;
 	}
 
-	private void setStyleSheet(String styleSheet) {
-		if (delegate != null) {
-			delegate.setStyleSheet(styleMap.get(styleSheet));
-		}
+	@Override
+	void setLanguageResourceBundle(ResourceBundle language) {
+		populateMenuBar(language);
 	}
 
-	private void populateMenuBar() {
+	private void populateMenuBar(ResourceBundle language) {
 		if (myMenuBar == null) {
 			myMenuBar = new HBox();
 		}
 		myMenuBar.getChildren().clear();
 
 		Button seeUserDefinedCommands = new Button(
-				myResources.getString("SeeUserCommands"));
+				language.getString("SeeUserCommands"));
 		seeUserDefinedCommands
 				.setOnMousePressed(event -> seeUserDefinedCommands());
 		myMenuBar.getChildren().add(seeUserDefinedCommands);
 
 		ComboBox<String> selectLanguage = new ComboBox<String>(languages);
-		if (language != null) {
-			selectLanguage.setValue(language);
-		}
+		selectLanguage.setValue(language.getString("Language"));
+
 		selectLanguage.setOnAction(event -> didSelectLanguage(selectLanguage
 				.getValue()));
 		myMenuBar.getChildren().add(selectLanguage);
 
-		Button help = new Button(myResources.getString("Help"));
+		Button help = new Button(language.getString("Help"));
 		help.setOnMousePressed(event -> help());
 		myMenuBar.getChildren().add(help);
 
+		populateStyleMap();
+		styles = FXCollections.observableArrayList(styleMap.keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
@@ -206,36 +121,32 @@ class EditorMenuBarManager {
 
 	}
 
+	private void setStyleSheet(String styleSheet) {
+		if (getDelegate() != null && getDelegate() instanceof EditorMenuBarDelegate) {
+			((EditorMenuBarDelegate)getDelegate()).setStyleSheet(styleMap.get(styleSheet));
+		}
+	}
+
 	private void seeUserDefinedCommands() {
-		if (delegate != null) {
-			delegate.seeUserDefinedCommands();
+		if (getDelegate() != null) {
+			getDelegate().seeUserDefinedCommands();
 		}
 	}
 
 	private void didSelectLanguage(String language) {
-		if (delegate != null) {
-			delegate.didSelectLanguage(language);
+		if (getDelegate() != null) {
+			getDelegate().didSelectLanguage(language);
 		}
 	}
 
 	private void help() {
-		if (delegate != null) {
-			delegate.help();
+		if (getDelegate() != null) {
+			getDelegate().help();
 		}
 	}
 
-	private void populateLanguageMap() {
-		languageToPropertyName.put("Zhōngwén", "Chinese");
-		languageToPropertyName.put("English", "English");
-		languageToPropertyName.put("Français", "French");
-		languageToPropertyName.put("Deutsche", "German");
-		languageToPropertyName.put("Italiano", "Italian");
-		languageToPropertyName.put("Português", "Portuguese");
-		languageToPropertyName.put("Russkiy", "Russian");
-		languageToPropertyName.put("Español", "Spanish");
-	}
-
 	private void populateStyleMap() {
+		styleMap = new HashMap<String, String>();
 		styleMap.put("Default Theme", "resources/default.css");
 		styleMap.put("Dark Theme", "resources/darktheme.css");
 	}
