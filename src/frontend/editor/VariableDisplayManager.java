@@ -3,7 +3,6 @@
  */
 package frontend.editor;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -14,12 +13,12 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Region;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -37,29 +36,12 @@ import javafx.scene.control.cell.TextFieldTableCell;
  * @author Dylan Peters
  *
  */
-class VariableDisplayManager {
-	private static final String DEFAULT_LANGUAGE = "English";
-	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
-
-	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
-
-	private ResourceBundle myResources;
-	private String language;
-
-	private VariableDisplayDelegate delegate;
+class VariableDisplayManager extends EditorPaneManagerChild<VariableDisplayDelegate>{
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
 	private TableView<Variable> table;
 	private ObservableList<Variable> variables;
-
-	/**
-	 * Creates a new instance of VariableDisplayManager. Sets all values to
-	 * default.
-	 */
-	VariableDisplayManager() {
-		this(DEFAULT_LANGUAGE);
-	}
 
 	/**
 	 * Creates a new instance of VariableDisplayManager. Sets all values except
@@ -69,20 +51,8 @@ class VariableDisplayManager {
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	VariableDisplayManager(String language) {
+	VariableDisplayManager(ResourceBundle language) {
 		this(null, language);
-	}
-
-	/**
-	 * Creates a new instance of VariableDisplayManager. Sets all values except
-	 * delegate to default.
-	 * 
-	 * @param delegate
-	 *            the object implementing the VariableDisplayDelegate interface
-	 *            that this class will use to call delegated methods.
-	 */
-	VariableDisplayManager(VariableDisplayDelegate delegate) {
-		this(delegate, DEFAULT_LANGUAGE);
 	}
 
 	/**
@@ -96,11 +66,8 @@ class VariableDisplayManager {
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	VariableDisplayManager(VariableDisplayDelegate delegate, String language) {
+	VariableDisplayManager(VariableDisplayDelegate delegate, ResourceBundle language) {
 		initializeTable();
-		setDelegate(delegate);
-		populateLanguageMap();
-		setLanguage(language);
 	}
 
 	/**
@@ -111,53 +78,16 @@ class VariableDisplayManager {
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	void setLanguage(String language) {
-		this.language = language;
-		myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-				+ languageToPropertyName.get(language));
+	@Override
+	void setLanguageResourceBundle(ResourceBundle language) {
 		if (names != null) {
-			names.setText(myResources.getString("Name"));
+			names.setText(language.getString("Name"));
 		}
 
 		if (values != null) {
-			values.setText(myResources.getString("Value"));
+			values.setText(language.getString("Value"));
 		}
 
-	}
-
-	/**
-	 * Gets the language that this class uses to display its contents. This
-	 * class will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @return a string representing the language to be displayed
-	 */
-	String getLanguage() {
-		return language;
-	}
-
-	/**
-	 * Sets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with the VariableDisplay.
-	 * 
-	 * @param delegate
-	 *            the object implementing the VariableDisplayDelegate interface
-	 *            that this class will use as its delegate
-	 */
-	void setDelegate(VariableDisplayDelegate delegate) {
-		this.delegate = delegate;
-	}
-
-	/**
-	 * Gets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with the fields in the
-	 * VariableDisplay.
-	 * 
-	 * @return the object implementing the VariableDisplayDelegate interface
-	 *         that this class will use as its delegate
-	 */
-	VariableDisplayDelegate getDelegate() {
-		return delegate;
 	}
 
 	/**
@@ -168,7 +98,8 @@ class VariableDisplayManager {
 	 * @return Node containing all the UI components that allow the user to
 	 *         interact with the program
 	 */
-	Node getVariableDisplay() {
+	@Override
+	Region getRegion() {
 		return table;
 	}
 
@@ -263,17 +194,9 @@ class VariableDisplayManager {
 		table.getColumns().add(values);
 		variables.add(new Variable("asdf", 3));
 		table.setEditable(true);
-	}
+		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-	private void populateLanguageMap() {
-		languageToPropertyName.put("Zhōngwén", "Chinese");
-		languageToPropertyName.put("English", "English");
-		languageToPropertyName.put("Français", "French");
-		languageToPropertyName.put("Deutsche", "German");
-		languageToPropertyName.put("Italiano", "Italian");
-		languageToPropertyName.put("Português", "Portuguese");
-		languageToPropertyName.put("Russkiy", "Russian");
-		languageToPropertyName.put("Español", "Spanish");
+
 	}
 
 	public class Variable implements Comparable<Variable> {

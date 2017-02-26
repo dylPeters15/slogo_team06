@@ -42,3 +42,7 @@
 -fx-background-radius: 7;
 -fx-border-radius: 7;
 }
+
+.combo-box:hover {
+    -fx-background-color: #888888;
+}
