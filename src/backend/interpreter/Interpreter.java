@@ -19,21 +19,23 @@ public class Interpreter {
 	     lang.addPatterns(SYNTAX);
 	}
 	
-	public void interpret(String text){
-		
-		System.out.println("I got text!");
-        // try against different inputs
-        String userInput = "fd 50 rt 90 BACK :distance Left :angle";
-        
-        
-        //lang.getSymbol(userInput);
+	public void interpret(String text){		
+		parseText(text.split(WHITESPACE));      
 	}
 	
-	public void test(){
-        
-        
+	public void splitA(){        
         
 	}
+	
+	private void parseText (String[] text) {
+        for (String s : text) {
+            if (s.trim().length() > 0) {            	
+                System.out.println(String.format("%s : %s", s, lang.getSymbol(s)));                
+                
+            }
+        }
+        System.out.println();
+    }
 	
 	
 }
