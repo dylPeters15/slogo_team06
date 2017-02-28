@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import frontend.help.HelpPaneManager;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 /**
  * This class will be of public visibility, so it will be visible to any class
@@ -211,7 +214,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * use the program by printing it to the terminal portion of the display.
 	 */
 	public void help() {
-
+		Stage helpStage = new Stage();
+		helpStage.setScene(new Scene(new HelpPaneManager().getParent()));
+		helpStage.show();
 	}
 
 	// VariableDisplayDelegate methods:
