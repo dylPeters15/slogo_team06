@@ -2,11 +2,15 @@ package backend.states;
 
 import java.awt.Point;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public abstract class ActorModel {
 	private Point pos;
 	private Double heading;
 	private boolean penUp;
 	private boolean visible;
+	private ImageView actorImage;
 	
 	public static final Point DEF_POS = new Point(0,0);
 	public static final boolean DEF_PENUP = false;
@@ -46,11 +50,11 @@ public abstract class ActorModel {
 		moveForward(-distance);
 	}
 	
-	private boolean isVisible() {
+	public boolean isVisible() {
 		return visible;
 	}
 
-	private boolean isPenUp() {
+	public boolean isPenUp() {
 		return penUp;
 	}
 	
@@ -65,5 +69,15 @@ public abstract class ActorModel {
 	}
 	public void setHeading(Double heading) {
 		this.heading = heading%360;
+	}
+	
+	public void setActorImage(Image image) {
+		actorImage.setImage(image);
+		actorImage.setX(pos.getX());
+		actorImage.setY(pos.getY());
+	}
+	
+	public ImageView getActorImage() {
+		return actorImage;
 	}
 }
