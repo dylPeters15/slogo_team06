@@ -16,16 +16,16 @@ public class TurtleModel extends ActorModel {
 	 
 	 TurtleModel(){
 		 super();
-		 super.setActorImage(new Image(TURTLE_IMAGE_PATH));
+		 super.setActorImage(new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE_PATH)));
 	 }
 	 
 	 TurtleModel(double x, double y, double heading) {
 		 super(x,y,heading);
-		 super.setActorImage(new Image(TURTLE_IMAGE_PATH));
+		 super.setActorImage(new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE_PATH)));
 	 }
 	 
 	 TurtleModel(TurtleModel turtle) {
 		 super(turtle);
-		 super.setActorImage(new Image(TURTLE_IMAGE_PATH));
+		 super.setActorImage(new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE_PATH)));
 	 }
 }

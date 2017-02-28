@@ -1,7 +1,5 @@
 package backend.states;
 
-import java.util.Map;
-
 /**
  * @author Tavo
  *
@@ -11,6 +9,15 @@ import java.util.Map;
 public class State {
 	
 	private ActorModel actor;
+	
+	public State() {
+		// TODO all TurtleModel
+		actor = new TurtleModel();
+	}
+	
+	public State(double x, double y, double heading) {
+		actor = new TurtleModel(x, y, heading);
+	}
 
 	public ActorModel getActor() {
 		return actor;

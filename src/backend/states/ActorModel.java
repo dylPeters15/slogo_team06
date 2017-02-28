@@ -21,22 +21,25 @@ public abstract class ActorModel {
 		this(DEF_POS.getX(),DEF_POS.getX(),DEF_HEADING);
 		penUp = DEF_PENUP;
 		visible = DEF_VISIBILITY;
+		actorImage = new ImageView();
 	}
 	
 	ActorModel(double x, double y, double heading){
 		pos = new Point((int)x,(int)y);
 		this.heading = heading;
+		actorImage = new ImageView();
 	}		
 	
 	ActorModel(ActorModel actor){
 		initFromActor(actor);
+		actorImage = new ImageView();
 	}
 
 	public void initFromActor(ActorModel actor){
 		pos = actor.getPos();
 		heading = actor.getHeading();
-		penUp = actor.isPenUp();
-		visible = actor.isVisible();
+		penUp = actor.getPenUp();
+		visible = actor.getVisible();
 	}
 	
 	public void moveForward(double distance){
@@ -50,11 +53,11 @@ public abstract class ActorModel {
 		moveForward(-distance);
 	}
 	
-	public boolean isVisible() {
+	public boolean getVisible() {
 		return visible;
 	}
 
-	public boolean isPenUp() {
+	public boolean getPenUp() {
 		return penUp;
 	}
 	
@@ -72,6 +75,7 @@ public abstract class ActorModel {
 	}
 	
 	public void setActorImage(Image image) {
+		// TODO
 		actorImage.setImage(image);
 		actorImage.setX(pos.getX());
 		actorImage.setY(pos.getY());
