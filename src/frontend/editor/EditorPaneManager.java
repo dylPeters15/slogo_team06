@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import backend.Model;
 import frontend.help.HelpPaneManager;
+import frontend.simulation.SimulationPaneManager;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -56,6 +57,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+	private SimulationPaneManager simulationPaneManager;
 
 	private Model model;
 
@@ -256,6 +258,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		if (model != null) {
 			model.interpret(command);
 		}
+		Stage simulationStage = new Stage();
+		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
+		simulationStage.show();
 	}
 
 	public void setStyleSheet(String styleSheet) {
@@ -288,6 +293,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
+		
+		simulationPaneManager = new SimulationPaneManager();
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
