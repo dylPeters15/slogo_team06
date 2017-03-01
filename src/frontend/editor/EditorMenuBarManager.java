@@ -35,8 +35,6 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
 					"Italiano", "Português", "Russkiy", "Español");
 
-	private ObservableList<String> styles = FXCollections.observableArrayList(
-			"Default Theme", "Dark Theme");
 	private Map<String, String> styleMap;
 
 	private HBox myMenuBar;
@@ -108,8 +106,8 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 		help.setOnMousePressed(event -> help());
 		myMenuBar.getChildren().add(help);
 
-		populateStyleMap();
-		styles = FXCollections.observableArrayList(styleMap.keySet());
+		populateStyleMap(language);
+		ObservableList<String> styles = FXCollections.observableArrayList(styleMap.keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
@@ -145,10 +143,10 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 		}
 	}
 
-	private void populateStyleMap() {
+	private void populateStyleMap(ResourceBundle language) {
 		styleMap = new HashMap<String, String>();
-		styleMap.put("Default Theme", "resources/default.css");
-		styleMap.put("Dark Theme", "resources/darktheme.css");
+		styleMap.put(language.getString("DefaultTheme"), "resources/default.css");
+		styleMap.put(language.getString("DarkTheme"), "resources/darktheme.css");
 	}
 
 }
