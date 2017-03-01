@@ -3,13 +3,16 @@ package backend;
 import Exceptions.SlogoException;
 import backend.interpreter.Interpreter;
 import backend.states.*;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 /**
  * @author Tavo Loaiza
  *
  */
 public class Model {
 	private StatesList<State> statesList;
+	private ObservableMap<String,String> variables;
 	
 	public StatesList<State> getStatesList() {
 		 return statesList;
@@ -18,9 +21,10 @@ public class Model {
 	private Interpreter interpreter;
 	
 	public Model(){
+		variables = new SimpleMapProperty<String, String>(FXCollections.observableHashMap());
 		statesList = new StatesList<State>();
 		statesList.add(new State());
-		interpreter = new Interpreter(statesList);
+		interpreter = new Interpreter(statesList,variables);
 		System.out.println("Starting Turtle pos: "+statesList.getLast().getActor().getPos());
 		System.out.println("Starting Turtle heading: "+statesList.getLast().getActor().getHeading());
 	}
