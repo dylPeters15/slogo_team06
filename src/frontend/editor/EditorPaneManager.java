@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import Exceptions.SlogoException;
 import backend.Model;
 import frontend.help.HelpPaneManager;
+import frontend.simulation.SimulationPaneManager;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -56,6 +58,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+	private SimulationPaneManager simulationPaneManager;
 
 	private Model model;
 
@@ -254,8 +257,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 */
 	public void processCommand(String command) {
 		if (model != null) {
-			model.interpret(command);
+			try {
+				model.interpret(command);
+			} catch (SlogoException e) {
+				System.err.println(e.getText());
+			}
 		}
+		Stage simulationStage = new Stage();
+		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
+		simulationStage.show();
 	}
 
 	public void setStyleSheet(String styleSheet) {
@@ -264,14 +274,14 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void populateLanguageMap() {
-		languageToPropertyName.put("Zhōngwén", "Chinese");
+		languageToPropertyName.put("ZhÅ�ngwÃ©n", "Chinese");
 		languageToPropertyName.put("English", "English");
-		languageToPropertyName.put("Français", "French");
+		languageToPropertyName.put("FranÃ§ais", "French");
 		languageToPropertyName.put("Deutsche", "German");
 		languageToPropertyName.put("Italiano", "Italian");
-		languageToPropertyName.put("Português", "Portuguese");
+		languageToPropertyName.put("PortuguÃªs", "Portuguese");
 		languageToPropertyName.put("Russkiy", "Russian");
-		languageToPropertyName.put("Español", "Spanish");
+		languageToPropertyName.put("EspaÃ±ol", "Spanish");
 	}
 
 	private void initialize(String language) {
@@ -288,6 +298,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
+		
+		simulationPaneManager = new SimulationPaneManager();
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}

@@ -40,6 +40,10 @@ class URLBarManager {
 		myURLDisplay.setText(url);
 		myURLDisplay.setEditable(false);
 		myMenuBar.getChildren().add(myURLDisplay);
+		
+		myMenuBar.prefHeightProperty().bind(myURLDisplay.heightProperty());
+		
+		myURLDisplay.prefWidthProperty().bind(myMenuBar.widthProperty());
 	}
 
 }

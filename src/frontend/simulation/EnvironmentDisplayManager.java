@@ -28,7 +28,7 @@ class EnvironmentDisplayManager {
 	private GraphicsContext gc;
 	private int width;
 	private int height;
-	private static final String TURTLE_IMAGE = "turtle.png";
+	private static final String TURTLE_IMAGE = "turtleicon.png";
 	
 	EnvironmentDisplayManager(int width, int height){
 		this.width = width;
@@ -56,7 +56,11 @@ class EnvironmentDisplayManager {
 		gc = myEnvironmentDisplay.getGraphicsContext2D();
 		myEnvironment.getChildren().add(myEnvironmentDisplay);
 		Image image = new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE));
-		gc.drawImage(image, width/2-image.getWidth()/2, height/2-image.getHeight()/2);
+		ImageView imageView = new ImageView(image);
+		imageView.setFitHeight(30);
+		imageView.setFitWidth(30);
+		myEnvironment.getChildren().add(imageView);
+		//gc.drawImage(imageView.getImage(), width/2-image.getWidth()/2, height/2-image.getHeight()/2);
 		
 	}
 
