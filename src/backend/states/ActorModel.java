@@ -62,6 +62,9 @@ public abstract class ActorModel {
 	public boolean getVisible() {
 		return visible;
 	}
+	public void setVisible(boolean v) {
+		visible = v;
+	}
 
 	public boolean getPenUp() {
 		return penUp;

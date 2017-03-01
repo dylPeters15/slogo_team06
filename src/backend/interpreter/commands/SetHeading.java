@@ -17,9 +17,9 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Setheading extends Command {
+public class SetHeading extends Command {
 
-	public Setheading(StatesList<State> list) {
+	public SetHeading(StatesList<State> list) {
 		super(list);
 	}
 
