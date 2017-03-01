@@ -9,7 +9,7 @@ import javafx.collections.ObservableListBase;
 public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
     private final Queue<E> queue ;
-
+    private E placeHolder;
 
     /**
      * Creates an ObservableQueue backed by the supplied Queue. 
@@ -52,6 +52,12 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         }
     }
 
+    
+    private void ifEmptySetPlaceholder(E e){
+    	if(queue.isEmpty()){
+    		placeHolder = e;
+    	}
+    }
 
     @Override
     public E remove() {
@@ -59,6 +65,7 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         try {
             E e = queue.remove();
             nextRemove(0, e);
+            ifEmptySetPlaceholder(e);
             return e;
         } finally {
             endChange();
@@ -70,6 +77,7 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         beginChange();
         E e = queue.poll();
         if (e != null) {
+        	ifEmptySetPlaceholder(e);
             nextRemove(0, e);
         }
         endChange();
@@ -92,7 +100,13 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         for (int i = 0; i < index; i++) iterator.next();
         return iterator.next();
     }
-
+    
+    public E getLast(){
+    	if(queue.isEmpty()){
+    		return placeHolder;
+    	}
+    	return get(size()-1);
+    }
     @Override
     public int size() {
         return queue.size();

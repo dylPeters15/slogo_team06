@@ -12,6 +12,15 @@ public class State {
 	
 	private ActorModel actor;
 
+	public State(State state){
+			actor = new TurtleModel(state.getActor());
+		
+	}
+	
+	public State() {
+		actor = new TurtleModel();
+	}
+
 	public ActorModel getActor() {
 		return actor;
 	}
