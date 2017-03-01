@@ -58,6 +58,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
 	private SimulationPaneManager simulationPaneManager;
+	private Stage simulationStage;
 
 	private Model model;
 
@@ -258,8 +259,6 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		if (model != null) {
 			model.interpret(command);
 		}
-		Stage simulationStage = new Stage();
-		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 		simulationStage.show();
 	}
 
@@ -295,6 +294,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setTop(editorMenuBarManager.getRegion());
 		
 		simulationPaneManager = new SimulationPaneManager();
+		simulationStage = new Stage();
+		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
