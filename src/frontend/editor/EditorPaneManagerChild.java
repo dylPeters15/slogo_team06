@@ -43,5 +43,5 @@ abstract class EditorPaneManagerChild<D extends EditorPaneManagerChildDelegate> 
 	}
 
 	abstract Region getRegion();
-	
+
 }

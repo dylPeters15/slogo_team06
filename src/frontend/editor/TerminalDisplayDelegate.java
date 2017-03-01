@@ -36,7 +36,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface TerminalDisplayDelegate extends EditorPaneManagerChildDelegate{
+interface TerminalDisplayDelegate extends EditorPaneManagerChildDelegate {
 
 	/**
 	 * This method is called by the TerminalDisplayManager to indicate to the
