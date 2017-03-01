@@ -33,6 +33,14 @@ interface SimulationMenuBarDelegate extends SimulationPaneManagerChildDelegate {
 	void setBackgroundColor(Color color);
 	
 	/**
+	 * This method is called to change the 
+	 * Pen color of the simulation's
+	 * environment display
+	 * @param color
+	 */
+	void setPenColor(Color color);
+	
+	/**
 	 * This method is called to change the image 
 	 * used for the actor/turtle
 	 * @param image

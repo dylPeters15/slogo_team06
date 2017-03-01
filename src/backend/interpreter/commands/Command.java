@@ -6,6 +6,7 @@ import java.util.List;
 
 import Exceptions.SlogoException;
 import backend.states.*;
+import javafx.collections.ObservableMap;
 
 /**
  * @author Tavo Loaiza
@@ -14,7 +15,10 @@ import backend.states.*;
 public abstract class Command {
 
 	private StatesList<State> statesList;
-
+	private boolean DEF_NEEDS_VAR_PARAM = false;
+	private ObservableMap<String,String> variables;
+	
+	
 	public Command(StatesList<State> list){
 		statesList = list;
 	}
@@ -44,6 +48,18 @@ public abstract class Command {
 
 	public abstract Integer numParamsNeeded();
 	public abstract List<String> paramsNeeded();
+	
+	public double runCommand(List<String> words) throws SlogoException{
+		throw new SlogoException("IncorrectParamType");
+	}
+	
+	public boolean needsVarParams(){
+		return DEF_NEEDS_VAR_PARAM;
+	}
+	
+	public void setVarMap(ObservableMap<String, String> variables){
+		this.variables = variables;
+	}
 
 	public static Command getCommand(String commandName, StatesList<State> statesList) throws SlogoException {
 		Command comm;
@@ -59,6 +75,18 @@ public abstract class Command {
 		}
 		return comm;
 	}	
-
+	
+	/**
+	 * @return the variables
+	 */
+	protected ObservableMap<String,String> getVariables() {
+		return variables;
+	}
+	/**
+	 * @param variables the variables to set
+	 */
+	protected void setVariables(ObservableMap<String,String> variables) {
+		this.variables = variables;
+	}
 
 }
