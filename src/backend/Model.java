@@ -12,7 +12,7 @@ public class Model {
 	private StatesList<State> statesList;
 	
 	public StatesList<State> getStatesList() {
-		 return (StatesList<State>) FXCollections.unmodifiableObservableList(statesList);
+		 return statesList;
 	}
 
 	private Interpreter interpreter;

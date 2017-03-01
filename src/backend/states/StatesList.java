@@ -34,12 +34,7 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
     @Override
     public boolean offer(E e) {
-        beginChange();
         boolean result = queue.offer(e);
-        if (result) {
-            nextAdd(queue.size()-1, queue.size());
-        }
-        endChange();
         return result ;
     }
 
@@ -64,26 +59,17 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
     @Override
     public E remove() {
-        beginChange();
-        try {
             E e = queue.remove();
-            nextRemove(0, e);
             ifEmptySetPlaceholder(e);
             return e;
-        } finally {
-            endChange();
-        }
     }
 
     @Override
     public E poll() {
-        beginChange();
         E e = queue.poll();
         if (e != null) {
         	ifEmptySetPlaceholder(e);
-            nextRemove(0, e);
         }
-        endChange();
         return e ;
     }
 
