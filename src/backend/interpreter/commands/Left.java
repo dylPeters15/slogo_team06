@@ -16,15 +16,16 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Forward extends Command {
+public class Left extends Command {
 
-	public Forward(StatesList<State> list) {
+	public Left(StatesList<State> list) {
 		super(list);
 	}
 
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
 	
 	private final int NUM_PARAMS = 1;
+	
 	
 	@Override
 	public List<String> paramsNeeded() {
@@ -34,7 +35,7 @@ public class Forward extends Command {
 	@Override
 	public double runCommand(double distance) {
 		State newState = getNewState();
-		newState.getActor().moveForward(distance);
+		newState.getActor().setHeading(newState.getActor().getHeading()+distance);
 		addNewState(newState);
 		return distance;		
 	}
