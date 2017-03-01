@@ -5,6 +5,7 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
+import Exceptions.SlogoException;
 import backend.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

@@ -5,7 +5,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import javafx.collections.ObservableListBase;
 
-
+/**
+ * @author Tavo Loaiza
+ *
+ */
 public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
     private final Queue<E> queue ;
