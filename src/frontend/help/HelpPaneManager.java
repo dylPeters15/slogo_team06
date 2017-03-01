@@ -6,6 +6,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class HelpPaneManager {
+	private static final double DEFAULT_WIDTH = 600;
+	private static final double DEFAULT_HEIGHT = 600;
 	
 	private static final String DEFAULT_STYLE_SHEET = "resources/darktheme.css";
 	private static final String HELP_PAGE = "http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands.php";
@@ -49,6 +51,12 @@ public class HelpPaneManager {
 		
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 		
+		urlBarManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
+		htmlDisplayManager.getRegion().prefHeightProperty().bind(borderPane.heightProperty().subtract(urlBarManager.getRegion().heightProperty()));
+		htmlDisplayManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
+		
+		borderPane.setPrefWidth(DEFAULT_WIDTH);
+		borderPane.setPrefHeight(DEFAULT_HEIGHT);
 	}
 
 }

@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import backend.Model;
 import frontend.help.HelpPaneManager;
+import frontend.simulation.SimulationPaneManager;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -55,6 +57,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+	private SimulationPaneManager simulationPaneManager;
+
+	private Model model;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
@@ -250,7 +255,12 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the command the user has entered to be executed.
 	 */
 	public void processCommand(String command) {
-
+		if (model != null) {
+			model.interpret(command);
+		}
+		Stage simulationStage = new Stage();
+		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
+		simulationStage.show();
 	}
 
 	public void setStyleSheet(String styleSheet) {
@@ -270,17 +280,21 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void initialize(String language) {
+		model = new Model();
+
 		ResourceBundle myResources = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
 						+ languageToPropertyName.get(language));
 		borderPane = new BorderPane();
-		terminalDisplayManager = new TerminalDisplayManager(this,myResources);
-		editorMenuBarManager = new EditorMenuBarManager(this,myResources);
-		variableDisplayManager = new VariableDisplayManager(this,myResources);
+		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
+		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
+		variableDisplayManager = new VariableDisplayManager(this, myResources);
 
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
+		
+		simulationPaneManager = new SimulationPaneManager();
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}

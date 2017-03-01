@@ -42,7 +42,6 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	private VBox vbox;
 	private ObservableList<TextInputArea> textInputAreas;
 	private Button run, clear, clearAll;
-	private Model model;
 
 	/**
 	 * Creates a new instance of TerminalDisplayManager. Sets all values except
@@ -131,14 +130,8 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	 *            commands to print and execute
 	 */
 	void runCommands(String commands) {
-		 if (model != null) {
-			 try {
-				model.interpret(commands);
-			} catch (SlogoException e) {
-				// TODO Auto-generated catch block
-				System.err.println(e.getText());
-
-			}
+		 if (getDelegate() != null){
+			 getDelegate().processCommand(commands);
 		 }
 	}
 
@@ -187,7 +180,6 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	}
 
 	private void initialize(ResourceBundle language) {
-		model = new Model();
 		overallSplitPane = new SplitPane();
 		overallSplitPane.setOrientation(Orientation.HORIZONTAL);
 		overallSplitPane.setPrefSize(800, 600);
