@@ -20,7 +20,7 @@ public abstract class Command {
 	}
 
 	public abstract double runCommand() throws SlogoException;
-	public abstract double runCommand(double a);
+	public abstract double runCommand(double a) throws SlogoException;
 	public abstract double runCommand(double a, double b) throws SlogoException;
 	
 	public StatesList<State> getStatesList() {
