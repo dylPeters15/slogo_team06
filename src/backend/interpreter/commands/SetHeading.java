@@ -25,7 +25,7 @@ public class SetHeading extends Command {
 
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant, Constant"}));
 	
-	private final int NUM_PARAMS = 2;
+	private final int NUM_PARAMS = 1;
 
 	@Override
 	public List<String> paramsNeeded() {
@@ -52,9 +52,8 @@ public class SetHeading extends Command {
 	}
 
 	@Override
-	public double runCommand(double x, double y) {
-
-		return 0;
+	public double runCommand(double x, double y) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 

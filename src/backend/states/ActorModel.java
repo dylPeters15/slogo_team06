@@ -1,18 +1,14 @@
 package backend.states;
 
-import java.awt.Point;
-
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import java.awt.geom.Point2D;
 
 public abstract class ActorModel {
-	private Point pos;
+	private Point2D.Double pos;
 	private Double heading;
 	private boolean penUp;
 	private boolean visible;
-	private ImageView actorImage;
 	
-	public static final Point DEF_POS = new Point(0,0);
+	public static final Point2D.Double DEF_POS = new Point2D.Double(0,0);
 	public static final boolean DEF_PENUP = false;
 	public static final double DEF_HEADING = 0;
 	public static final boolean DEF_VISIBILITY = true;
@@ -21,7 +17,6 @@ public abstract class ActorModel {
 		this(DEF_POS.getX(),DEF_POS.getX(),DEF_HEADING);
 		penUp = DEF_PENUP;
 		visible = DEF_VISIBILITY;
-		actorImage = new ImageView();
 	}
 	
 	ActorModel(double x, double y, double heading){
@@ -29,14 +24,12 @@ public abstract class ActorModel {
 	}
 
 	protected void setVector(double x, double y, double heading) {
-		pos = new Point((int)x,(int)y);
+		pos = new Point2D.Double((int)x,(int)y);
 		this.heading = heading;
-		actorImage = new ImageView();
 	}		
 	
 	ActorModel(ActorModel actor){
 		initFromActor(actor);
-		actorImage = new ImageView();
 	}
 
 	public void initFromActor(ActorModel actor){
@@ -49,6 +42,7 @@ public abstract class ActorModel {
 	public void moveForward(double distance){
 		double x = pos.getX();
 		double y = pos.getY();
+		System.out.println("    Distance: "+distance);
 		System.out.println("\t Before: ("+x+","+y+")");
 		pos.setLocation(x + Math.cos(heading)*distance,
 						y + Math.sin(heading)*distance);
@@ -70,13 +64,13 @@ public abstract class ActorModel {
 		return penUp;
 	}
 	
-	public Point getPos() {
+	public Point2D.Double getPos() {
 		return pos;
 	}
-	public void setPos(Point pos) {
+	public void setPos(Point2D.Double pos) {
 		this.pos = pos;
 	}
-	public Double getHeading() {
+	public double getHeading() {
 		return heading;
 	}
 	public void setHeading(Double heading) {

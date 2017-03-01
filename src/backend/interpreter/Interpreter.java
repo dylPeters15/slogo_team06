@@ -53,7 +53,7 @@ public class Interpreter {
 		
 		LinkedList<String> words = new LinkedList<String>(Arrays.asList(text));
 		
-		recursiveParse(words);
+		System.out.println(recursiveParse(words));
 		
 		
 		
