@@ -47,7 +47,7 @@ public class SetPosition extends Command {
 	}
 
 	@Override
-	public double runCommand(double x, double y) {
+	public double runCommand(double x, double y) throws SlogoException {
 		State newState = getNewState();
 		Double distance = newState.getActor().getPos().distance(x, y);
 		newState.getActor().getPos().setLocation(x, y);
