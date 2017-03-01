@@ -32,6 +32,11 @@
     -fx-text-fill: #ffffff;
 }
 
+#text {
+    -fx-fill: #ffffff;
+    -fx-stroke: #ffffff;
+}
+
 .pane {
 -fx-background-color: #000000;
 }
