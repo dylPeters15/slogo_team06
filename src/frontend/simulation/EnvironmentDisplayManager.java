@@ -1,13 +1,13 @@
 package frontend.simulation;
 
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -51,7 +51,7 @@ class EnvironmentDisplayManager {
 	
 	private void initialize(){
 		myEnvironment = new ScrollPane();
-		StackPane stack = new StackPane();
+		Pane stack = new Pane();
 		stack.prefWidthProperty().set(1000);
 		stack.prefHeightProperty().set(1000);
 		myEnvironment.setContent(stack);
@@ -74,6 +74,20 @@ class EnvironmentDisplayManager {
 		myEnvironment.setHvalue(0.5);
 		myEnvironment.layout();
 		myEnvironment.setVvalue(0.5);
+		
+		
+		
+		Line line = new Line(0, 150, 200,150);   
+		line.setStrokeWidth(20); 
+		line.setStroke(Color.web("000000")); 
+		stack.getChildren().add(line);
+		
+		Line line2 = new Line(200,150,200,300);
+		line2.setStrokeWidth(10);
+		line2.setStroke(Color.web("000000")); 
+		stack.getChildren().add(line2);
+
+		
 		//gc.drawImage(imageView.getImage(), width/2-image.getWidth()/2, height/2-image.getHeight()/2);
 	}
 	
