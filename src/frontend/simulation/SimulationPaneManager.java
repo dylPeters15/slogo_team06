@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  */
 public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	
-	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
+	private static final String DEFAULT_STYLE_SHEET = "resources/darktheme.css";
 	
 	private BorderPane borderPane;
 	
