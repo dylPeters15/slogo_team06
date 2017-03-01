@@ -78,6 +78,7 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 		myMenuBar.getChildren().add(Home);
 		
 		Text backgroundColor = new Text("Background Color:");
+		backgroundColor.setId("text");
 		myMenuBar.getChildren().add(backgroundColor);
 		ColorPicker setBackgroundColor = new ColorPicker();
 		setBackgroundColor.setStyle("-fx-color-label-visible: false ;");
