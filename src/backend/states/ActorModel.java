@@ -79,15 +79,8 @@ public abstract class ActorModel {
 	public void setHeading(Double heading) {
 		this.heading = heading%360;
 	}
-	
-	public void setActorImage(Image image) {
-		// TODO
-		actorImage.setImage(image);
-		actorImage.setX(pos.getX());
-		actorImage.setY(pos.getY());
+	public void setPenUp(boolean penUp) {
+		this.penUp = penUp;
 	}
 	
-	public ImageView getActorImage() {
-		return actorImage;
-	}
 }

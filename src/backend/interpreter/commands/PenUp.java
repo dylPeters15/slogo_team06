@@ -44,7 +44,9 @@ public class PenUp extends Command {
 	@Override
 	public double runCommand() throws SlogoException {
 		State newState = getNewState();
+		newState.getActor().setPenUp(true);
 		addNewState(newState);
+		return 0;
 	}
 
 	@Override
