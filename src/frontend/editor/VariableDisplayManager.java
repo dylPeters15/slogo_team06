@@ -36,7 +36,8 @@ import javafx.scene.layout.Region;
  * @author Dylan Peters
  *
  */
-class VariableDisplayManager extends EditorPaneManagerChild<VariableDisplayDelegate>{
+class VariableDisplayManager extends
+		EditorPaneManagerChild<VariableDisplayDelegate> {
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
@@ -66,7 +67,8 @@ class VariableDisplayManager extends EditorPaneManagerChild<VariableDisplayDeleg
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	VariableDisplayManager(VariableDisplayDelegate delegate, ResourceBundle language) {
+	VariableDisplayManager(VariableDisplayDelegate delegate,
+			ResourceBundle language) {
 		initializeTable();
 	}
 
@@ -195,7 +197,6 @@ class VariableDisplayManager extends EditorPaneManagerChild<VariableDisplayDeleg
 		variables.add(new Variable("asdf", 3));
 		table.setEditable(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
 
 	}
 
