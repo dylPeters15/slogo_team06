@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import backend.Model;
 import frontend.help.HelpPaneManager;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -55,6 +56,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+
+	private Model model;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
@@ -250,7 +253,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the command the user has entered to be executed.
 	 */
 	public void processCommand(String command) {
-
+		if (model != null) {
+			model.interpret(command);
+		}
 	}
 
 	public void setStyleSheet(String styleSheet) {
@@ -270,13 +275,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void initialize(String language) {
+		model = new Model();
+
 		ResourceBundle myResources = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
 						+ languageToPropertyName.get(language));
 		borderPane = new BorderPane();
-		terminalDisplayManager = new TerminalDisplayManager(this,myResources);
-		editorMenuBarManager = new EditorMenuBarManager(this,myResources);
-		variableDisplayManager = new VariableDisplayManager(this,myResources);
+		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
+		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
+		variableDisplayManager = new VariableDisplayManager(this, myResources);
 
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
