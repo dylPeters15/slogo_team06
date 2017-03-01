@@ -22,7 +22,7 @@ public class IsShowing extends Command {
 	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return (this.getNewState().getActor().getVisible()) ? 1 : 0;
+		return (this.getLastState().getActor().getVisible()) ? 1 : 0;
 	}
 
 	@Override
