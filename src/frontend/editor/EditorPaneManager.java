@@ -64,6 +64,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+	private SimulationPaneManager simulationPaneManager;
 	private Stage simulationStage;
 
 	private Model model;
@@ -167,6 +168,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            a string representing the language to be displayed
 	 */
 	public void setLanguage(String language) {
+		System.out.println(language);
+		System.out.println(languageToPropertyName);
+		System.out.println(languageToPropertyName.get(language));
 		ResourceBundle myResources = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
 						+ languageToPropertyName.get(language));
@@ -311,14 +315,14 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void populateLanguageMap() {
-		languageToPropertyName.put("ZhÅ�ngwÃ©n", "Chinese");
+		languageToPropertyName.put("Zhōngwén", "Chinese");
 		languageToPropertyName.put("English", "English");
-		languageToPropertyName.put("FranÃ§ais", "French");
+		languageToPropertyName.put("Français", "French");
 		languageToPropertyName.put("Deutsche", "German");
 		languageToPropertyName.put("Italiano", "Italian");
-		languageToPropertyName.put("PortuguÃªs", "Portuguese");
+		languageToPropertyName.put("Português", "Portuguese");
 		languageToPropertyName.put("Russkiy", "Russian");
-		languageToPropertyName.put("EspaÃ±ol", "Spanish");
+		languageToPropertyName.put("Español", "Spanish");
 	}
 
 	private void initialize(String language) {
@@ -336,8 +340,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
+
 		simulationStage = new Stage();
-		SimulationPaneManager simulationPaneManager = new SimulationPaneManager();
+		SimulationPaneManager simulationPaneManager = new SimulationPaneManager(model.getStatesList());
 		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);

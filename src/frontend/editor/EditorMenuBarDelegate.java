@@ -38,7 +38,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarDelegate extends EditorPaneManagerChildDelegate{
+interface EditorMenuBarDelegate extends EditorPaneManagerChildDelegate {
 
 	/**
 	 * This method is called when the user selects to change the language in
