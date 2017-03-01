@@ -4,7 +4,6 @@ package Exceptions;
  *
  */
 public class SlogoException extends Exception {
-
 	/**
 	 * 
 	 */
@@ -19,7 +18,6 @@ public class SlogoException extends Exception {
 	public String getText(){
 		return text;
 	}
-
 	public void setText(String string) {
 		text = string;	
 	}
