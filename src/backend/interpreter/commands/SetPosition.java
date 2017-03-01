@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import Exceptions.SlogoException;
-import backend.states.ActorModel;
 import backend.states.State;
 import backend.states.StatesList;
 
@@ -17,9 +16,9 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Setheading extends Command {
+public class SetPosition extends Command {
 
-	public Setheading(StatesList<State> list) {
+	public SetPosition(StatesList<State> list) {
 		super(list);
 	}
 
@@ -34,11 +33,7 @@ public class Setheading extends Command {
 	
 	@Override
 	public double runCommand(double a) throws SlogoException {
-		State newState = getNewState();
-		Double distance = Math.abs(newState.getActor().getHeading() - a)%360;
-		newState.getActor().setHeading(a);
-		addNewState(newState);
-		return distance;
+		throw new SlogoException("IncorrectNumOfParameters: 1");
 	}
 
 	@Override
@@ -52,9 +47,12 @@ public class Setheading extends Command {
 	}
 
 	@Override
-	public double runCommand(double x, double y) {
-
-		return 0;
+	public double runCommand(double x, double y) throws SlogoException {
+		State newState = getNewState();
+		Double distance = newState.getActor().getPos().distance(x, y);
+		newState.getActor().getPos().setLocation(x, y);
+		addNewState(newState);
+		return distance;
 	}
 
 

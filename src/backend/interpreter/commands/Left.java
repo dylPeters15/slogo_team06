@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import Exceptions.SlogoException;
-import backend.states.ActorModel;
 import backend.states.State;
 import backend.states.StatesList;
 
@@ -17,28 +16,28 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Setheading extends Command {
+public class Left extends Command {
 
-	public Setheading(StatesList<State> list) {
+	public Left(StatesList<State> list) {
 		super(list);
 	}
 
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant, Constant"}));
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
 	
-	private final int NUM_PARAMS = 2;
-
+	private final int NUM_PARAMS = 1;
+	
+	
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
 	
 	@Override
-	public double runCommand(double a) throws SlogoException {
+	public double runCommand(double distance) {
 		State newState = getNewState();
-		Double distance = Math.abs(newState.getActor().getHeading() - a)%360;
-		newState.getActor().setHeading(a);
+		newState.getActor().setHeading(newState.getActor().getHeading()+distance);
 		addNewState(newState);
-		return distance;
+		return distance;		
 	}
 
 	@Override
@@ -52,9 +51,8 @@ public class Setheading extends Command {
 	}
 
 	@Override
-	public double runCommand(double x, double y) {
-
-		return 0;
+	public double runCommand(double a, double b) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 

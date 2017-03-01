@@ -16,15 +16,15 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Forward extends Command {
+public class PenUp extends Command {
 
-	public Forward(StatesList<State> list) {
+	public PenUp(StatesList<State> list) {
 		super(list);
 	}
 
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
 	
-	private final int NUM_PARAMS = 1;
+	private final int NUM_PARAMS = 0;
 	
 	@Override
 	public List<String> paramsNeeded() {
@@ -32,11 +32,8 @@ public class Forward extends Command {
 	}
 	
 	@Override
-	public double runCommand(double distance) {
-		State newState = getNewState();
-		newState.getActor().moveForward(distance);
-		addNewState(newState);
-		return distance;		
+	public double runCommand(double distance) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters: 1");	
 	}
 
 	@Override
@@ -46,7 +43,8 @@ public class Forward extends Command {
 
 	@Override
 	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
+		State newState = getNewState();
+		addNewState(newState);
 	}
 
 	@Override
