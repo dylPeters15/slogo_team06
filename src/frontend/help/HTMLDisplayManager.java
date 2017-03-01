@@ -38,5 +38,8 @@ class HTMLDisplayManager {
         webEngine.load(url);
         
         myDisplay.getChildren().add(browser);
+        
+        browser.prefHeightProperty().bind(myDisplay.heightProperty());
+        browser.prefWidthProperty().bind(myDisplay.widthProperty());
 	}
 }
