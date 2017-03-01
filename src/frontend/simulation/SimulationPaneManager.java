@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
  *
  */
 public class SimulationPaneManager implements SimulationMenuBarDelegate {
+	private static final double DEFAULT_WIDTH = 1000;
+	private static final double DEFAULT_HEIGHT = 1000;
 	
 	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
 	
@@ -118,15 +120,19 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 		borderPane = new BorderPane();
 		
 		simulationMenuBarManager = new SimulationMenuBarManager(this);
-		if (simulationMenuBarManager.getDelegate() == null){
-			System.out.println("we have a problem");
-		}
 		environmentDisplayManager = new EnvironmentDisplayManager(600, 600);
 		
 		borderPane.setTop(simulationMenuBarManager.getRegion());
 		borderPane.setBottom(environmentDisplayManager.getRegion());
 		
 		setStyleSheet(DEFAULT_STYLE_SHEET);
+		
+		simulationMenuBarManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
+		environmentDisplayManager.getRegion().prefHeightProperty().bind(borderPane.heightProperty().subtract(simulationMenuBarManager.getRegion().heightProperty()));
+		environmentDisplayManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
+		
+		borderPane.setPrefWidth(DEFAULT_WIDTH);
+		borderPane.setPrefHeight(DEFAULT_HEIGHT);
 		
 	}
 }
