@@ -2,11 +2,15 @@ package backend.states;
 
 import java.awt.Point;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public abstract class ActorModel {
 	private Point pos;
 	private Double heading;
 	private boolean penUp;
 	private boolean visible;
+	private ImageView actorImage;
 	
 	public static final Point DEF_POS = new Point(0,0);
 	public static final boolean DEF_PENUP = false;
@@ -17,6 +21,7 @@ public abstract class ActorModel {
 		this(DEF_POS.getX(),DEF_POS.getX(),DEF_HEADING);
 		penUp = DEF_PENUP;
 		visible = DEF_VISIBILITY;
+		actorImage = new ImageView();
 	}
 	
 	ActorModel(double x, double y, double heading){
@@ -26,17 +31,19 @@ public abstract class ActorModel {
 	protected void setVector(double x, double y, double heading) {
 		pos = new Point((int)x,(int)y);
 		this.heading = heading;
+		actorImage = new ImageView();
 	}		
 	
 	ActorModel(ActorModel actor){
 		initFromActor(actor);
+		actorImage = new ImageView();
 	}
 
 	public void initFromActor(ActorModel actor){
 		pos = actor.getPos();
 		heading = actor.getHeading();
-		penUp = actor.isPenUp();
-		visible = actor.isVisible();
+		penUp = actor.getPenUp();
+		visible = actor.getVisible();
 	}
 	
 	public void moveForward(double distance){
@@ -52,11 +59,11 @@ public abstract class ActorModel {
 		moveForward(-distance);
 	}
 	
-	private boolean isVisible() {
+	public boolean getVisible() {
 		return visible;
 	}
 
-	private boolean isPenUp() {
+	public boolean getPenUp() {
 		return penUp;
 	}
 	

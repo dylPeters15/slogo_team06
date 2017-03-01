@@ -3,6 +3,7 @@
  */
 package backend.states;
 
+
 /**
  * @author Tavo
  *
@@ -10,7 +11,6 @@ package backend.states;
 
 
 public class TurtleModel extends ActorModel {
-	
 	TurtleModel(ActorModel model){
 		super(model);
 		

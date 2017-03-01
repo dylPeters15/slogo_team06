@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.ResourceBundle;
-
 import Exceptions.SlogoException;
 import backend.interpreter.commands.Command;
 import backend.interpreter.commands.Forward;
@@ -28,7 +27,6 @@ public class Interpreter {
 		 type = new ProgramParser();
 		 setLanguage(DEF_LANG);
 	}
-
 	private void setParserPatterns(String lang) {
 		
 		langParser.clearPatterns();
@@ -102,7 +100,6 @@ public class Interpreter {
 		throw new SlogoException("IncorrectNumOfParameters");
 		
 	}
-
 	public void translateError(SlogoException e){
 		int indexOfCustomMessage = e.getText().indexOf(';');
 		if(indexOfCustomMessage==-1){
