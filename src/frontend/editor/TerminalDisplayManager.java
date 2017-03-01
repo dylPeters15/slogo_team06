@@ -5,7 +5,6 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
-import backend.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -33,7 +32,8 @@ import javafx.scene.layout.VBox;
  * @author Dylan Peters
  *
  */
-class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDelegate>{
+class TerminalDisplayManager extends
+		EditorPaneManagerChild<TerminalDisplayDelegate> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;
@@ -65,8 +65,9 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	 *            the language with which to display the text in the terminal
 	 *            display
 	 */
-	TerminalDisplayManager(TerminalDisplayDelegate delegate, ResourceBundle language) {
-		super(delegate,language);
+	TerminalDisplayManager(TerminalDisplayDelegate delegate,
+			ResourceBundle language) {
+		super(delegate, language);
 		initialize(language);
 	}
 
@@ -90,7 +91,7 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 		if (clearAll != null) {
 			clearAll.setText(language.getString("ClearAll"));
 		}
-		if (textInputAreas != null && textInputAreas.size() > 0){
+		if (textInputAreas != null && textInputAreas.size() > 0) {
 			textInputAreas.get(0).setPrompt(prompt);
 		}
 	}
@@ -118,7 +119,7 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	 *            the text to print to the Terminal display.
 	 */
 	void printText(String text) {
-		addTextArea(new TextInputArea(text));
+		addTextArea(new TextInputArea(text, prompt));
 	}
 
 	/**
@@ -129,9 +130,9 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	 *            commands to print and execute
 	 */
 	void runCommands(String commands) {
-		 if (getDelegate() != null){
-			 getDelegate().processCommand(commands);
-		 }
+		if (getDelegate() != null) {
+			getDelegate().processCommand(commands);
+		}
 	}
 
 	/**
@@ -153,11 +154,9 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 		for (TextInputArea textInputArea : textInputAreas) {
 			vbox.getChildren().add(textInputArea.getRegion());
 			textInputArea.getRegion().setOnMouseClicked(
-					event -> textInputAreas.get(0)
-							.setText(
-									textInputAreas.get(0)
-											.getText()
-											+ textInputArea.getText()));
+					event -> textInputAreas.get(0).setText(
+							textInputAreas.get(0).getText()
+									+ textInputArea.getText()));
 			textInputArea.getRegion().prefWidthProperty()
 					.bind(scrollPane.widthProperty());
 			textInputArea.getRegion().prefHeightProperty()
@@ -166,15 +165,14 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 		}
 		if (textInputAreas.size() > 0) {
 			textInputAreas.get(0).greyOut(false);
-			textInputAreas.get(0).getRegion()
-					.setOnMouseClicked(event -> {
-					});
+			textInputAreas.get(0).getRegion().setOnMouseClicked(event -> {
+			});
 		}
 		scrollPane.layout();
 		scrollPane.setVvalue(0.0);
 	}
-	
-	private void addTextArea(TextInputArea textInputArea){
+
+	private void addTextArea(TextInputArea textInputArea) {
 		textInputAreas.add(0, textInputArea);
 	}
 
@@ -187,6 +185,14 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 		scrollPane = new ScrollPane();
 		overallSplitPane.getItems().add(scrollPane);
 
+		SplitPane buttonSplitPane = new SplitPane();
+		overallSplitPane.getItems().add(buttonSplitPane);
+
+		initializeScrollPane(scrollPane);
+		initializeButtonPane(buttonSplitPane, language);
+	}
+
+	private void initializeScrollPane(ScrollPane scrollPane) {
 		vbox = new VBox();
 		vbox.prefWidthProperty().bind(scrollPane.widthProperty());
 		scrollPane.setContent(vbox);
@@ -200,12 +206,11 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 				textInputAreasDidChange();
 			}
 		});
-		TextInputArea textInput = new TextInputArea();
-		textInput.setPrompt(prompt);
-		addTextArea(textInput);
+		addTextArea(new TextInputArea("", prompt));
+	}
 
-		SplitPane buttonSplitPane = new SplitPane();
-		overallSplitPane.getItems().add(buttonSplitPane);
+	private void initializeButtonPane(SplitPane buttonSplitPane,
+			ResourceBundle language) {
 		buttonSplitPane.setOrientation(Orientation.VERTICAL);
 		buttonSplitPane.setDividerPositions(1.0 / 3, 2.0 / 3);
 
@@ -227,14 +232,10 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 		clearAll.setWrapText(true);
 		clearAll.setOnAction(event -> clearAllPressed());
 		buttonSplitPane.getItems().add(clearAll);
-
 	}
 
 	private void clearAllPressed() {
-		textInputAreas.clear();
-		TextInputArea textInput = new TextInputArea();
-		textInput.setPrompt(prompt);
-		addTextArea(textInput);
+		addTextArea(new TextInputArea("", prompt));
 	}
 
 	private void clearButtonPressed() {
@@ -245,12 +246,9 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 
 	private void runButtonPressed() {
 		if (textInputAreas.size() > 0
-				&& !textInputAreas.get(0).getText()
-						.isEmpty()) {
+				&& !textInputAreas.get(0).getText().isEmpty()) {
 			runCommands(textInputAreas.get(0).getText());
-			TextInputArea textInput = new TextInputArea();
-			textInput.setPrompt(prompt);
-			addTextArea(textInput);
+			addTextArea(new TextInputArea("", prompt));
 		}
 	}
 

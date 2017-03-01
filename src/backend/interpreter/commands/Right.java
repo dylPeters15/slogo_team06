@@ -16,16 +16,16 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Backward extends Forward {
+public class Right extends Left {
 
-	public Backward(StatesList<State> list) {
+	public Right(StatesList<State> list) {
 		super(list);
 	}
-
+	
 	@Override
 	public double runCommand(double distance) {
 		return super.runCommand(-distance);
 	}
-
-
+	
+	
 }

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Exceptions.SlogoException;
+import backend.states.ActorModel;
 import backend.states.State;
 import backend.states.StatesList;
 
@@ -16,27 +17,28 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Forward extends Command {
+public class Setheading extends Command {
 
-	public Forward(StatesList<State> list) {
+	public Setheading(StatesList<State> list) {
 		super(list);
 	}
 
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant, Constant"}));
 	
-	private final int NUM_PARAMS = 1;
-	
+	private final int NUM_PARAMS = 2;
+
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
 	
 	@Override
-	public double runCommand(double distance) {
+	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
-		newState.getActor().moveForward(distance);
+		Double distance = Math.abs(newState.getActor().getHeading() - a)%360;
+		newState.getActor().setHeading(a);
 		addNewState(newState);
-		return distance;		
+		return distance;
 	}
 
 	@Override
@@ -50,8 +52,9 @@ public class Forward extends Command {
 	}
 
 	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
+	public double runCommand(double x, double y) {
+
+		return 0;
 	}
 
 

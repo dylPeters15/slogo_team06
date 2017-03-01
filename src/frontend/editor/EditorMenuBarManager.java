@@ -30,7 +30,8 @@ import javafx.scene.layout.Region;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate> {
+class EditorMenuBarManager extends
+		EditorPaneManagerChild<EditorMenuBarDelegate> {
 	private ObservableList<String> languages = FXCollections
 			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
 					"Italiano", "Português", "Russkiy", "Español");
@@ -107,7 +108,8 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 		myMenuBar.getChildren().add(help);
 
 		populateStyleMap(language);
-		ObservableList<String> styles = FXCollections.observableArrayList(styleMap.keySet());
+		ObservableList<String> styles = FXCollections
+				.observableArrayList(styleMap.keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
@@ -120,8 +122,10 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 	}
 
 	private void setStyleSheet(String styleSheet) {
-		if (getDelegate() != null && getDelegate() instanceof EditorMenuBarDelegate) {
-			((EditorMenuBarDelegate)getDelegate()).setStyleSheet(styleMap.get(styleSheet));
+		if (getDelegate() != null
+				&& getDelegate() instanceof EditorMenuBarDelegate) {
+			((EditorMenuBarDelegate) getDelegate()).setStyleSheet(styleMap
+					.get(styleSheet));
 		}
 	}
 
@@ -145,7 +149,8 @@ class EditorMenuBarManager extends EditorPaneManagerChild<EditorMenuBarDelegate>
 
 	private void populateStyleMap(ResourceBundle language) {
 		styleMap = new HashMap<String, String>();
-		styleMap.put(language.getString("DefaultTheme"), "resources/default.css");
+		styleMap.put(language.getString("DefaultTheme"),
+				"resources/default.css");
 		styleMap.put(language.getString("DarkTheme"), "resources/darktheme.css");
 	}
 

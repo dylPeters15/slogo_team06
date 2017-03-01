@@ -4,9 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import Exceptions.SlogoException;
 import backend.states.*;
 
-
+/**
+ * @author Tavo Loaiza
+ *
+ */
 public abstract class Command {
 
 	private StatesList<State> statesList;
@@ -15,9 +19,9 @@ public abstract class Command {
 		statesList = list;
 	}
 
-	public abstract double runCommand();
-	public abstract double runCommand(double a);
-	public abstract double runCommand(double a, double b);
+	public abstract double runCommand() throws SlogoException;
+	public abstract double runCommand(double a) throws SlogoException;
+	public abstract double runCommand(double a, double b) throws SlogoException;
 	
 	public StatesList<State> getStatesList() {
 		return statesList;
@@ -34,10 +38,10 @@ public abstract class Command {
 		this.statesList = statesList;
 	}
 
-	abstract Integer numParamsNeeded();
-	abstract List<String> paramsNeeded();
+	public abstract Integer numParamsNeeded();
+	public abstract List<String> paramsNeeded();
 
-	public static Command getCommand(String commandName, StatesList<State> statesList) throws ClassNotFoundException {
+	public static Command getCommand(String commandName, StatesList<State> statesList) throws SlogoException {
 		Command comm;
 		try {
 			Class<?> myClass = Class.forName("backend.interpreter.commands." + commandName);
@@ -46,9 +50,8 @@ public abstract class Command {
 			comm = (Command) constructor.newInstance(statesList);
 		} catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
 				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			System.err.println("Could not find command of the name: "+commandName);
-			e.printStackTrace();
-			throw new ClassNotFoundException();
+			
+			throw new SlogoException("CommandDoesNotExist:commandName");
 		}
 		return comm;
 	}	
