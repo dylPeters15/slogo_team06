@@ -8,6 +8,8 @@ import javafx.collections.ObservableListBase;
 
 public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
+	// TODO change ObservableList to Observable
+	
     private final Queue<E> queue ;
 
 

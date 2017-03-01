@@ -9,7 +9,6 @@ public class Model {
 	
 	
 	public Model(){
-		// TODO: add listener to stateList
 		statesList = new StatesList<State>();
 		interpreter = new Interpreter(statesList);
 	}
