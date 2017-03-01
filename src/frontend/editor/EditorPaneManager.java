@@ -64,6 +64,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
+	private SimulationPaneManager simulationPaneManager;
 	private Stage simulationStage;
 
 	private Model model;
@@ -338,6 +339,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
+
 
 		simulationStage = new Stage();
 		SimulationPaneManager simulationPaneManager = new SimulationPaneManager(model.getStatesList());
