@@ -3,11 +3,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.ResourceBundle;
 import Exceptions.SlogoException;
 import backend.interpreter.commands.Command;
-import backend.interpreter.commands.Forward;
 import backend.states.*;
 import javafx.collections.ObservableMap;
 /**
@@ -54,20 +52,10 @@ public class Interpreter {
 		}
 	}
 	
-	private void parseText (String[] text) throws SlogoException {
-		
+	private void parseText (String[] text) throws SlogoException {	
 		LinkedList<String> words = new LinkedList<String>(Arrays.asList(text));
-		
-		System.out.println(recursiveParse(words));
-		
-		
-		
-        for (String s : text) {
-            if (s.trim().length() > 0) {            	
-             //   System.out.println(String.format("%s : %s", s, lang.getSymbol(s)));            
-            }
-        }
-        System.out.println();
+		recursiveParse(words);
+       
     }
 	
 	private double recursiveParse(LinkedList<String> words) throws SlogoException{
@@ -99,8 +87,9 @@ public class Interpreter {
 						if(com.paramsNeeded().get(i).equals(type.getSymbol(word))){
 							params.add(word);
 						}
-						else if(isConstant(word)){
-								params.add(Double.toString(recursiveParse(words)));							
+						else if(com.paramsNeeded().get(i).equals("Constant")){
+								words.addFirst(word);
+								params.add(Double.toString(recursiveParse(words)));	
 						}
 					}
 					
@@ -123,13 +112,16 @@ public class Interpreter {
 				e.setText(e.getText()+"->"+word);
 			}
 		}
-		else if(type.getSymbol(word).equals("Variable")){
+		if(type.getSymbol(word).equals("Variable")){
 			try{
-			return Double.parseDouble(variables.get(word.substring(1)));
+				return Double.parseDouble(variables.get(word.substring(1)));
 			}
 			catch (Exception e){
 				throw new SlogoException("IncorrectParamType");
 			}
+		}
+		else{
+			System.out.println("Not a variable?");
 		}
 		
 		throw new SlogoException("IncorrectNumOfParameters");
