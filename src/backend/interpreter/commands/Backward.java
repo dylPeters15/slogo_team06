@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
 
 /**
- * @author User
+ * @author Tavo Loaiza
  *
  */
 public class Backward extends Command {
@@ -24,14 +25,6 @@ public class Backward extends Command {
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
 	
 	private final int NUM_PARAMS = 1;
-	
-	/*
-	public double runCommand(List<String> param) {
-		//TODO check params
-		Double val = Double.parseDouble(param.get(0));
-		return runCommand(val);
-	}
-	*/
 	
 	@Override
 	public List<String> paramsNeeded() {
@@ -48,20 +41,18 @@ public class Backward extends Command {
 	}
 
 	@Override
-	Integer numParamsNeeded() {
+	public 	Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
 	@Override
-	public double runCommand() {
-		//Throw error
-		return 0;
+	public double runCommand() throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters: 0");
 	}
 
 	@Override
-	public double runCommand(double a, double b) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double runCommand(double a, double b) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 

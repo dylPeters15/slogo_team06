@@ -5,6 +5,7 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
+import Exceptions.SlogoException;
 import backend.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -131,7 +132,13 @@ class TerminalDisplayManager extends EditorPaneManagerChild<TerminalDisplayDeleg
 	 */
 	void runCommands(String commands) {
 		 if (model != null) {
-			 model.interpret(commands);
+			 try {
+				model.interpret(commands);
+			} catch (SlogoException e) {
+				// TODO Auto-generated catch block
+				System.err.println(e.getText());
+
+			}
 		 }
 	}
 

@@ -16,22 +16,25 @@ public class ProgramParser {
 
 
     public ProgramParser () {
-        mySymbols = new ArrayList<>();
+    	clearPatterns();
     }
 
     // adds the given resource file to this language's recognized types
     public void addPatterns (String syntax) {
         ResourceBundle resources = ResourceBundle.getBundle(syntax);
-        Enumeration<String> iter = resources.getKeys();
-        while (iter.hasMoreElements()) {
-            String key = iter.nextElement();
-            String regex = resources.getString(key);
-            mySymbols.add(new SimpleEntry<>(key,
-                           // THIS IS THE IMPORTANT LINE
-                           Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
-        }
+        addPatterns(resources);
+       
     }
-
+    public void addPatterns(ResourceBundle resources){
+    	 Enumeration<String> iter = resources.getKeys();
+         while (iter.hasMoreElements()) {
+             String key = iter.nextElement();
+             String regex = resources.getString(key);
+             mySymbols.add(new SimpleEntry<>(key,
+                            // THIS IS THE IMPORTANT LINE
+                            Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
+         }
+    }
     // returns the language's type associated with the given text if one exists 
     public String getSymbol (String text) {
         final String ERROR = "NO MATCH";
@@ -48,4 +51,8 @@ public class ProgramParser {
         // THIS IS THE KEY LINE
         return regex.matcher(text).matches();
     }
+
+	public void clearPatterns() {
+		 mySymbols = new ArrayList<>();	
+	}
 }
