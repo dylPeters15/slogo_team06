@@ -1,5 +1,7 @@
 package backend.states;
 
+import javafx.collections.ObservableMap;
+
 /**
  * @author Tavo
  *
@@ -10,6 +12,7 @@ public class State {
 	
 	private ActorModel actor;
 	private boolean clear;
+	
 	public State(State state){
 			actor = new TurtleModel(state.getActor());
 			clear = false;
