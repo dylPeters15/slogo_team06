@@ -55,8 +55,9 @@ public class Interpreter {
 		
 		LinkedList<String> words = new LinkedList<String>(Arrays.asList(text));
 		
-		recursiveParse(words, null);
-				
+		recursiveParse(words);
+		
+		
 		
         for (String s : text) {
             if (s.trim().length() > 0) {            	
@@ -66,25 +67,18 @@ public class Interpreter {
         System.out.println();
     }
 	
-	private double recursiveParse(LinkedList<String> words, String lastWord) throws SlogoException{
-		
-		
+	private double recursiveParse(LinkedList<String> words) throws SlogoException{
+				
 		if(words.isEmpty()){
-			if(langParser.getSymbol(lastWord).equals("Constant")){
-				return Double.parseDouble(lastWord);
+				throw new SlogoException("IncorrectNumOfParameters");
 			}
-			else{
-				throw new SlogoException("LastParamNotConstant");
-			}
-						
-		}
 		
 		String word = words.pop();
 		
 		if(langParser.getSymbol(word).equals("Constant")){
 			return Double.parseDouble(word);
 		}
-		if(type.getSymbol(word).equals("Command")){
+		else if(type.getSymbol(word).equals("Command")){
 			Command com = null;
 			
 				System.out.println(langParser.getSymbol(word));
@@ -92,7 +86,10 @@ public class Interpreter {
 			try{
 				
 				if(com.numParamsNeeded() == 1){
-					return com.runCommand(recursiveParse(words, word));
+					return com.runCommand(recursiveParse(words));
+				}
+				if(com.numParamsNeeded() == 2){
+					return com.runCommand(recursiveParse(words),recursiveParse(words));
 				}
 				else 
 					return com.runCommand();
@@ -102,7 +99,8 @@ public class Interpreter {
 			}
 		}
 		
-		return recursiveParse(words, word);
+		throw new SlogoException("IncorrectNumOfParameters");
+		
 	}
 
 	public void translateError(SlogoException e){
