@@ -25,6 +25,10 @@ public abstract class ActorModel {
 	}
 	
 	ActorModel(double x, double y, double heading){
+		setVector(x, y, heading);
+	}
+
+	protected void setVector(double x, double y, double heading) {
 		pos = new Point((int)x,(int)y);
 		this.heading = heading;
 		actorImage = new ImageView();
@@ -45,8 +49,10 @@ public abstract class ActorModel {
 	public void moveForward(double distance){
 		double x = pos.getX();
 		double y = pos.getY();
+		System.out.println("\t Before: ("+x+","+y+")");
 		pos.setLocation(x + Math.cos(heading)*distance,
-						y + Math.sin(heading)*distance);	
+						y + Math.sin(heading)*distance);
+		System.out.println("\t After: ("+pos.getX()+","+pos.getY()+")");
 	}
 	
 	public void moveBackward(double distance){

@@ -9,24 +9,20 @@ package backend.states;
 public class State {
 	
 	private ActorModel actor;
+	public State(State state){
+			actor = new TurtleModel(state.getActor());
+		
+	}
 	
 	public State() {
-		// TODO all TurtleModel
 		actor = new TurtleModel();
 	}
-	
-	public State(double x, double y, double heading) {
-		actor = new TurtleModel(x, y, heading);
-	}
-
 	public ActorModel getActor() {
 		return actor;
 	}
-
 	public void setActor(ActorModel actorModel) {
 		this.actor = actorModel;
 	}
-	
 	
 	
 }
