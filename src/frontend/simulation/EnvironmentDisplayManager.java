@@ -97,12 +97,28 @@ class EnvironmentDisplayManager {
 			((Region)(myEnvironment.getContent())).setPrefWidth(((Region)(myEnvironment.getContent())).getPrefWidth()*2);
 			myEnvironment.layout();
 			myEnvironment.setHvalue(0.25+val/2);
+			recalcChildren(oldwidth,oldheight,newwidth,newheight);
 		}
 		if (myEnvironment.getVvalue() == 1.0 || myEnvironment.getVvalue() == 0.0){
 			double val = myEnvironment.getVvalue();
 			((Region)(myEnvironment.getContent())).setPrefHeight(((Region)(myEnvironment.getContent())).getPrefHeight()*2);
 			myEnvironment.layout();
 			myEnvironment.setVvalue(0.25+val/2);
+			recalcChildren(oldwidth,oldheight,newwidth,newheight);
+		}
+	}
+	
+	private void recalcChildren(aasdfasdfasdf){
+		for (Node child : ((Pane)(myEnvironment.getContent())).getChildren()){
+			if (child instanceof ImageView){
+				
+			} else if (child instanceof Line){
+				Line childLine = (Line)child;
+				childLine.setStartX(asdf);
+				childLine.setStartY(asdf);
+				childLine.setEndX(asdf);
+				childLine.setEndY(asdf);
+			}
 		}
 	}
 	
