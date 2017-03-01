@@ -266,37 +266,43 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 			try {
 				model.interpret(command);
 			} catch (SlogoException e) {
-				terminalDisplayManager.printText(e.getText());
-				
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Exception");
-				alert.setHeaderText("Error Occurred");
-				alert.setContentText("Error while Parsing Commands");
-
-				Label label = new Label("The exception stacktrace was:");
-
-				TextArea textArea = new TextArea(e.getText());
-				textArea.setEditable(false);
-				textArea.setWrapText(true);
-
-				textArea.setMaxWidth(Double.MAX_VALUE);
-				textArea.setMaxHeight(Double.MAX_VALUE);
-				GridPane.setVgrow(textArea, Priority.ALWAYS);
-				GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-				GridPane expContent = new GridPane();
-				expContent.setMaxWidth(Double.MAX_VALUE);
-				expContent.add(label, 0, 0);
-				expContent.add(textArea, 0, 1);
-
-				// Set expandable Exception into the dialog pane.
-				alert.getDialogPane().setExpandableContent(expContent);
-				alert.getDialogPane().setExpanded(true);
-
-				alert.showAndWait();
+				printError(e);
+				displayErrorDialog(e);
 			}
 		}
 		simulationStage.show();
+	}
+
+	private void printError(SlogoException e) {
+		terminalDisplayManager.printText(e.getText());
+	}
+
+	private void displayErrorDialog(SlogoException e) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Exception");
+		alert.setHeaderText("Error Occurred");
+		alert.setContentText("Error while Parsing Commands");
+
+		Label label = new Label("The exception stacktrace was:");
+
+		TextArea textArea = new TextArea(e.getText());
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		alert.getDialogPane().setExpandableContent(expContent);
+		alert.getDialogPane().setExpanded(true);
+
+		alert.showAndWait();
 	}
 
 	public void setStyleSheet(String styleSheet) {
