@@ -8,21 +8,18 @@ import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
-public class XCoordinate extends Command {
+public class SetTowards extends Command {
 	
-	private final int NUM_PARAMS = 0;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
+	private final int NUM_PARAMS = 2;
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "Constant"}));
 
-	public XCoordinate(StatesList<State> list) {
-		super(list);
+	public SetTowards(StatesList<State> list) {
+		super(list);	
 	}
 
-	/**
-	 * @return x coordinate of the turtle from the center of the screen
-	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return this.getLastState().getActor().getPos().getX();
+		throw new SlogoException("IncorrectNumOfParameters: 0");
 	}
 
 	@Override
@@ -32,7 +29,12 @@ public class XCoordinate extends Command {
 
 	@Override
 	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
+		State newState = getNewState();
+		double newAngle = Math.toDegrees(Math.atan(newState.getActor().getPos().getY() / newState.getActor().getPos().getX()));
+		double oldAngle = newState.getActor().getHeading();
+		newState.getActor().setHeading(newAngle);
+		addNewState(newState);
+		return (newAngle - oldAngle);
 	}
 
 	@Override

@@ -88,6 +88,10 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 
 		ChoiceBox<String> setTurtleImage = new ChoiceBox<String>(colors);
 		myMenuBar.getChildren().add(setTurtleImage);
+		
+		myMenuBar.prefHeightProperty().bind(Home.heightProperty());
+		
+		//myURLDisplay.prefWidthProperty().bind(myMenuBar.widthProperty());
 
 	}
 

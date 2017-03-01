@@ -1,9 +1,8 @@
 package frontend.simulation;
 
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
@@ -23,9 +22,9 @@ import javafx.scene.paint.Color;
  */
 class EnvironmentDisplayManager {
 	
-	private StackPane myEnvironment;
-	private Canvas myEnvironmentDisplay;
-	private GraphicsContext gc;
+	private ScrollPane myEnvironment;
+//	private Canvas myEnvironmentDisplay;
+//	private GraphicsContext gc;
 	private int width;
 	private int height;
 	private static final String TURTLE_IMAGE = "turtleicon.png";
@@ -44,25 +43,55 @@ class EnvironmentDisplayManager {
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	Node getRegion() {
+	Region getRegion() {
 		return myEnvironment;
 	}
 	
 	
 	
 	private void initialize(){
-		myEnvironment = new StackPane();
-		myEnvironmentDisplay = new Canvas(width, height);
-		gc = myEnvironmentDisplay.getGraphicsContext2D();
-		myEnvironment.getChildren().add(myEnvironmentDisplay);
+		myEnvironment = new ScrollPane();
+		StackPane stack = new StackPane();
+		stack.prefWidthProperty().set(1000);
+		stack.prefHeightProperty().set(1000);
+		myEnvironment.setContent(stack);
+		
+//		myEnvironmentDisplay = new Canvas(Double.MAX_VALUE, Double.MAX_VALUE);
+//		gc = myEnvironmentDisplay.getGraphicsContext2D();
+//		stack.getChildren().add(myEnvironmentDisplay);
 		Image image = new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE));
 		ImageView imageView = new ImageView(image);
-		imageView.setFitHeight(30);
-		imageView.setFitWidth(30);
-		myEnvironment.getChildren().add(imageView);
+		imageView.setFitHeight(100);
+		imageView.setFitWidth(100);
+		imageView.setX(0);
+		imageView.setY(0);
+		stack.getChildren().add(imageView);
+		myEnvironment.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		myEnvironment.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		myEnvironment.setOnScrollStarted(event -> didScroll());
+		myEnvironment.setPrefSize(400, 400);
+		myEnvironment.layout();
+		myEnvironment.setHvalue(0.5);
+		myEnvironment.layout();
+		myEnvironment.setVvalue(0.5);
 		//gc.drawImage(imageView.getImage(), width/2-image.getWidth()/2, height/2-image.getHeight()/2);
-		
 	}
+	
+	void didScroll(){
+		if (myEnvironment.getHvalue() == 1.0 || myEnvironment.getHvalue() == 0.0){
+			double val = myEnvironment.getHvalue();
+			((Region)(myEnvironment.getContent())).setPrefWidth(((Region)(myEnvironment.getContent())).getPrefWidth()*2);
+			myEnvironment.layout();
+			myEnvironment.setHvalue(0.25+val/2);
+		}
+		if (myEnvironment.getVvalue() == 1.0 || myEnvironment.getVvalue() == 0.0){
+			double val = myEnvironment.getVvalue();
+			((Region)(myEnvironment.getContent())).setPrefHeight(((Region)(myEnvironment.getContent())).getPrefHeight()*2);
+			myEnvironment.layout();
+			myEnvironment.setVvalue(0.25+val/2);
+		}
+	}
+	
 
 	void setBackgroundColor(Color color) {
 		String t = color.toString().substring(2, color.toString().length());
