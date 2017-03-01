@@ -1,5 +1,7 @@
 package frontend.simulation;
 
+import backend.states.State;
+import backend.states.StatesList;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +28,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	
 	// Constructors that will be present when this interface is turned into a
 	// class:
-	public SimulationPaneManager(){
+	public SimulationPaneManager(StatesList<State> statesList){
 		initialize();
 	}
 	// public SimulationPaneManager(double width, double height);

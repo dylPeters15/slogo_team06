@@ -340,7 +340,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
 		simulationStage = new Stage();
-		SimulationPaneManager simulationPaneManager = new SimulationPaneManager();
+		SimulationPaneManager simulationPaneManager = new SimulationPaneManager(model.getStatesList());
 		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
