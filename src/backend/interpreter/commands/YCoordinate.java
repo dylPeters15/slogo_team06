@@ -22,7 +22,7 @@ public class YCoordinate extends Command {
 	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return this.getNewState().getActor().getPos().getY();
+		return this.getLastState().getActor().getPos().getY();
 	}
 
 	@Override

@@ -26,9 +26,13 @@ public abstract class Command {
 	public StatesList<State> getStatesList() {
 		return statesList;
 	}
+	
+	protected State getLastState() {
+		return getStatesList().getLast();
+	}
 
 	protected State getNewState(){
-		return new State(getStatesList().getLast());
+		return new State(getLastState());
 	}
 	protected void addNewState(State state){
 		statesList.add(state);
