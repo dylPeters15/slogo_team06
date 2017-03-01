@@ -22,11 +22,13 @@ import javafx.scene.shape.Line;
  */
 class EnvironmentDisplayManager {
 	
-	private ScrollPane myEnvironment;
+	private ScrollPane myScrollPane;
+	private Pane myPane;
 //	private Canvas myEnvironmentDisplay;
 //	private GraphicsContext gc;
 	private int width;
 	private int height;
+	private ImageView imageView;
 	private static final String TURTLE_IMAGE = "turtleicon.png";
 	
 	EnvironmentDisplayManager(int width, int height){
@@ -44,89 +46,93 @@ class EnvironmentDisplayManager {
 	 *         interact with the program's options
 	 */
 	Region getRegion() {
-		return myEnvironment;
+		return myScrollPane;
 	}
 	
 	
 	
 	private void initialize(){
-		myEnvironment = new ScrollPane();
-		Pane stack = new Pane();
-		stack.prefWidthProperty().set(1000);
-		stack.prefHeightProperty().set(1000);
-		myEnvironment.setContent(stack);
+		myScrollPane = new ScrollPane();
+		myPane = new Pane();
+		myPane.prefWidthProperty().set(1000);
+		myPane.prefHeightProperty().set(1000);
+		myScrollPane.setContent(myPane);
 		
 //		myEnvironmentDisplay = new Canvas(Double.MAX_VALUE, Double.MAX_VALUE);
 //		gc = myEnvironmentDisplay.getGraphicsContext2D();
-//		stack.getChildren().add(myEnvironmentDisplay);
+//		myPane.getChildren().add(myEnvironmentDisplay);
 		Image image = new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE));
-		ImageView imageView = new ImageView(image);
-		imageView.setFitHeight(100);
-		imageView.setFitWidth(100);
-		imageView.setX(0);
-		imageView.setY(0);
-		stack.getChildren().add(imageView);
-		myEnvironment.setHbarPolicy(ScrollBarPolicy.ALWAYS);
-		myEnvironment.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		myEnvironment.setOnScrollStarted(event -> didScroll());
-		myEnvironment.setPrefSize(400, 400);
-		myEnvironment.layout();
-		myEnvironment.setHvalue(0.5);
-		myEnvironment.layout();
-		myEnvironment.setVvalue(0.5);
+		imageView = new ImageView(image);
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
+		imageView.setX(myPane.getPrefWidth()/2);
+		imageView.setY(myPane.getPrefHeight()/2);
+		myPane.getChildren().add(imageView);
+		myScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		myScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		myScrollPane.setOnScrollStarted(event -> didScroll());
+		myScrollPane.setPrefSize(400, 400);
+		myScrollPane.layout();
+		myScrollPane.setHvalue(0.5);
+		myScrollPane.layout();
+		myScrollPane.setVvalue(0.5);
 		
 		
 		
 		Line line = new Line(0, 150, 200,150);   
 		line.setStrokeWidth(20); 
 		line.setStroke(Color.web("000000")); 
-		stack.getChildren().add(line);
+		myPane.getChildren().add(line);
 		
 		Line line2 = new Line(200,150,200,300);
 		line2.setStrokeWidth(10);
 		line2.setStroke(Color.web("000000")); 
-		stack.getChildren().add(line2);
+		myPane.getChildren().add(line2);
 
 		
 		//gc.drawImage(imageView.getImage(), width/2-image.getWidth()/2, height/2-image.getHeight()/2);
 	}
 	
 	void didScroll(){
-		if (myEnvironment.getHvalue() == 1.0 || myEnvironment.getHvalue() == 0.0){
-			double val = myEnvironment.getHvalue();
-			((Region)(myEnvironment.getContent())).setPrefWidth(((Region)(myEnvironment.getContent())).getPrefWidth()*2);
-			myEnvironment.layout();
-			myEnvironment.setHvalue(0.25+val/2);
-			recalcChildren(oldwidth,oldheight,newwidth,newheight);
+		if (myScrollPane.getHvalue() == 1.0 || myScrollPane.getHvalue() == 0.0){
+			double val = myScrollPane.getHvalue();
+			((Region)(myScrollPane.getContent())).setPrefWidth(((Region)(myScrollPane.getContent())).getPrefWidth()*2);
+			myScrollPane.layout();
+			myScrollPane.setHvalue(0.25+val/2);
+			//recalcChildren(oldwidth,oldheight,newwidth,newheight);
 		}
-		if (myEnvironment.getVvalue() == 1.0 || myEnvironment.getVvalue() == 0.0){
-			double val = myEnvironment.getVvalue();
-			((Region)(myEnvironment.getContent())).setPrefHeight(((Region)(myEnvironment.getContent())).getPrefHeight()*2);
-			myEnvironment.layout();
-			myEnvironment.setVvalue(0.25+val/2);
-			recalcChildren(oldwidth,oldheight,newwidth,newheight);
+		if (myScrollPane.getVvalue() == 1.0 || myScrollPane.getVvalue() == 0.0){
+			double val = myScrollPane.getVvalue();
+			((Region)(myScrollPane.getContent())).setPrefHeight(((Region)(myScrollPane.getContent())).getPrefHeight()*2);
+			myScrollPane.layout();
+			myScrollPane.setVvalue(0.25+val/2);
+			//recalcChildren(oldwidth,oldheight,newwidth,newheight);
 		}
 	}
 	
-	private void recalcChildren(aasdfasdfasdf){
-		for (Node child : ((Pane)(myEnvironment.getContent())).getChildren()){
-			if (child instanceof ImageView){
-				
-			} else if (child instanceof Line){
-				Line childLine = (Line)child;
-				childLine.setStartX(asdf);
-				childLine.setStartY(asdf);
-				childLine.setEndX(asdf);
-				childLine.setEndY(asdf);
-			}
-		}
-	}
+//	private void recalcChildren(aasdfasdfasdf){
+//		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
+//			if (child instanceof ImageView){
+//				
+//			} else if (child instanceof Line){
+//				Line childLine = (Line)child;
+//				childLine.setStartX(asdf);
+//				childLine.setStartY(asdf);
+//				childLine.setEndX(asdf);
+//				childLine.setEndY(asdf);
+//			}
+//		}
+//	}
 	
 
 	void setBackgroundColor(Color color) {
 		String t = color.toString().substring(2, color.toString().length());
 		String s = String.format("-fx-background-color: #%s", t);
-		myEnvironment.setStyle(s);	
+		myPane.setStyle(s);	
+	}
+
+	void setTurtleImage(Image image) {
+		imageView.setImage(image);;
 	}
 	
 }

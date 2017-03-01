@@ -112,7 +112,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	 * @param image
 	 */
 	public void setTurtleImage(Image image){
-		
+		environmentDisplayManager.setTurtleImage(image);
 	}
 	
 	private void initialize() {
@@ -134,5 +134,15 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 		borderPane.setPrefWidth(DEFAULT_WIDTH);
 		borderPane.setPrefHeight(DEFAULT_HEIGHT);
 		
+	}
+
+	/**
+	 * This method is called to change the 
+	 * Pen color of the simulation's
+	 * environment display
+	 * @param color
+	 */
+	public void setPenColor(Color color) {
+		// TODO Auto-generated method stub	
 	}
 }

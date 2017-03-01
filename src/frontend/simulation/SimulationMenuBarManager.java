@@ -1,19 +1,18 @@
 package frontend.simulation;
 
+import java.io.File;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -29,20 +28,11 @@ import javafx.scene.text.Text;
  *
  */
 class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenuBarDelegate> {
-	private ObservableList<String> colors = FXCollections
-			.observableArrayList(Color.WHITE.toString(), Color.AQUA.toString());
 
 	private HBox myMenuBar;
-	
-//	public SimulationMenuBarManager(){
-//		this(null, null);
-//		populateMenuBar();
-//	}
-//	
-//	public SimulationMenuBarManager(String language){
-//		this(null, null);
-//		populateMenuBar();
-//	}
+	private Button Home,setTurtleImage;
+	private Text backgroundColor, penColor;
+	private ColorPicker setBackgroundColor, setPenColor;
 	
 	public SimulationMenuBarManager(SimulationMenuBarDelegate delegate){
 		super(delegate);
@@ -62,37 +52,76 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	//@Override
 	Region getRegion() {
 		return myMenuBar;
 	}
 	
 	private void populateMenuBar() {
+		makeMenuBar();
+		makeHome();		
+		makeBackgroundColor();		
+		makePenColor();
+		makeTurtleImage();
+		
+		myMenuBar.prefHeightProperty().bind(Home.heightProperty());
+	}
+
+	private void makeTurtleImage() {
+		setTurtleImage = new Button("Set Turtle Image");
+		setTurtleImage.setOnMousePressed(event -> setTurtleImage());
+		myMenuBar.getChildren().add(setTurtleImage);
+	}
+
+	private void makePenColor() {
+		penColor = new Text("Pen Color:");
+		backgroundColor.setId("text");
+		myMenuBar.getChildren().add(penColor);
+		
+		setPenColor = new ColorPicker();
+		setPenColor.setStyle("-fx-color-label-visible: false ;");
+		setPenColor.setOnAction(event -> setPenColor(setPenColor.getValue()));
+		myMenuBar.getChildren().add(setPenColor);
+	}
+
+	private void makeBackgroundColor() {
+		backgroundColor = new Text("Background Color:");
+		backgroundColor.setId("text");
+		myMenuBar.getChildren().add(backgroundColor);
+		
+		setBackgroundColor = new ColorPicker();
+		setBackgroundColor.setStyle("-fx-color-label-visible: false ;");
+		setBackgroundColor.setOnAction(event -> setBackgroundColor(setBackgroundColor.getValue()));
+		myMenuBar.getChildren().add(setBackgroundColor);
+	}
+
+	private void makeHome() {
+		Home = new Button("Home");
+		Home.setOnMousePressed(event -> Home());
+		myMenuBar.getChildren().add(Home);
+	}
+
+	private void makeMenuBar() {
 		if (myMenuBar == null) {
 			myMenuBar = new HBox();
 		}
 		myMenuBar.getChildren().clear();
+	}
 
-		Button Home = new Button("Home");
-		Home.setOnMousePressed(event -> Home());
-		myMenuBar.getChildren().add(Home);
-		
-		Text backgroundColor = new Text("Background Color:");
-		backgroundColor.setId("text");
-		myMenuBar.getChildren().add(backgroundColor);
-		ColorPicker setBackgroundColor = new ColorPicker();
-		setBackgroundColor.setStyle("-fx-color-label-visible: false ;");
-		setBackgroundColor.setOnAction(event -> setBackgroundColor(setBackgroundColor.getValue()));
+	private void setPenColor(Color color) {
+		if (getDelegate() != null){
+			getDelegate().setPenColor(color);
+		}
+	}
 
-		myMenuBar.getChildren().add(setBackgroundColor);
-
-		ChoiceBox<String> setTurtleImage = new ChoiceBox<String>(colors);
-		myMenuBar.getChildren().add(setTurtleImage);
-		
-		myMenuBar.prefHeightProperty().bind(Home.heightProperty());
-		
-		//myURLDisplay.prefWidthProperty().bind(myMenuBar.widthProperty());
-
+	private void setTurtleImage() {
+		FileChooser choose = new FileChooser();
+		choose.setInitialDirectory(new File(System.getProperty("user.dir")));
+		choose.getExtensionFilters().setAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+		File file = choose.showOpenDialog(null);
+        Image image = new Image(file.toURI().toString());
+		if (getDelegate() != null){
+			getDelegate().setTurtleImage(image);
+		}
 	}
 
 	private void setBackgroundColor(Color color) {
@@ -104,28 +133,6 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	private void Home() {
 
 	}
-
-	/**
-	 * Sets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with one or more of the
-	 * Control components in the EditorMenuBar.
-	 * 
-	 * @param delegate
-	 */
-//	void setDelegate(SimulationMenuBarDelegate delegate){
-//
-//	}
-
-	/**
-	 * Gets the delegate of this instance to the object passed. The delegate's
-	 * methods are called when the user interacts with one or more of the
-	 * Control components in the EditorMenuBar.
-	 * @return
-	 * 		SimulationMenuBarDelegate
-	 */
-//	SimulationMenuBarDelegate getDelegate(){
-//		return null;
-//	}
 
 	/**
 	 * Changes the language that the menu bar uses to display its contents. The
@@ -147,17 +154,6 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	 * 		String
 	 */
 	String getLanguage(){
-		return null;
-	}
-
-	/**
-	 * Gets the display object that this class is manipulating and setting up.
-	 * The Node returned by this method should be displayed to allow the user to
-	 * interact with the editor and access all its options.
-	 * 
-	 * @return
-	 */
-	Node getMenuBar(){
 		return null;
 	}
 }
