@@ -72,4 +72,8 @@ public abstract class ActorModel {
 	public void setHeading(Double heading) {
 		this.heading = heading%360;
 	}
+	public void setPenUp(boolean penUp) {
+		this.penUp = penUp;
+	}
+	
 }
