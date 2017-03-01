@@ -7,14 +7,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
 import frontend.help.HelpPaneManager;
 import frontend.simulation.SimulationPaneManager;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 /**
  * This class will be of public visibility, so it will be visible to any class
@@ -58,7 +64,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
-	private SimulationPaneManager simulationPaneManager;
+	private Stage simulationStage;
 
 	private Model model;
 
@@ -260,11 +266,36 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 			try {
 				model.interpret(command);
 			} catch (SlogoException e) {
-				System.err.println(e.getText());
+				terminalDisplayManager.printText(e.getText());
+				
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Exception");
+				alert.setHeaderText("Error Occurred");
+				alert.setContentText("Error while Parsing Commands");
+
+				Label label = new Label("The exception stacktrace was:");
+
+				TextArea textArea = new TextArea(e.getText());
+				textArea.setEditable(false);
+				textArea.setWrapText(true);
+
+				textArea.setMaxWidth(Double.MAX_VALUE);
+				textArea.setMaxHeight(Double.MAX_VALUE);
+				GridPane.setVgrow(textArea, Priority.ALWAYS);
+				GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+				GridPane expContent = new GridPane();
+				expContent.setMaxWidth(Double.MAX_VALUE);
+				expContent.add(label, 0, 0);
+				expContent.add(textArea, 0, 1);
+
+				// Set expandable Exception into the dialog pane.
+				alert.getDialogPane().setExpandableContent(expContent);
+				alert.getDialogPane().setExpanded(true);
+
+				alert.showAndWait();
 			}
 		}
-		Stage simulationStage = new Stage();
-		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 		simulationStage.show();
 	}
 
@@ -298,8 +329,10 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
-		
-		simulationPaneManager = new SimulationPaneManager();
+
+		simulationStage = new Stage();
+		SimulationPaneManager simulationPaneManager = new SimulationPaneManager();
+		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
