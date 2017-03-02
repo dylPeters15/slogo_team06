@@ -3,11 +3,8 @@
  */
 package frontend.editor;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -46,6 +43,8 @@ class VariableDisplayManager extends
 	private TableView<Variable> table;
 	private ObservableList<Variable> variables;
 
+	private ObservableMap<String, String> varMap;
+
 	/**
 	 * Creates a new instance of VariableDisplayManager. Sets all values except
 	 * language to default.
@@ -54,9 +53,9 @@ class VariableDisplayManager extends
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-//	VariableDisplayManager(ResourceBundle language) {
-//		this(null, language,null);
-//	}
+	// VariableDisplayManager(ResourceBundle language) {
+	// this(null, language,null);
+	// }
 
 	/**
 	 * Creates a new instance of VariableDisplayManager. Sets all values except
@@ -70,13 +69,14 @@ class VariableDisplayManager extends
 	 *            display.
 	 */
 	VariableDisplayManager(VariableDisplayDelegate delegate,
-			ResourceBundle language, ObservableMap<String,String> variableMap) {
+			ResourceBundle language, ObservableMap<String, String> variableMap) {
 		initializeTable();
-		variableMap.addListener(new MapChangeListener<String, String>(){
+		this.varMap = variableMap;
+		variableMap.addListener(new MapChangeListener<String, String>() {
 			@Override
 			public void onChanged(
 					javafx.collections.MapChangeListener.Change<? extends String, ? extends String> arg0) {
-				update(variableMap);
+				update();
 			}
 		});
 	}
@@ -121,21 +121,32 @@ class VariableDisplayManager extends
 	 *            a map whose keyset is the names of all the variables, and
 	 *            whose values are the values of the variables.
 	 */
-	void update(ObservableMap<String, String> varMap) {
+	void update() {
 		for (String varName : varMap.keySet()) {
 			if (varListHasVarWithName(varName)) {
-				variables.get(indexOfVarWithName(varName)).objectProperty()
+				variables.get(indexOfVarWithName(varName)).valueProperty()
 						.set(varMap.get(varName));
 			} else {
-				variables.add(new Variable(varName, varMap.get(varName)));
+				variables.add(new Variable(varName, varMap.get(varName),
+						isNumber(varMap.get(varName))));
 			}
 		}
 		for (Variable var : variables) {
-			if (!varMapContainsVarWithName(varMap, var.nameProperty().get())) {
+			if (!varMapContainsVarWithName(var.nameProperty().get())) {
 				variables.remove(var);
 			}
 		}
 		variables.sort(null);
+		System.out.println("Update Vars!");
+	}
+
+	private boolean isNumber(String var) {
+		try {
+			Double.parseDouble(var);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	private boolean varListHasVarWithName(String varName) {
@@ -158,8 +169,7 @@ class VariableDisplayManager extends
 		return -1;
 	}
 
-	private boolean varMapContainsVarWithName(ObservableMap<String, String> varMap,
-			String varName) {
+	private boolean varMapContainsVarWithName(String varName) {
 		return varMap.keySet().contains(varName);
 	}
 
@@ -173,37 +183,39 @@ class VariableDisplayManager extends
 
 		values = new TableColumn<Variable, String>();
 		values.setCellValueFactory(new PropertyValueFactory<Variable, String>(
-				"valueRepresentation"));
+				"value"));
 		values.setCellFactory(TextFieldTableCell.forTableColumn());
 		values.setOnEditCommit(new EventHandler<CellEditEvent<Variable, String>>() {
 			@Override
 			public void handle(CellEditEvent<Variable, String> event) {
 				Variable varChanged = variables.get(event.getTablePosition()
 						.getRow());
-				try {
-					if (varChanged.objectProperty().get() instanceof String) {
-						varChanged.objectProperty().set(event.getNewValue());
-					} else if (varChanged.objectProperty().get() instanceof Integer) {
-						varChanged.objectProperty().set(
-								Integer.parseInt(event.getNewValue()));
-					} else if (varChanged.objectProperty().get() instanceof Float) {
-						varChanged.objectProperty().set(
-								Float.parseFloat(event.getNewValue()));
-					} else if (varChanged.objectProperty().get() instanceof Double) {
-						varChanged.objectProperty().set(
-								Double.parseDouble(event.getNewValue()));
+				if (varChanged.isNumber()) {
+					if (isNumber(event.getNewValue())) {
+						varChanged.valueProperty().set(event.getNewValue());
+						varMap.put(varChanged.nameProperty().get(),
+								event.getNewValue());
+					} else {
+						variables.remove(varChanged);
+						variables.add(varChanged);
+						variables.sort(null);
 					}
-				} catch (Exception e) {
-					variables.remove(varChanged);
-					variables.add(varChanged);
-					variables.sort(null);
+				} else {
+					if (isNumber(event.getNewValue())) {
+						variables.remove(varChanged);
+						variables.add(varChanged);
+						variables.sort(null);
+					} else {
+						varChanged.valueProperty().set(event.getNewValue());
+						varMap.put(varChanged.nameProperty().get(),
+								event.getNewValue());
+					}
 				}
-
 			}
 		});
 
 		table.getColumns().add(values);
-		variables.add(new Variable("asdf", 3));
+		// variables.add(new Variable("asdf", "3.0",true));
 		table.setEditable(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -212,32 +224,25 @@ class VariableDisplayManager extends
 	public class Variable implements Comparable<Variable> {
 
 		private StringProperty nameProperty;
-		private ObjectProperty<Object> objectProperty;
-		private StringProperty valueRepresentationProperty;
+		private StringProperty valueProperty;
+		private boolean isNumber;
 
-		Variable(String name) {
-			this(name, null);
-		}
-
-		Variable(String name, Object value) {
+		Variable(String name, String value, boolean isNumber) {
 			nameProperty = new SimpleStringProperty(name);
-			objectProperty = new SimpleObjectProperty<>(value);
-			valueRepresentationProperty = new SimpleStringProperty(
-					objectProperty.get().toString());
-			objectProperty.addListener(listener -> valueRepresentationProperty
-					.set(objectProperty.get().toString()));
+			valueProperty = new SimpleStringProperty(value);
+			this.isNumber = isNumber;
 		}
 
 		public StringProperty nameProperty() {
 			return nameProperty;
 		}
 
-		public ObjectProperty<Object> objectProperty() {
-			return objectProperty;
+		public StringProperty valueProperty() {
+			return valueProperty;
 		}
 
-		public StringProperty valueRepresentationProperty() {
-			return valueRepresentationProperty;
+		public boolean isNumber() {
+			return isNumber;
 		}
 
 		@Override
