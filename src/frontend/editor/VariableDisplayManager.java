@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Region;
+import javafx.scene.text.TextAlignment;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -103,6 +104,7 @@ class VariableDisplayManager extends
 		if (table != null){
 			Label placeHolder = new Label(language.getString("TablePlaceholder"));
 			placeHolder.setWrapText(true);
+			placeHolder.setTextAlignment(TextAlignment.CENTER);
 			table.setPlaceholder(placeHolder);
 		}
 
