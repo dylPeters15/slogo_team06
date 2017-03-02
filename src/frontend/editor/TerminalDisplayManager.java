@@ -245,11 +245,11 @@ class TerminalDisplayManager extends
 	}
 
 	private void runButtonPressed() {
-		if (textInputAreas.size() > 0
-				&& !textInputAreas.get(0).getText().isEmpty()) {
+		if (textInputAreas.size() > 0) {
 			runCommands(textInputAreas.get(0).getText());
-			addTextArea(new TextInputArea("", prompt));
+			if (!textInputAreas.get(0).getText().isEmpty()) {
+				addTextArea(new TextInputArea("", prompt));
+			}
 		}
 	}
-
 }
