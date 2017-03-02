@@ -42,4 +42,8 @@ public class Model {
 		interpreter.setLanguage(bundleName);
 	}
 	
+	public ObservableMap<String,String> getVariables(){
+		return variables;
+	}
+	
 }

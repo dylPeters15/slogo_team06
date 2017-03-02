@@ -11,7 +11,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -52,9 +54,9 @@ class VariableDisplayManager extends
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	VariableDisplayManager(ResourceBundle language) {
-		this(null, language);
-	}
+//	VariableDisplayManager(ResourceBundle language) {
+//		this(null, language,null);
+//	}
 
 	/**
 	 * Creates a new instance of VariableDisplayManager. Sets all values except
@@ -68,8 +70,15 @@ class VariableDisplayManager extends
 	 *            display.
 	 */
 	VariableDisplayManager(VariableDisplayDelegate delegate,
-			ResourceBundle language) {
+			ResourceBundle language, ObservableMap<String,String> variableMap) {
 		initializeTable();
+		variableMap.addListener(new MapChangeListener<String, String>(){
+			@Override
+			public void onChanged(
+					javafx.collections.MapChangeListener.Change<? extends String, ? extends String> arg0) {
+				update(variableMap);
+			}
+		});
 	}
 
 	/**
@@ -112,7 +121,7 @@ class VariableDisplayManager extends
 	 *            a map whose keyset is the names of all the variables, and
 	 *            whose values are the values of the variables.
 	 */
-	void update(Map<String, Object> varMap) {
+	void update(ObservableMap<String, String> varMap) {
 		for (String varName : varMap.keySet()) {
 			if (varListHasVarWithName(varName)) {
 				variables.get(indexOfVarWithName(varName)).objectProperty()
@@ -149,7 +158,7 @@ class VariableDisplayManager extends
 		return -1;
 	}
 
-	private boolean varMapContainsVarWithName(Map<String, Object> varMap,
+	private boolean varMapContainsVarWithName(ObservableMap<String, String> varMap,
 			String varName) {
 		return varMap.keySet().contains(varName);
 	}

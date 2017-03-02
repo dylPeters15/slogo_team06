@@ -334,7 +334,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
-		variableDisplayManager = new VariableDisplayManager(this, myResources);
+		variableDisplayManager = new VariableDisplayManager(this, myResources,model.getVariables());
 
 		borderPane.setCenter(terminalDisplayManager.getRegion());
 		borderPane.setRight(variableDisplayManager.getRegion());
