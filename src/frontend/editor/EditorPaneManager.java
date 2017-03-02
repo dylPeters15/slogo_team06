@@ -356,4 +356,10 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 	}
+	
+	public void showStage(){
+		if (simulationStage != null){
+			simulationStage.show();
+		}
+	}
 }
