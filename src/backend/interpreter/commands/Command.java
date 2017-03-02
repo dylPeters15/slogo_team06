@@ -16,6 +16,7 @@ public abstract class Command {
 
 	private StatesList<State> statesList;
 	private boolean DEF_NEEDS_VAR_PARAM = false;
+	private boolean DEF_REPEAT = false;
 	private ObservableMap<String,String> variables;
 	
 	
@@ -55,6 +56,14 @@ public abstract class Command {
 	
 	public boolean needsVarParams(){
 		return DEF_NEEDS_VAR_PARAM;
+	}
+	
+	public boolean isNestedCommand(){
+		return DEF_REPEAT;
+	}
+	
+	public List<String> nestedCommand(){
+		return null;
 	}
 	
 	public void setVarMap(ObservableMap<String, String> variables){
