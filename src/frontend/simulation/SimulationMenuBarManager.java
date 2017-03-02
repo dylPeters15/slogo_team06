@@ -1,9 +1,7 @@
 package frontend.simulation;
 
 import java.io.File;
-import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
