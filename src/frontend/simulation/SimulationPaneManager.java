@@ -155,8 +155,13 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	@Override
 	public void onChanged(ListChangeListener.Change<? extends State> c) {
 		while (!statesList.isEmpty()){
-			environmentDisplayManager.getTurtle().update(statesList.poll().getActor());
-			environmentDisplayManager.updateTurtle();
+			State state = statesList.poll();
+			if (state.clearscreen()){
+				environmentDisplayManager.clearScreen();
+			} else {
+				environmentDisplayManager.getTurtle().update(state.getActor());
+				environmentDisplayManager.updateTurtle();
+			}
 		}
 	}
 }

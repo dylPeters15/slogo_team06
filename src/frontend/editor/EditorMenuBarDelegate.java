@@ -65,5 +65,7 @@ interface EditorMenuBarDelegate extends EditorPaneManagerChildDelegate {
 	void help();
 
 	void setStyleSheet(String stylesheet);
+	
+	void showStage();
 
 }

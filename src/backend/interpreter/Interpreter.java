@@ -234,9 +234,14 @@ public class Interpreter {
 	}
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
 			throws SlogoException {
+		
+		System.out.println(params.toString());
+		
 		word = words.pop();		
 		if(com.paramsNeeded().get(i).equals("Commands") && com.paramsNeeded().get(i+1).equals("ListEnd")){
-			while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
+			
+			while( (!type.getSymbol(word).equals("ListEnd") || countOf(params, "[") > (countOf(params, "]") + 1))
+					&& !words.isEmpty() ){
 				params.add(word);
 				word = words.pop();
 			}
@@ -257,6 +262,17 @@ public class Interpreter {
 		else if( com.paramsNeeded().get(i).equals("ListStart") ||  com.paramsNeeded().get(i).equals("ListEnd")){
 			throw new SlogoException("ExceptedBracket");
 		}
+	}
+	
+	private int countOf(List<String> params, String search){
+	int count = 0;
+		for(String s:params){
+			if(s.contains(search)){
+				count++;
+			}
+				
+		}
+		return count;
 	}
 	
 	private boolean isConstant(String word) {
