@@ -76,19 +76,15 @@ public class Interpreter {
 		}
 		else if(type.getSymbol(word).equals("Command")){
 			Command com = null;
-			System.out.println(langParser.getSymbol(word));
 			try{
 				com = Command.getCommand(langParser.getSymbol(word), statesList);	
 			}
 			catch (SlogoException e){
-				System.out.println(variables);
 				if(!variables.containsKey(word)){
-					System.out.println("variables doesn't contain the word.");
 					throw e;
 				}
 				else
 				{
-					System.out.println("variables contains the word.");
 					interpret(variables.get(word));
 					return 0;
 				}
@@ -98,26 +94,7 @@ public class Interpreter {
 				if(com.needsVarParams()){
 					com.setVarMap(variables);
 					if(com.isNestedCommand()){
-						List<String> params = new ArrayList<String>();
-
-						for(int i=0; i<com.paramsNeeded().size(); i++){	
-							getConstant(words, word, com, params, i);						
-						}
-
-						double lastReturn = 0;
-						while(com.isNestedCommand()){
-							com.runCommand(params);	
-							LinkedList<String> nestedCommand = new LinkedList<String>(com.nestedCommand());
-							while(!nestedCommand.isEmpty()){
-								System.out.println("NestedCommand = " + nestedCommand.toString());
-								lastReturn = recursiveParse(nestedCommand);
-							}
-
-						}
-						
-						
-						
-						return lastReturn;
+						return handleNestedCommand(words, word, com);
 					}
 					else{
 						List<String> params = new ArrayList<String>();
@@ -264,15 +241,29 @@ public class Interpreter {
 			}
 			return parse(bracketWords);
 		}
-		else if (type.getSymbol(word).equals("ListEnd")) {
-			
-		}
-		else{
-		}
 
 		throw new SlogoException("IncorrectNumOfParameters");
 
+	}
 
+	private double handleNestedCommand(LinkedList<String> words, String word, Command com) throws SlogoException {
+		List<String> params = new ArrayList<String>();
+
+		for(int i=0; i<com.paramsNeeded().size(); i++){	
+			getConstant(words, word, com, params, i);						
+		}
+
+		double lastReturn = 0;
+		while(com.isNestedCommand()){
+			com.runCommand(params);	
+			LinkedList<String> nestedCommand = new LinkedList<String>(com.nestedCommand());
+			while(!nestedCommand.isEmpty()){
+				lastReturn = recursiveParse(nestedCommand);
+			}
+
+		}
+
+		return lastReturn;
 	}
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
 			throws SlogoException {

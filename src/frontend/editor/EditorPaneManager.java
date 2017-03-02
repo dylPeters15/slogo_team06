@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -173,6 +175,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		terminalDisplayManager.setLanguageResourceBundle(myResources);
 		editorMenuBarManager.setLanguageResourceBundle(myResources);
 		variableDisplayManager.setLanguageResourceBundle(myResources);
+		model.setResourceBundle(DEFAULT_RESOURCE_PACKAGE
+						+ languageToPropertyName.get(language));
 	}
 
 	/**
@@ -262,7 +266,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the command the user has entered to be executed.
 	 */
 	public void processCommand(String command) {
-		if (model != null) {
+		if (model != null && !command.isEmpty()) {
 			try {
 				model.interpret(command);
 			} catch (SlogoException e) {
@@ -332,9 +336,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
 		variableDisplayManager = new VariableDisplayManager(this, myResources,
 				model.getVariables());
+		
+		SplitPane terminalAndVarTable = new SplitPane();
+		terminalAndVarTable.setOrientation(Orientation.HORIZONTAL);
+		terminalAndVarTable.getItems().add(terminalDisplayManager.getRegion());
+		terminalAndVarTable.getItems().add(variableDisplayManager.getRegion());
+		terminalAndVarTable.setDividerPositions(0.8);
 
-		borderPane.setCenter(terminalDisplayManager.getRegion());
-		borderPane.setRight(variableDisplayManager.getRegion());
+		borderPane.setCenter(terminalAndVarTable);
+//		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
 		simulationStage = new Stage();

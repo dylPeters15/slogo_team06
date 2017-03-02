@@ -149,12 +149,14 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	 * @param color
 	 */
 	public void setPenColor(Color color) {
-		// TODO Auto-generated method stub	
+		environmentDisplayManager.setPenColor(color);	
 	}
 	
 	@Override
 	public void onChanged(ListChangeListener.Change<? extends State> c) {
-		environmentDisplayManager.getTurtle().update(statesList.poll().getActor());
-		environmentDisplayManager.updateTurtle();
+		while (!statesList.isEmpty()){
+			environmentDisplayManager.getTurtle().update(statesList.poll().getActor());
+			environmentDisplayManager.updateTurtle();
+		}
 	}
 }
