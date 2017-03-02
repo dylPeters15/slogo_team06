@@ -16,6 +16,8 @@ public abstract class Command {
 
 	private StatesList<State> statesList;
 	private boolean DEF_NEEDS_VAR_PARAM = false;
+	private boolean DEF_NEEDS_COMMANDS_PARAM = false;
+	private boolean DEF_NEEDS_PRIOR_CHECK = false;
 	private ObservableMap<String,String> variables;
 	
 	
@@ -26,6 +28,10 @@ public abstract class Command {
 	public abstract double runCommand() throws SlogoException;
 	public abstract double runCommand(double a) throws SlogoException;
 	public abstract double runCommand(double a, double b) throws SlogoException;
+
+	public double runCommand(List<String> words) throws SlogoException{
+		throw new SlogoException("IncorrectParamType");
+	}
 	
 	public StatesList<State> getStatesList() {
 		return statesList;
@@ -38,8 +44,13 @@ public abstract class Command {
 	protected State getNewState(){
 		return new State(getLastState());
 	}
+	
 	protected void addNewState(State state){
 		statesList.add(state);
+	}
+	
+	protected void removeNewState() {
+		statesList.removeLast();
 	}
 	
 	public void setStatesList(StatesList<State> statesList) {
@@ -49,12 +60,17 @@ public abstract class Command {
 	public abstract Integer numParamsNeeded();
 	public abstract List<String> paramsNeeded();
 	
-	public double runCommand(List<String> words) throws SlogoException{
-		throw new SlogoException("IncorrectParamType");
-	}
 	
 	public boolean needsVarParams(){
 		return DEF_NEEDS_VAR_PARAM;
+	}
+	
+	public boolean needsCommandParams() {
+		return DEF_NEEDS_COMMANDS_PARAM;
+	}
+	
+	public boolean needsPriorCheck() {
+		return DEF_NEEDS_PRIOR_CHECK;
 	}
 	
 	public void setVarMap(ObservableMap<String, String> variables){
