@@ -112,7 +112,6 @@ public class Interpreter {
 
 						return com.runCommand(params);
 					}
-					return com.runCommand(params);
 				}
 				else if (com.needsPriorCheck()) { // if and if-else
 					double condition = recursiveParse(words);
