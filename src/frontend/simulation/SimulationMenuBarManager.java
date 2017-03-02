@@ -118,10 +118,12 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 		choose.setInitialDirectory(new File(System.getProperty("user.dir")));
 		choose.getExtensionFilters().setAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File file = choose.showOpenDialog(null);
-        Image image = new Image(file.toURI().toString());
-		if (getDelegate() != null){
-			getDelegate().setTurtleImage(image);
-		}
+        if (file != null){
+        	Image image = new Image(file.toURI().toString());
+        	if (getDelegate() != null && image != null){
+    			getDelegate().setTurtleImage(image);
+    		}
+        }
 	}
 
 	private void setBackgroundColor(Color color) {
