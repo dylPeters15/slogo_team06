@@ -167,9 +167,6 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            a string representing the language to be displayed
 	 */
 	public void setLanguage(String language) {
-		System.out.println(language);
-		System.out.println(languageToPropertyName);
-		System.out.println(languageToPropertyName.get(language));
 		ResourceBundle myResources = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
 						+ languageToPropertyName.get(language));

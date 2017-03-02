@@ -137,7 +137,6 @@ class VariableDisplayManager extends
 			}
 		}
 		variables.sort(null);
-		System.out.println("Update Vars!");
 	}
 
 	private boolean isNumber(String var) {
