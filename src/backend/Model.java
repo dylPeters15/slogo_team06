@@ -25,17 +25,10 @@ public class Model {
 		statesList = new StatesList<State>();
 		statesList.add(new State());
 		interpreter = new Interpreter(statesList,variables);
-		System.out.println("Starting Turtle pos: "+statesList.getLast().getActor().getPos());
-		System.out.println("Starting Turtle heading: "+statesList.getLast().getActor().getHeading());
 	}
 	
 	public void interpret(String text) throws SlogoException{
 		interpreter.interpret(text);
-		System.out.println("Current Turtle pos: "+statesList.getLast().getActor().getPos());
-		System.out.println("Current Turtle heading: "+statesList.getLast().getActor().getHeading());
-		for(State s:statesList){
-			System.out.println(" 	pos: "+s.getActor().getPos());
-		}
 	}
 	
 	public void setResourceBundle(String bundleName){
