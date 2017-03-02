@@ -18,6 +18,7 @@ public abstract class Command {
 	private boolean DEF_NEEDS_VAR_PARAM = false;
 	private boolean DEF_NEEDS_COMMANDS_PARAM = false;
 	private boolean DEF_NEEDS_PRIOR_CHECK = false;
+	private boolean DEF_MAKE_NEW_COMMAND = false;
 	private ObservableMap<String,String> variables;
 	
 	
@@ -28,6 +29,9 @@ public abstract class Command {
 	public abstract double runCommand() throws SlogoException;
 	public abstract double runCommand(double a) throws SlogoException;
 	public abstract double runCommand(double a, double b) throws SlogoException;
+	public double runCommand(String commandName, String commands) throws SlogoException{
+		throw new SlogoException("IncorrectParamType");
+	}
 
 	public double runCommand(List<String> words) throws SlogoException{
 		throw new SlogoException("IncorrectParamType");
@@ -71,6 +75,10 @@ public abstract class Command {
 	
 	public boolean needsPriorCheck() {
 		return DEF_NEEDS_PRIOR_CHECK;
+	}
+	
+	public boolean ifDefineNewCommands(){
+		return DEF_MAKE_NEW_COMMAND;
 	}
 	
 	public void setVarMap(ObservableMap<String, String> variables){

@@ -145,6 +145,26 @@ public class Interpreter {
 						}
 					}
 				}
+				else if (com.ifDefineNewCommands()) { // TO
+					String commandName = "";
+					word = words.pop();
+					while (!type.getSymbol(word).equals("ListStart")) {
+						commandName = commandName + word + " ";
+						word = words.pop();
+					}
+					commandName = commandName.substring(0, commandName.length()); // remove the last blank
+					// TODO make new variables and put into variable map
+					String commands = "";
+					word = words.pop();
+					while (!type.getSymbol(word).equals("ListStart")) {
+						word = words.pop();
+					}
+					while (!type.getSymbol(word).equals("ListEnd")) {
+						commands = commands + word + " ";
+						word = words.pop();
+					}
+					com.runCommand(commandName, commands);
+				}
 				else{
 					if(com.numParamsNeeded() == 1){
 						return com.runCommand(recursiveParse(words));
@@ -166,7 +186,11 @@ public class Interpreter {
 				return Double.parseDouble(variables.get(word.substring(1)));
 			}
 			catch (Exception e){
-				throw new SlogoException("IncorrectParamType");
+//				throw new SlogoException("IncorrectParamType");
+			}
+			finally {
+				// not a double, then a command name
+				interpret(variables.get(word.substring(1)));
 			}
 		}
 		else if (type.getSymbol(word).equals("ListStart")) {
