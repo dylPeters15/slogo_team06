@@ -173,6 +173,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		terminalDisplayManager.setLanguageResourceBundle(myResources);
 		editorMenuBarManager.setLanguageResourceBundle(myResources);
 		variableDisplayManager.setLanguageResourceBundle(myResources);
+		model.setResourceBundle(DEFAULT_RESOURCE_PACKAGE
+						+ languageToPropertyName.get(language));
 	}
 
 	/**
