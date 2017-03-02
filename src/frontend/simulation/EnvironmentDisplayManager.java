@@ -1,5 +1,6 @@
 package frontend.simulation;
 
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
@@ -70,7 +71,7 @@ class EnvironmentDisplayManager {
 		myPane.getChildren().add(imageView);
 		myScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
 		myScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		myScrollPane.setOnScrollStarted(event -> didScroll());
+		myScrollPane.setOnScroll(event -> didScroll());
 		myScrollPane.setPrefSize(400, 400);
 		myScrollPane.layout();
 		myScrollPane.setHvalue(0.5);
@@ -96,33 +97,45 @@ class EnvironmentDisplayManager {
 	void didScroll(){
 		if (myScrollPane.getHvalue() == 1.0 || myScrollPane.getHvalue() == 0.0){
 			double val = myScrollPane.getHvalue();
+			double oldWidth = ((Region)(myScrollPane.getContent())).getPrefWidth();
 			((Region)(myScrollPane.getContent())).setPrefWidth(((Region)(myScrollPane.getContent())).getPrefWidth()*2);
+			double newWidth = ((Region)(myScrollPane.getContent())).getPrefWidth();
 			myScrollPane.layout();
 			myScrollPane.setHvalue(0.25+val/2);
-			//recalcChildren(oldwidth,oldheight,newwidth,newheight);
+			recalcChildren(oldWidth,((Region)(myScrollPane.getContent())).getHeight(),newWidth,((Region)(myScrollPane.getContent())).getWidth());
 		}
 		if (myScrollPane.getVvalue() == 1.0 || myScrollPane.getVvalue() == 0.0){
 			double val = myScrollPane.getVvalue();
+			double oldHeight = ((Region)(myScrollPane.getContent())).getPrefHeight();
 			((Region)(myScrollPane.getContent())).setPrefHeight(((Region)(myScrollPane.getContent())).getPrefHeight()*2);
+			double newHeight = ((Region)(myScrollPane.getContent())).getPrefHeight();
 			myScrollPane.layout();
 			myScrollPane.setVvalue(0.25+val/2);
-			//recalcChildren(oldwidth,oldheight,newwidth,newheight);
+			recalcChildren(((Region)(myScrollPane.getContent())).getWidth(),oldHeight,((Region)(myScrollPane.getContent())).getWidth(),newHeight);
 		}
 	}
 	
-//	private void recalcChildren(aasdfasdfasdf){
-//		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
-//			if (child instanceof ImageView){
-//				
-//			} else if (child instanceof Line){
-//				Line childLine = (Line)child;
-//				childLine.setStartX(asdf);
-//				childLine.setStartY(asdf);
-//				childLine.setEndX(asdf);
-//				childLine.setEndY(asdf);
-//			}
-//		}
-//	}
+	private void recalcChildren(double oldWidth, double oldHeight, double newWidth, double newHeight){
+		double oldCenterX = oldWidth/2;
+		double oldCenterY = oldHeight/2;
+		double newCenterX = newWidth/2;
+		double newCenterY = newHeight/2;
+		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
+			if (child instanceof ImageView){
+				ImageView childImage = (ImageView)child;
+				childImage.setX(newCenterX+(childImage.getX()-oldCenterX));
+				childImage.setY(newCenterY+(childImage.getY()-oldCenterY));
+				System.out.println("image");
+			} else if (child instanceof Line){
+				Line childLine = (Line)child;
+				childLine.setStartX(newCenterX+(childLine.getStartX()-oldCenterX));
+				childLine.setStartY(newCenterY+(childLine.getStartY()-oldCenterY));
+				childLine.setEndX(newCenterX+(childLine.getEndX()-oldCenterX));
+				childLine.setEndY(newCenterY+(childLine.getEndY()-oldCenterY));
+				System.out.println("line");
+			}
+		}
+	}
 	
 
 	void setBackgroundColor(Color color) {
@@ -133,6 +146,13 @@ class EnvironmentDisplayManager {
 
 	void setTurtleImage(Image image) {
 		imageView.setImage(image);;
+	}
+	
+	void home(){
+		myScrollPane.layout();
+		myScrollPane.setHvalue(imageView.getX()/((Region)(myScrollPane.getContent())).getWidth());
+		myScrollPane.layout();
+		myScrollPane.setVvalue(imageView.getY()/((Region)(myScrollPane.getContent())).getHeight());
 	}
 	
 }

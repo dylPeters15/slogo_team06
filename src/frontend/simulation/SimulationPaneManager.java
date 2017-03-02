@@ -93,7 +93,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	 * a double value later)
 	 */
     public void home(){
-    	
+    	environmentDisplayManager.home();
     }
 	
     /**
