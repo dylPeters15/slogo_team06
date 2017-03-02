@@ -312,6 +312,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
+		simulationStage.getScene().getRoot().getStylesheets().clear();
+		simulationStage.getScene().getRoot().getStylesheets().add(styleSheet);
 	}
 
 	private void populateLanguageMap() {
