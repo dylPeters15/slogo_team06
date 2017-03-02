@@ -77,7 +77,7 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 		backgroundColor.setId("text");
 		myMenuBar.getChildren().add(penColor);
 		
-		setPenColor = new ColorPicker();
+		setPenColor = new ColorPicker(Color.BLACK);
 		setPenColor.setStyle("-fx-color-label-visible: false ;");
 		setPenColor.setOnAction(event -> setPenColor(setPenColor.getValue()));
 		myMenuBar.getChildren().add(setPenColor);
