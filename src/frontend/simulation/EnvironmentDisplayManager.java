@@ -116,25 +116,28 @@ class EnvironmentDisplayManager {
 	}
 	
 	private void recalcChildren(double oldWidth, double oldHeight, double newWidth, double newHeight){
-		double oldCenterX = oldWidth/2;
-		double oldCenterY = oldHeight/2;
-		double newCenterX = newWidth/2;
-		double newCenterY = newHeight/2;
-		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
-			if (child instanceof ImageView){
-				ImageView childImage = (ImageView)child;
-				childImage.setX(newCenterX+(childImage.getX()-oldCenterX));
-				childImage.setY(newCenterY+(childImage.getY()-oldCenterY));
-				System.out.println("image");
-			} else if (child instanceof Line){
-				Line childLine = (Line)child;
-				childLine.setStartX(newCenterX+(childLine.getStartX()-oldCenterX));
-				childLine.setStartY(newCenterY+(childLine.getStartY()-oldCenterY));
-				childLine.setEndX(newCenterX+(childLine.getEndX()-oldCenterX));
-				childLine.setEndY(newCenterY+(childLine.getEndY()-oldCenterY));
-				System.out.println("line");
-			}
-		}
+//		double oldCenterX = oldWidth/2;
+//		double oldCenterY = oldHeight/2;
+//		double newCenterX = newWidth/2;
+//		double newCenterY = newHeight/2;
+//		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
+//			if (child instanceof ImageView){
+//				ImageView childImage = (ImageView)child;
+//				childImage.setX(newCenterX+(childImage.getX()-oldCenterX));
+//				childImage.setY(newCenterY+(childImage.getY()-oldCenterY));
+//				System.out.println("image");
+//			} else if (child instanceof Line){
+//				Line childLine = (Line)child;
+//				childLine.setStartX(newCenterX+(childLine.getStartX()-oldCenterX));
+//				childLine.setStartY(newCenterY+(childLine.getStartY()-oldCenterY));
+//				childLine.setEndX(newCenterX+(childLine.getEndX()-oldCenterX));
+//				childLine.setEndY(newCenterY+(childLine.getEndY()-oldCenterY));
+//				System.out.println("line");
+//			}
+//		}
+//		if (!myPane.getChildren().contains(myTurtle.getImageView())){
+//			myPane.getChildren().add(myTurtle.getImageView());
+//		}
 	}
 	
 
@@ -150,9 +153,10 @@ class EnvironmentDisplayManager {
 	
 	void home(){
 		myScrollPane.layout();
-		myScrollPane.setHvalue(imageView.getX()/((Region)(myScrollPane.getContent())).getWidth());
+		myScrollPane.setHvalue(myTurtle.getImageView().getX()/((Region)(myScrollPane.getContent())).getWidth());
 		myScrollPane.layout();
-		myScrollPane.setVvalue(imageView.getY()/((Region)(myScrollPane.getContent())).getHeight());
+		myScrollPane.setVvalue(myTurtle.getImageView()
+				.getY()/((Region)(myScrollPane.getContent())).getHeight());
 	}
 	
 }
