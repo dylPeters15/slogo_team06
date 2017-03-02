@@ -8,12 +8,12 @@ import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
-public class If extends Command {
+public class IfElse extends Command {
 	
-	private final int NUM_PARAMS = 2;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "Constant"}));
+	private final int NUM_PARAMS = 3;
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "Constant", "Constant"}));
 
-	public If(StatesList<State> list) {
+	public IfElse(StatesList<State> list) {
 		super(list);
 	}
 
@@ -30,7 +30,7 @@ public class If extends Command {
 	@Override
 	public double runCommand(double condition, double command) throws SlogoException {
 		return command;
-	}
+	}	
 
 	@Override
 	public boolean needsPriorCheck() {
