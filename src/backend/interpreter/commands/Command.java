@@ -18,6 +18,7 @@ public abstract class Command {
 	private boolean DEF_NEEDS_VAR_PARAM = false;
 	private boolean DEF_NEEDS_COMMANDS_PARAM = false;
 	private boolean DEF_NEEDS_PRIOR_CHECK = false;
+	private boolean DEF_MAKE_NEW_COMMAND = false;
 	private boolean DEF_REPEAT = false;
 	private ObservableMap<String,String> variables;
 	
@@ -29,6 +30,9 @@ public abstract class Command {
 	public abstract double runCommand() throws SlogoException;
 	public abstract double runCommand(double a) throws SlogoException;
 	public abstract double runCommand(double a, double b) throws SlogoException;
+	public double runCommand(String commandName, String commands) throws SlogoException{
+		throw new SlogoException("IncorrectParamType");
+	}
 
 	public double runCommand(List<String> words) throws SlogoException{
 		throw new SlogoException("IncorrectParamType");
@@ -81,6 +85,10 @@ public abstract class Command {
 		return null;
 	}
 	
+	public boolean ifDefineNewCommands(){
+		return DEF_MAKE_NEW_COMMAND;
+	}
+	
 	public void setVarMap(ObservableMap<String, String> variables){
 		this.variables = variables;
 	}
@@ -94,7 +102,6 @@ public abstract class Command {
 			comm = (Command) constructor.newInstance(statesList);
 		} catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
 				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			
 			throw new SlogoException("CommandDoesNotExist:commandName");
 		}
 		return comm;

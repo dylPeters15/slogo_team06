@@ -12,12 +12,14 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Region;
+import javafx.scene.text.TextAlignment;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -97,6 +99,13 @@ class VariableDisplayManager extends
 
 		if (values != null) {
 			values.setText(language.getString("Value"));
+		}
+		
+		if (table != null){
+			Label placeHolder = new Label(language.getString("TablePlaceholder"));
+			placeHolder.setWrapText(true);
+			placeHolder.setTextAlignment(TextAlignment.CENTER);
+			table.setPlaceholder(placeHolder);
 		}
 
 	}

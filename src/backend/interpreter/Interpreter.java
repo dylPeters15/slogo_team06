@@ -76,7 +76,19 @@ public class Interpreter {
 		}
 		else if(type.getSymbol(word).equals("Command")){
 			Command com = null;
-			com = Command.getCommand(langParser.getSymbol(word), statesList);	
+			try{
+				com = Command.getCommand(langParser.getSymbol(word), statesList);	
+			}
+			catch (SlogoException e){
+				if(!variables.containsKey(word)){
+					throw e;
+				}
+				else
+				{
+					interpret(variables.get(word));
+					return 0;
+				}
+			}
 			try{
 
 				if(com.needsVarParams()){
@@ -144,6 +156,44 @@ public class Interpreter {
 					}
 
 				}
+				else if (com.ifDefineNewCommands()) { // TO
+					com.setVarMap(variables);
+					String commandName = "";
+					word = words.pop();
+					while (!type.getSymbol(word).equals("ListStart")) {
+						commandName = commandName + word + " ";
+						word = words.pop();
+					}
+					commandName = commandName.substring(0, commandName.length()-1); // remove the last blank
+					// make new variables and put into variable map
+					word = words.pop();
+					while (!type.getSymbol(word).equals("ListEnd")) {
+						String variable = "make ";
+						variable = variable + word + " " + words.pop();
+						interpret(variable);
+						word = words.pop();
+					}					
+					String commands = "";
+					word = words.pop();
+					while (!type.getSymbol(word).equals("ListStart")) {
+						word = words.pop();
+					}
+					int numOfFrontBracket = 1;
+					int numOfEndBracket = 0;
+					while (!type.getSymbol(word).equals("ListEnd") || numOfFrontBracket != numOfEndBracket) {
+						commands = commands + word + " ";
+						if (!words.isEmpty()){
+							word = words.pop();
+						}
+						else {
+							throw new SlogoException("ExceptedBracket");
+						}
+						if (type.getSymbol(word).equals("ListStart")) numOfFrontBracket ++;
+						if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
+					}
+					commands = commands + "]";
+					return com.runCommand(commandName, commands);
+				}
 				else{
 					if(com.numParamsNeeded() == 1){
 						return com.runCommand(recursiveParse(words));
@@ -165,15 +215,29 @@ public class Interpreter {
 				return Double.parseDouble(variables.get(word.substring(1)));
 			}
 			catch (Exception e){
-				throw new SlogoException("IncorrectParamType");
+//				throw new SlogoException("IncorrectParamType");
+			}
+			finally {
+				// not a double, then a command name
+				String command = variables.get(word.substring(1));
+				interpret(command);
 			}
 		}
 		else if (type.getSymbol(word).equals("ListStart")) {
 			LinkedList<String> bracketWords = new LinkedList<>();
-			word = words.pop();
-			while (!type.getSymbol(word).equals("ListEnd")) {
+			word = words.pop();			
+			int numOfFrontBracket = 1;
+			int numOfEndBracket = 0;
+			while (!type.getSymbol(word).equals("ListEnd") || numOfFrontBracket != numOfEndBracket) {
 				bracketWords.add(word);
-				word = words.pop();
+				if (!words.isEmpty()){
+					word = words.pop();
+				}
+				else {
+					throw new SlogoException("ExceptedBracket");
+				}
+				if (type.getSymbol(word).equals("ListStart")) numOfFrontBracket ++;
+				if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
 			}
 			return parse(bracketWords);
 		}

@@ -118,7 +118,17 @@ class EditorMenuBarManager extends
 				.setOnAction(event -> setStyleSheet(styleSheetSelector
 						.getValue()));
 		myMenuBar.getChildren().add(styleSheetSelector);
+		
+		Button showStage = new Button(language.getString("ShowStage"));
+		showStage.setOnMousePressed(event -> showStage());
+		myMenuBar.getChildren().add(showStage);
 
+	}
+	
+	private void showStage(){
+		if (getDelegate() != null){
+			getDelegate().showStage();
+		}
 	}
 
 	private void setStyleSheet(String styleSheet) {

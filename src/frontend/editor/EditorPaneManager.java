@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -310,6 +312,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
+		simulationStage.getScene().getRoot().getStylesheets().clear();
+		simulationStage.getScene().getRoot().getStylesheets().add(styleSheet);
 	}
 
 	private void populateLanguageMap() {
@@ -334,9 +338,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
 		variableDisplayManager = new VariableDisplayManager(this, myResources,
 				model.getVariables());
+		
+		SplitPane terminalAndVarTable = new SplitPane();
+		terminalAndVarTable.setOrientation(Orientation.HORIZONTAL);
+		terminalAndVarTable.getItems().add(terminalDisplayManager.getRegion());
+		terminalAndVarTable.getItems().add(variableDisplayManager.getRegion());
+		terminalAndVarTable.setDividerPositions(0.8);
 
-		borderPane.setCenter(terminalDisplayManager.getRegion());
-		borderPane.setRight(variableDisplayManager.getRegion());
+		borderPane.setCenter(terminalAndVarTable);
+//		borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
 		simulationStage = new Stage();
@@ -345,5 +355,11 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
+	}
+	
+	public void showStage(){
+		if (simulationStage != null){
+			simulationStage.show();
+		}
 	}
 }
