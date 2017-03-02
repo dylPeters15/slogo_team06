@@ -149,7 +149,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	 * @param color
 	 */
 	public void setPenColor(Color color) {
-		// TODO Auto-generated method stub	
+		environmentDisplayManager.setPenColor(color);	
 	}
 	
 	@Override
