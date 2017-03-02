@@ -43,14 +43,14 @@ public class Interpreter {
 	}
 
 	public void interpret(String text) throws SlogoException{
-//		try{
+		try{
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
 			parse(words);
-//		}
-//		catch (SlogoException e){
-//			translateError(e);
-//			throw e;
-//		}
+		}
+		catch (SlogoException e){
+			translateError(e);
+			throw e;
+		}
 	}
 
 	private LinkedList<String> separateWords (String[] text) throws SlogoException {	
