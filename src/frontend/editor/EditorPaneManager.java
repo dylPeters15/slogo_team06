@@ -312,6 +312,8 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
+		simulationStage.getScene().getRoot().getStylesheets().clear();
+		simulationStage.getScene().getRoot().getStylesheets().add(styleSheet);
 	}
 
 	private void populateLanguageMap() {
@@ -353,5 +355,11 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
+	}
+	
+	public void showStage(){
+		if (simulationStage != null){
+			simulationStage.show();
+		}
 	}
 }
