@@ -32,6 +32,27 @@ public class MakeUserInstruction extends Command {
 		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 	
+//	@Override
+//	public double runCommand(List<String> words) throws SlogoException {
+//		String commandName = "";
+//		String word = words.get(0);
+//		while (!type.getSymbol(word).equals("ListStart")) {
+//			commandName = commandName + word + " ";
+//			word = words.pop();
+//		}
+//		commandName = commandName.substring(0, commandName.length()); // remove the last blank
+//		// TODO make new variables and put into variable map
+//		String commands = "";
+//		word = words.pop();
+//		while (!type.getSymbol(word).equals("ListStart")) {
+//			word = words.pop();
+//		}
+//		while (!type.getSymbol(word).equals("ListEnd")) {
+//			commands = commands + word + " ";
+//			word = words.pop();
+//		}
+//	}
+	
 	@Override
 	public double runCommand(String commandName, String commands) throws SlogoException {
 		try {

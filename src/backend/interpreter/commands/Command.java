@@ -102,7 +102,6 @@ public abstract class Command {
 			comm = (Command) constructor.newInstance(statesList);
 		} catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
 				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			
 			throw new SlogoException("CommandDoesNotExist:commandName");
 		}
 		return comm;
