@@ -31,6 +31,7 @@ class EnvironmentDisplayManager {
 	// private ImageView imageView;
 	// private static final String TURTLE_IMAGE = "turtleicon.png";
 	private TurtleView myTurtle;
+	private Color penColor;
 
 	EnvironmentDisplayManager(int width, int height) {
 		// this.width = width;
@@ -74,6 +75,8 @@ class EnvironmentDisplayManager {
 		myScrollPane.setHvalue(0.5);
 		myScrollPane.layout();
 		myScrollPane.setVvalue(0.5);
+		
+		penColor = Color.BLACK;
 
 	}
 
@@ -86,7 +89,11 @@ class EnvironmentDisplayManager {
 	}
 
 	private void drawLine(double startX, double startY, double endX, double endY) {
-		Line line = new Line(startX, startY, endX, endY);
+		double x = myTurtle.getImageView().getFitWidth()/2;
+		double y = myTurtle.getImageView().getFitHeight()/2;
+		Line line = new Line(startX+x, startY+y, endX+x, endY+y);
+		line.setStroke(penColor);
+		line.setFill(penColor);
 		myPane.getChildren().add(line);
 	}
 
@@ -166,6 +173,10 @@ class EnvironmentDisplayManager {
 		myScrollPane.layout();
 		myScrollPane.setVvalue(myTurtle.getImageView().getY()
 				/ myPane.getHeight());
+	}
+
+	void setPenColor(Color color) {
+		penColor = color;
 	}
 
 }
