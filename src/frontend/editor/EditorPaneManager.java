@@ -262,7 +262,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the command the user has entered to be executed.
 	 */
 	public void processCommand(String command) {
-		if (model != null) {
+		if (model != null && !command.isEmpty()) {
 			try {
 				model.interpret(command);
 			} catch (SlogoException e) {
