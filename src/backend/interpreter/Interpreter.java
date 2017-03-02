@@ -44,7 +44,8 @@ public class Interpreter {
 
 	public void interpret(String text) throws SlogoException{
 		try{
-			parseText(text.split(WHITESPACE));
+			LinkedList<String> words = separateWords(text.split(WHITESPACE));
+			parse(words);
 		}
 		catch (SlogoException e){
 			translateError(e);
@@ -52,9 +53,16 @@ public class Interpreter {
 		}
 	}
 
-	private void parseText (String[] text) throws SlogoException {	
-		LinkedList<String> words = new LinkedList<String>(Arrays.asList(text));
-		recursiveParse(words);
+	private LinkedList<String> separateWords (String[] text) throws SlogoException {	
+		return new LinkedList<String>(Arrays.asList(text));
+	}
+
+	private double parse(LinkedList<String> words) throws SlogoException {
+		double result = 0;
+		while (!words.isEmpty()) {
+			result = recursiveParse(words);
+		}
+		return result;
 	}
 
 	private double recursiveParse(LinkedList<String> words) throws SlogoException{
@@ -135,7 +143,13 @@ public class Interpreter {
 			}
 		}
 		else if (type.getSymbol(word).equals("ListStart")) {
-			return recursiveParse(words);
+			LinkedList<String> bracketWords = new LinkedList<>();
+			word = words.pop();
+			while (!type.getSymbol(word).equals("ListEnd")) {
+				bracketWords.add(word);
+				word = words.pop();
+			}
+			return parse(bracketWords);
 		}
 		else if (type.getSymbol(word).equals("ListEnd")) {
 			
@@ -143,7 +157,7 @@ public class Interpreter {
 		else{
 			System.out.println("Not a variable?");
 		}
-
+		
 		throw new SlogoException("IncorrectNumOfParameters");
 
 	}
