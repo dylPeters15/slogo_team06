@@ -14,6 +14,7 @@ class TurtleView extends ActorView {
 	private Image turtleImage;
 	private ImageView turtleImageView;
 	private double previousX,previousY;
+	private boolean penDown;
 	
 	TurtleView(){
 		turtleImage = new Image(getClass().getClassLoader().getResourceAsStream(DEFAULT_TURTLE_IMAGE));
@@ -63,6 +64,10 @@ class TurtleView extends ActorView {
 		turtleImageView.setY(y);
 	}
 	
+	boolean penDown(){
+		return penDown;
+	}
+	
 	void update(ActorModel a){
 		Point2D.Double newPoint = a.getPos();
 		previousX = getX();
@@ -71,6 +76,9 @@ class TurtleView extends ActorView {
 		double newY = newPoint.getY();
 		setPosition(newX, newY);
 		//drawLine(oldX, oldY, newX, newY);
+		penDown = !a.getPenUp();
+		turtleImageView.setRotate(-1*a.getHeading());
+		turtleImageView.setVisible(a.getVisible());
 	}
 	
 }
