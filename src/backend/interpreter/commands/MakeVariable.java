@@ -24,7 +24,6 @@ public class MakeVariable extends Command {
 		if(words.size()==NUM_PARAMS)
 		{
 			String var = words.get(0).substring(1);
-			
 			Double val =  0.0;
 			try{
 				val = Double.parseDouble(words.get(1));

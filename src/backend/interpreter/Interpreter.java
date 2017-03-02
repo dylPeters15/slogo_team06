@@ -28,8 +28,8 @@ public class Interpreter {
 		langParser = new ProgramParser();
 		type = new ProgramParser();
 		setLanguage(DEF_LANG);
-
 	}		
+	
 	private void setParserPatterns(String lang) {
 
 		langParser.clearPatterns();
@@ -44,7 +44,8 @@ public class Interpreter {
 
 	public void interpret(String text) throws SlogoException{
 		try{
-			parseText(text.split(WHITESPACE));
+			LinkedList<String> words = separateWords(text.split(WHITESPACE));
+			parse(words);
 		}
 		catch (SlogoException e){
 			translateError(e);
@@ -52,52 +53,41 @@ public class Interpreter {
 		}
 	}
 
-	private void parseText (String[] text) throws SlogoException {	
-		LinkedList<String> words = new LinkedList<String>(Arrays.asList(text));
+	private LinkedList<String> separateWords (String[] text) throws SlogoException {	
+		return new LinkedList<String>(Arrays.asList(text));
+	}
 
-		while(!words.isEmpty()){
-			recursiveParse(words);
-			System.out.println(variables);
+	private double parse(LinkedList<String> words) throws SlogoException {
+		double result = 0;
+		while (!words.isEmpty()) {
+			result = recursiveParse(words);
 		}
-
+		return result;
 	}
 
 	private double recursiveParse(LinkedList<String> words) throws SlogoException{
-
 		if(words.isEmpty()){
 			throw new SlogoException("IncorrectNumOfParameters");
 		}
-
 		String word = words.pop();
 
 		if(isConstant(word)){
 			return Double.parseDouble(word);
 		}
-
 		else if(type.getSymbol(word).equals("Command")){
-
-
 			Command com = null;
-
 			System.out.println(langParser.getSymbol(word));
 			com = Command.getCommand(langParser.getSymbol(word), statesList);	
 			try{
 
 				if(com.needsVarParams()){
 					com.setVarMap(variables);
-
-
-
-
 					if(com.isNestedCommand()){
 						List<String> params = new ArrayList<String>();
 
 						for(int i=0; i<com.paramsNeeded().size(); i++){	
 							getConstant(words, word, com, params, i);						
 						}
-
-						System.out.println(params.toString());
-
 
 						double lastReturn = 0;
 						while(com.isNestedCommand()){
@@ -107,6 +97,7 @@ public class Interpreter {
 								System.out.println("NestedCommand = " + nestedCommand.toString());
 								lastReturn = recursiveParse(nestedCommand);
 							}
+
 						}
 						
 						
@@ -121,6 +112,58 @@ public class Interpreter {
 
 						return com.runCommand(params);
 					}
+					return com.runCommand(params);
+				}
+				else if (com.needsPriorCheck()) { // if and if-else
+					double condition = recursiveParse(words);
+					if (condition != 0) {
+						if(com.numParamsNeeded() == 1){
+							return com.runCommand(condition);
+						}
+						else if(com.numParamsNeeded() == 2){ // if
+							return com.runCommand(condition,recursiveParse(words));
+						}
+						else if (com.numParamsNeeded() == 3){ // else if
+							double executedStatement = recursiveParse(words);
+							// remove the else statements
+							if (!words.isEmpty()) {
+								word = words.pop();
+								while (!type.getSymbol(word).equals("ListEnd")) {
+									word = words.pop();
+								}
+							}
+							else {
+								throw new SlogoException("IncorrectNumOfParameters");
+							}
+							return com.runCommand(condition, executedStatement);
+						}
+						else {
+							return com.runCommand();
+						}
+					}
+					else {
+						if(com.numParamsNeeded() == 2){ // if
+							word = words.pop();
+							while (!type.getSymbol(word).equals("ListEnd")) {
+								word = words.pop();
+							}
+							return 0;
+						}
+						else if (com.numParamsNeeded() == 3) { // else if
+							if (!words.isEmpty()) {
+								word = words.pop();
+								while (!type.getSymbol(word).equals("ListEnd")) {
+									word = words.pop();
+								}
+							}
+							else {
+								throw new SlogoException("IncorrectNumOfParameters");
+							}
+							double executedStatement = recursiveParse(words);
+							return com.runCommand(condition, executedStatement);
+						}
+					}
+
 				}
 				else{
 					if(com.numParamsNeeded() == 1){
@@ -138,7 +181,7 @@ public class Interpreter {
 				e.setText(e.getText()+"->"+word);
 			}
 		}
-		if(type.getSymbol(word).equals("Variable")){
+		else if(type.getSymbol(word).equals("Variable")){
 			try{
 				return Double.parseDouble(variables.get(word.substring(1)));
 			}
@@ -146,10 +189,23 @@ public class Interpreter {
 				throw new SlogoException("IncorrectParamType");
 			}
 		}
+		else if (type.getSymbol(word).equals("ListStart")) {
+			LinkedList<String> bracketWords = new LinkedList<>();
+			word = words.pop();
+			while (!type.getSymbol(word).equals("ListEnd")) {
+				bracketWords.add(word);
+				word = words.pop();
+			}
+			return parse(bracketWords);
+		}
+		else if (type.getSymbol(word).equals("ListEnd")) {
+			
+		}
 		else{
 		}
 
 		throw new SlogoException("IncorrectNumOfParameters");
+
 
 	}
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
@@ -178,9 +234,11 @@ public class Interpreter {
 			throw new SlogoException("ExceptedBracket");
 		}
 	}
+	
 	private boolean isConstant(String word) {
 		return langParser.getSymbol(word).equals("Constant");
 	}
+	
 	public void translateError(SlogoException e){
 		int indexOfCustomMessage = e.getText().indexOf(';');
 		if(indexOfCustomMessage==-1){
@@ -194,8 +252,5 @@ public class Interpreter {
 		resources = ResourceBundle.getBundle(DEF_LANG);
 		setParserPatterns(lang);
 	}
-
-
-
 
 }

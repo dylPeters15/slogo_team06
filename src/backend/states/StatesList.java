@@ -98,6 +98,18 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
     	}
     	return get(size()-1);
     }
+    
+    public E removeLast() {
+    	if (!queue.isEmpty()) {
+    		E last = this.get(this.size() - 1);
+    		queue.remove(last);
+    		return last;
+    	}
+    	else {
+    		return placeHolder;
+    	}
+    }
+    
     @Override
     public int size() {
         return queue.size();
