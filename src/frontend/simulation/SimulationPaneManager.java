@@ -99,7 +99,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	 * a double value later)
 	 */
     public void home(){
-    	
+    	environmentDisplayManager.home();
     }
 	
     /**

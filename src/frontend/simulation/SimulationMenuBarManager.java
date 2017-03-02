@@ -131,7 +131,9 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	}
 
 	private void Home() {
-
+		if (getDelegate() != null){
+			getDelegate().home();
+		}
 	}
 
 	/**
