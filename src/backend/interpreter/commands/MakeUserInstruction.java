@@ -2,6 +2,7 @@ package backend.interpreter.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import Exceptions.SlogoException;
@@ -32,26 +33,49 @@ public class MakeUserInstruction extends Command {
 		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 	
-//	@Override
-//	public double runCommand(List<String> words) throws SlogoException {
-//		String commandName = "";
-//		String word = words.get(0);
-//		while (!type.getSymbol(word).equals("ListStart")) {
-//			commandName = commandName + word + " ";
-//			word = words.pop();
-//		}
-//		commandName = commandName.substring(0, commandName.length()); // remove the last blank
-//		// TODO make new variables and put into variable map
-//		String commands = "";
-//		word = words.pop();
-//		while (!type.getSymbol(word).equals("ListStart")) {
-//			word = words.pop();
-//		}
-//		while (!type.getSymbol(word).equals("ListEnd")) {
-//			commands = commands + word + " ";
-//			word = words.pop();
-//		}
-//	}
+	@Override
+	public double runCommand(List<String> words) throws SlogoException {
+		LinkedList<String> newWords = new LinkedList<String>(words);
+		String commandName = "";
+		String word = newWords.pop();
+		while (!word.equals("[")) {
+			commandName = commandName + word + " ";
+			word = newWords.pop();
+		}
+		commandName = commandName.substring(0, commandName.length()-1); // remove the last blank
+		// make new variables and put into variable map
+		word = newWords.pop();
+		while (!word.equals("]")) {
+			this.getVariables().put(word, newWords.pop());
+			word = newWords.pop();
+		}					
+		String commands = "";
+		word = newWords.pop();
+		while (!word.equals("[")) {
+			word = newWords.pop();
+		}
+		int numOfFrontBracket = 1;
+		int numOfEndBracket = 0;
+		while (!word.equals("]") || numOfFrontBracket != numOfEndBracket) {
+			commands = commands + word + " ";
+			if (!words.isEmpty()){
+				word = newWords.pop();
+			}
+			else {
+				throw new SlogoException("ExceptedBracket");
+			}
+			if (word.equals("[")) numOfFrontBracket ++;
+			if (word.equals("]")) numOfEndBracket ++;
+		}
+		commands = commands + "]";
+		try {
+			getVariables().put(commandName, commands);
+			return 1;
+		}
+		catch (Exception e) {
+			return 0;
+		}
+	}
 	
 	@Override
 	public double runCommand(String commandName, String commands) throws SlogoException {

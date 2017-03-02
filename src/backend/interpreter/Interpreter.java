@@ -90,7 +90,6 @@ public class Interpreter {
 				}
 			}
 			try{
-
 				if(com.needsVarParams()){
 					com.setVarMap(variables);
 					if(com.isNestedCommand()){
@@ -101,7 +100,6 @@ public class Interpreter {
 						for(int i=0; i<com.numParamsNeeded(); i++){
 							getConstant(words, word, com, params, i);
 						}
-
 						return com.runCommand(params);
 					}
 				}
@@ -134,6 +132,7 @@ public class Interpreter {
 					}
 					else {
 						if(com.numParamsNeeded() == 2){ // if
+							// remove the if statement
 							word = words.pop();
 							while (!type.getSymbol(word).equals("ListEnd")) {
 								word = words.pop();
@@ -141,6 +140,7 @@ public class Interpreter {
 							return 0;
 						}
 						else if (com.numParamsNeeded() == 3) { // else if
+							// remove the if statement
 							if (!words.isEmpty()) {
 								word = words.pop();
 								while (!type.getSymbol(word).equals("ListEnd")) {
@@ -158,41 +158,7 @@ public class Interpreter {
 				}
 				else if (com.ifDefineNewCommands()) { // TO
 					com.setVarMap(variables);
-					String commandName = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						commandName = commandName + word + " ";
-						word = words.pop();
-					}
-					commandName = commandName.substring(0, commandName.length()-1); // remove the last blank
-					// make new variables and put into variable map
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListEnd")) {
-						String variable = "make ";
-						variable = variable + word + " " + words.pop();
-						interpret(variable);
-						word = words.pop();
-					}					
-					String commands = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						word = words.pop();
-					}
-					int numOfFrontBracket = 1;
-					int numOfEndBracket = 0;
-					while (!type.getSymbol(word).equals("ListEnd") || numOfFrontBracket != numOfEndBracket) {
-						commands = commands + word + " ";
-						if (!words.isEmpty()){
-							word = words.pop();
-						}
-						else {
-							throw new SlogoException("ExceptedBracket");
-						}
-						if (type.getSymbol(word).equals("ListStart")) numOfFrontBracket ++;
-						if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
-					}
-					commands = commands + "]";
-					return com.runCommand(commandName, commands);
+					return com.runCommand(words);
 				}
 				else{
 					if(com.numParamsNeeded() == 1){
@@ -223,7 +189,8 @@ public class Interpreter {
 				interpret(command);
 			}
 		}
-		else if (type.getSymbol(word).equals("ListStart")) {
+		else if (type.getSymbol(word).equals("ListStart")) { 
+			// remove the brackets, and parse all inside words
 			LinkedList<String> bracketWords = new LinkedList<>();
 			word = words.pop();			
 			int numOfFrontBracket = 1;
