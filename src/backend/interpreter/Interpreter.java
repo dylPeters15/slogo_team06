@@ -69,7 +69,6 @@ public class Interpreter {
 		if(words.isEmpty()){
 			throw new SlogoException("IncorrectNumOfParameters");
 		}
-		
 		String word = words.pop();
 
 		if(isConstant(word)){
@@ -80,18 +79,38 @@ public class Interpreter {
 			System.out.println(langParser.getSymbol(word));
 			com = Command.getCommand(langParser.getSymbol(word), statesList);	
 			try{
+
 				if(com.needsVarParams()){
 					com.setVarMap(variables);
-					List<String> params = new ArrayList<String>();
-					for(int i=0; i<com.numParamsNeeded(); i++){
-						word = words.pop();
-						if(com.paramsNeeded().get(i).equals(type.getSymbol(word))){
-							params.add(word);
+					if(com.isNestedCommand()){
+						List<String> params = new ArrayList<String>();
+
+						for(int i=0; i<com.paramsNeeded().size(); i++){	
+							getConstant(words, word, com, params, i);						
 						}
-						else if(com.paramsNeeded().get(i).equals("Constant")){
-							words.addFirst(word);
-							params.add(Double.toString(recursiveParse(words)));	
+
+						double lastReturn = 0;
+						while(com.isNestedCommand()){
+							com.runCommand(params);	
+							LinkedList<String> nestedCommand = new LinkedList<String>(com.nestedCommand());
+							while(!nestedCommand.isEmpty()){
+								System.out.println("NestedCommand = " + nestedCommand.toString());
+								lastReturn = recursiveParse(nestedCommand);
+							}
+
 						}
+						
+						
+						
+						return lastReturn;
+					}
+					else{
+						List<String> params = new ArrayList<String>();
+						for(int i=0; i<com.numParamsNeeded(); i++){
+							getConstant(words, word, com, params, i);
+						}
+
+						return com.runCommand(params);
 					}
 					return com.runCommand(params);
 				}
@@ -144,6 +163,7 @@ public class Interpreter {
 							return com.runCommand(condition, executedStatement);
 						}
 					}
+
 				}
 				else{
 					if(com.numParamsNeeded() == 1){
@@ -182,11 +202,37 @@ public class Interpreter {
 			
 		}
 		else{
-			System.out.println("Not a variable?");
 		}
-		
+
 		throw new SlogoException("IncorrectNumOfParameters");
 
+
+	}
+	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
+			throws SlogoException {
+		word = words.pop();		
+		if(com.paramsNeeded().get(i).equals("Commands") && com.paramsNeeded().get(i+1).equals("ListEnd")){
+			while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
+				params.add(word);
+				word = words.pop();
+			}
+			words.addFirst(word);
+		}
+		else if(com.paramsNeeded().get(i).equals(type.getSymbol(word))){
+			if(type.getSymbol(word).equals("Variable")){
+				params.add(word.substring(1));
+			}		
+			else{
+				params.add(word);
+			}
+		}
+		else if(com.paramsNeeded().get(i).equals("Constant")){
+			words.addFirst(word);
+			params.add(Double.toString(recursiveParse(words)));	
+		}
+		else if( com.paramsNeeded().get(i).equals("ListStart") ||  com.paramsNeeded().get(i).equals("ListEnd")){
+			throw new SlogoException("ExceptedBracket");
+		}
 	}
 	
 	private boolean isConstant(String word) {
