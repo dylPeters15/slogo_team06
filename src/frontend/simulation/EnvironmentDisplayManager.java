@@ -75,7 +75,7 @@ class EnvironmentDisplayManager {
 		myScrollPane.setHvalue(0.5);
 		myScrollPane.layout();
 		myScrollPane.setVvalue(0.5);
-		
+
 		penColor = Color.BLACK;
 
 	}
@@ -91,9 +91,9 @@ class EnvironmentDisplayManager {
 	}
 
 	private void drawLine(double startX, double startY, double endX, double endY) {
-		double x = myTurtle.getImageView().getFitWidth()/2;
-		double y = myTurtle.getImageView().getFitHeight()/2;
-		Line line = new Line(startX+x, startY+y, endX+x, endY+y);
+		double x = myTurtle.getImageView().getFitWidth() / 2;
+		double y = myTurtle.getImageView().getFitHeight() / 2;
+		Line line = new Line(startX + x, startY + y, endX + x, endY + y);
 		line.setStroke(penColor);
 		line.setFill(penColor);
 		myPane.getChildren().add(line);
@@ -115,8 +115,8 @@ class EnvironmentDisplayManager {
 			double newWidth = myPane.getPrefWidth();
 			myScrollPane.layout();
 			myScrollPane.setHvalue(0.25 + val / 2);
-			recalcChildren(oldWidth, myPane.getHeight(), newWidth,
-					myPane.getHeight());
+			recalcChildren(oldWidth, myPane.getPrefHeight(), newWidth,
+					myPane.getPrefHeight());
 		}
 		if (myScrollPane.getVvalue() == 1.0 || myScrollPane.getVvalue() == 0.0) {
 			double val = myScrollPane.getVvalue();
@@ -125,8 +125,8 @@ class EnvironmentDisplayManager {
 			double newHeight = myPane.getPrefHeight();
 			myScrollPane.layout();
 			myScrollPane.setVvalue(0.25 + val / 2);
-			recalcChildren(myPane.getWidth(), oldHeight, myPane.getWidth(),
-					newHeight);
+			recalcChildren(myPane.getPrefWidth(), oldHeight,
+					myPane.getPrefWidth(), newHeight);
 		}
 	}
 
@@ -169,16 +169,39 @@ class EnvironmentDisplayManager {
 	}
 
 	void home() {
+		while (myTurtle.getImageView().getX() >= myPane.getPrefWidth()
+				|| myTurtle.getImageView().getX() <= 0) {
+			double oldWidth = myPane.getPrefWidth();
+			myPane.setPrefWidth(myPane.getPrefWidth() * 2);
+			double newWidth = myPane.getPrefWidth();
+			recalcChildren(oldWidth, myPane.getPrefHeight(), newWidth,
+					myPane.getPrefHeight());
+		}
+		while (myTurtle.getImageView().getY() >= myPane.getPrefHeight()
+				|| myTurtle.getImageView().getY() <= 0) {
+			double oldHeight = myPane.getPrefHeight();
+			myPane.setPrefHeight(myPane.getPrefHeight() * 2);
+			double newHeight = myPane.getPrefHeight();
+			recalcChildren(myPane.getPrefWidth(), oldHeight,
+					myPane.getPrefWidth(), newHeight);
+		}
 		myScrollPane.layout();
 		myScrollPane.setHvalue(myTurtle.getImageView().getX()
-				/ myPane.getWidth());
+				/ myPane.getPrefWidth());
 		myScrollPane.layout();
 		myScrollPane.setVvalue(myTurtle.getImageView().getY()
-				/ myPane.getHeight());
+				/ myPane.getPrefHeight());
 	}
 
 	void setPenColor(Color color) {
 		penColor = color;
+	}
+
+	void clearScreen() {
+		// myTurtle.setPosition(convertXCoordinate(0), convertYCoordinate(0));
+		myPane.getChildren().clear();
+		myPane.getChildren().add(myTurtle.getImageView());
+		home();
 	}
 
 }
