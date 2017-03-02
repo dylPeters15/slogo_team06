@@ -97,47 +97,45 @@ class EnvironmentDisplayManager {
 	void didScroll(){
 		if (myScrollPane.getHvalue() == 1.0 || myScrollPane.getHvalue() == 0.0){
 			double val = myScrollPane.getHvalue();
-			double oldWidth = ((Region)(myScrollPane.getContent())).getPrefWidth();
-			((Region)(myScrollPane.getContent())).setPrefWidth(((Region)(myScrollPane.getContent())).getPrefWidth()*2);
-			double newWidth = ((Region)(myScrollPane.getContent())).getPrefWidth();
+			double oldWidth = myPane.getPrefWidth();
+			myPane.setPrefWidth(myPane.getPrefWidth()*2);
+			double newWidth = myPane.getPrefWidth();
 			myScrollPane.layout();
 			myScrollPane.setHvalue(0.25+val/2);
-			recalcChildren(oldWidth,((Region)(myScrollPane.getContent())).getHeight(),newWidth,((Region)(myScrollPane.getContent())).getWidth());
+			recalcChildren(oldWidth,myPane.getHeight(),newWidth,myPane.getHeight());
 		}
 		if (myScrollPane.getVvalue() == 1.0 || myScrollPane.getVvalue() == 0.0){
 			double val = myScrollPane.getVvalue();
-			double oldHeight = ((Region)(myScrollPane.getContent())).getPrefHeight();
-			((Region)(myScrollPane.getContent())).setPrefHeight(((Region)(myScrollPane.getContent())).getPrefHeight()*2);
-			double newHeight = ((Region)(myScrollPane.getContent())).getPrefHeight();
+			double oldHeight = myPane.getPrefHeight();
+			myPane.setPrefHeight(myPane.getPrefHeight()*2);
+			double newHeight = myPane.getPrefHeight();
 			myScrollPane.layout();
 			myScrollPane.setVvalue(0.25+val/2);
-			recalcChildren(((Region)(myScrollPane.getContent())).getWidth(),oldHeight,((Region)(myScrollPane.getContent())).getWidth(),newHeight);
+			recalcChildren(myPane.getWidth(),oldHeight,myPane.getWidth(),newHeight);
 		}
 	}
 	
 	private void recalcChildren(double oldWidth, double oldHeight, double newWidth, double newHeight){
-//		double oldCenterX = oldWidth/2;
-//		double oldCenterY = oldHeight/2;
-//		double newCenterX = newWidth/2;
-//		double newCenterY = newHeight/2;
-//		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
-//			if (child instanceof ImageView){
-//				ImageView childImage = (ImageView)child;
-//				childImage.setX(newCenterX+(childImage.getX()-oldCenterX));
-//				childImage.setY(newCenterY+(childImage.getY()-oldCenterY));
-//				System.out.println("image");
-//			} else if (child instanceof Line){
-//				Line childLine = (Line)child;
-//				childLine.setStartX(newCenterX+(childLine.getStartX()-oldCenterX));
-//				childLine.setStartY(newCenterY+(childLine.getStartY()-oldCenterY));
-//				childLine.setEndX(newCenterX+(childLine.getEndX()-oldCenterX));
-//				childLine.setEndY(newCenterY+(childLine.getEndY()-oldCenterY));
-//				System.out.println("line");
-//			}
-//		}
-//		if (!myPane.getChildren().contains(myTurtle.getImageView())){
-//			myPane.getChildren().add(myTurtle.getImageView());
-//		}
+		double oldCenterX = oldWidth/2;
+		double oldCenterY = oldHeight/2;
+		double newCenterX = newWidth/2;
+		double newCenterY = newHeight/2;
+		for (Node child : ((Pane)(myScrollPane.getContent())).getChildren()){
+			if (child instanceof ImageView){
+				ImageView childImage = (ImageView)child;
+				childImage.setX(newCenterX+(childImage.getX()-oldCenterX));				
+				childImage.setY(newCenterY+(childImage.getY()-oldCenterY));
+			} else if (child instanceof Line){
+				Line childLine = (Line)child;
+				childLine.setStartX(newCenterX+(childLine.getStartX()-oldCenterX));
+				childLine.setStartY(newCenterY+(childLine.getStartY()-oldCenterY));
+				childLine.setEndX(newCenterX+(childLine.getEndX()-oldCenterX));
+				childLine.setEndY(newCenterY+(childLine.getEndY()-oldCenterY));
+			}
+		}
+		if (!myPane.getChildren().contains(myTurtle.getImageView())){
+			myPane.getChildren().add(myTurtle.getImageView());
+		}
 	}
 	
 
@@ -153,10 +151,10 @@ class EnvironmentDisplayManager {
 	
 	void home(){
 		myScrollPane.layout();
-		myScrollPane.setHvalue(myTurtle.getImageView().getX()/((Region)(myScrollPane.getContent())).getWidth());
+		myScrollPane.setHvalue(myTurtle.getImageView().getX()/myPane.getWidth());
 		myScrollPane.layout();
 		myScrollPane.setVvalue(myTurtle.getImageView()
-				.getY()/((Region)(myScrollPane.getContent())).getHeight());
+				.getY()/myPane.getHeight());
 	}
 	
 }
