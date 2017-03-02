@@ -19,6 +19,7 @@ public abstract class Command {
 	private boolean DEF_NEEDS_COMMANDS_PARAM = false;
 	private boolean DEF_NEEDS_PRIOR_CHECK = false;
 	private boolean DEF_MAKE_NEW_COMMAND = false;
+	private boolean DEF_REPEAT = false;
 	private ObservableMap<String,String> variables;
 	
 	
@@ -75,6 +76,13 @@ public abstract class Command {
 	
 	public boolean needsPriorCheck() {
 		return DEF_NEEDS_PRIOR_CHECK;
+    }
+	public boolean isNestedCommand(){
+		return DEF_REPEAT;
+	}
+	
+	public List<String> nestedCommand(){
+		return null;
 	}
 	
 	public boolean ifDefineNewCommands(){

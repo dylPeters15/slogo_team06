@@ -13,12 +13,15 @@ class TurtleView extends ActorView {
 	
 	private Image turtleImage;
 	private ImageView turtleImageView;
+	private double previousX,previousY;
 	
 	TurtleView(){
 		turtleImage = new Image(getClass().getClassLoader().getResourceAsStream(DEFAULT_TURTLE_IMAGE));
 		turtleImageView = new ImageView(turtleImage);
 		setDimensions(DEFAULT_DIMENSION, DEFAULT_DIMENSION);
 		setPosition(0, 0);
+		previousX = getX();
+		previousY = getY();
 	}
 	
 	Image getImage(){
@@ -39,6 +42,14 @@ class TurtleView extends ActorView {
 		turtleImageView.setFitHeight(y);
 	}
 	
+	double getPreviousX(){
+		return previousX;
+	}
+	
+	double getPreviousY(){
+		return previousY;
+	}
+	
 	double getX(){
 		return turtleImageView.getX();
 	}
@@ -53,10 +64,9 @@ class TurtleView extends ActorView {
 	}
 	
 	void update(ActorModel a){
-		System.out.println("updaated!");
 		Point2D.Double newPoint = a.getPos();
-		double oldX = getX();
-		double oldY = getY();
+		previousX = getX();
+		previousY = getY();
 		double newX = newPoint.getX();
 		double newY = newPoint.getY();
 		setPosition(newX, newY);
