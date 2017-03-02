@@ -12,6 +12,7 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -97,6 +98,12 @@ class VariableDisplayManager extends
 
 		if (values != null) {
 			values.setText(language.getString("Value"));
+		}
+		
+		if (table != null){
+			Label placeHolder = new Label(language.getString("TablePlaceholder"));
+			placeHolder.setWrapText(true);
+			table.setPlaceholder(placeHolder);
 		}
 
 	}

@@ -42,11 +42,8 @@ public abstract class ActorModel {
 	public void moveForward(double distance){
 		double x = pos.getX();
 		double y = pos.getY();
-		System.out.println("    Distance: "+distance);
-		System.out.println("\t Before: ("+x+","+y+")");
 		pos.setLocation(x + format(Math.cos(Math.toRadians(heading)))*distance,
 						y + format(Math.sin(Math.toRadians(heading)))*distance);
-		System.out.println("\t After: ("+pos.getX()+","+pos.getY()+")");
 	}
 	
     private double format(double value) {
