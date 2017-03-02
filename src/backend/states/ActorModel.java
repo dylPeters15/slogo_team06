@@ -44,10 +44,14 @@ public abstract class ActorModel {
 		double y = pos.getY();
 		System.out.println("    Distance: "+distance);
 		System.out.println("\t Before: ("+x+","+y+")");
-		pos.setLocation(x + Math.cos(heading)*distance,
-						y + Math.sin(heading)*distance);
+		pos.setLocation(x + format(Math.cos(Math.toRadians(heading)))*distance,
+						y + format(Math.sin(Math.toRadians(heading)))*distance);
 		System.out.println("\t After: ("+pos.getX()+","+pos.getY()+")");
 	}
+	
+    private double format(double value) {
+        return (double)Math.round(value * 1000000) / 1000000; //you can change this to round up the value(for two position use 100...)
+    }
 	
 	public void moveBackward(double distance){
 		moveForward(-distance);

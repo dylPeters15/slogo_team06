@@ -9,43 +9,67 @@ import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
-public class MakeVariable extends Command {
+public class Repeat extends Command {
 	
 	private final int NUM_PARAMS = 2;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Variable", "Constant"}));
-
-	public MakeVariable(StatesList<State> list) {
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "ListStart", "Commands", "ListEnd"}));
+	private int upperLimit;
+	private int index = 0;
+	private List<String> commandToRun;
+	private boolean nested = true;
+	
+	
+	public Repeat(StatesList<State> list) {
 		super(list);
 	}
 	
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.size()==NUM_PARAMS)
-		{
-			String var = words.get(0).substring(1);
-			Double val =  0.0;
-			try{
-				val = Double.parseDouble(words.get(1));
-			}
-			catch(Exception e){
-				throw new SlogoException("IncorrectParamType");
-			}			
-			getVariables().put(var, val.toString());
-			return val;
-		}
-		else{
-			throw new SlogoException("IncorrectParamType");
+		if(words.isEmpty()){
+			throw new SlogoException("IncorrectNumOfParameters: 0");
 		}
 		
+		if(index == 0){
+			upperLimit =  (int) Double.parseDouble(words.get(0));
+			
+			if(words.get(1).contains("[") && words.get(words.size()-1).contains("]")){
+				commandToRun =  new ArrayList<String>();
+				for(int i=2; i<words.size()-1; i++){
+					commandToRun.add(words.get(i));
+				}
+			}
+			else{
+				
+				throw new SlogoException("IncorrectNumOfBrackets");
+			}
+				
+			
+		}
+		
+		index++;
+		getVariables().put("repcount", Integer.toString(index) );
+		nested = index<upperLimit;
+
+		return 0;
+		
+	}	
+	
+	@Override
+	public boolean isNestedCommand(){
+		return nested;
 	}
 	
-
+	@Override
+	public List<String> nestedCommand(){
+		return commandToRun;
+	}
 	
 	@Override
 	public boolean needsVarParams(){
 		return true;
 	}
+	
 	
 	/**
 	 * @return 1 if the pen is down, 0 if the pen is up
