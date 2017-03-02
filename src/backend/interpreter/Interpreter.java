@@ -101,21 +101,48 @@ public class Interpreter {
 						if(com.numParamsNeeded() == 1){
 							return com.runCommand(condition);
 						}
-						if(com.numParamsNeeded() == 2){
+						else if(com.numParamsNeeded() == 2){ // if
 							return com.runCommand(condition,recursiveParse(words));
+						}
+						else if (com.numParamsNeeded() == 3){ // else if
+							double executedStatement = recursiveParse(words);
+							// remove the else statements
+							if (!words.isEmpty()) {
+								word = words.pop();
+								while (!type.getSymbol(word).equals("ListEnd")) {
+									word = words.pop();
+								}
+							}
+							else {
+								throw new SlogoException("IncorrectNumOfParameters");
+							}
+							return com.runCommand(condition, executedStatement);
 						}
 						else {
 							return com.runCommand();
 						}
 					}
 					else {
-						if(com.numParamsNeeded() == 2){
+						if(com.numParamsNeeded() == 2){ // if
 							word = words.pop();
 							while (!type.getSymbol(word).equals("ListEnd")) {
 								word = words.pop();
 							}
+							return 0;
 						}
-						return 0;
+						else if (com.numParamsNeeded() == 3) { // else if
+							if (!words.isEmpty()) {
+								word = words.pop();
+								while (!type.getSymbol(word).equals("ListEnd")) {
+									word = words.pop();
+								}
+							}
+							else {
+								throw new SlogoException("IncorrectNumOfParameters");
+							}
+							double executedStatement = recursiveParse(words);
+							return com.runCommand(condition, executedStatement);
+						}
 					}
 				}
 				else{
