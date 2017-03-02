@@ -24,17 +24,20 @@ class EnvironmentDisplayManager {
 	
 	private ScrollPane myScrollPane;
 	private Pane myPane;
-//	private Canvas myEnvironmentDisplay;
-//	private GraphicsContext gc;
-	private int width;
-	private int height;
-	private ImageView imageView;
-	private static final String TURTLE_IMAGE = "turtleicon.png";
+	//private int width;
+	//private int height;
+	//private ImageView imageView;
+	//private static final String TURTLE_IMAGE = "turtleicon.png";
+	private TurtleView myTurtle;
 	
 	EnvironmentDisplayManager(int width, int height){
-		this.width = width;
-		this.height = height;
+		//this.width = width;
+		//this.height = height;
 		initialize();
+	}
+	
+	TurtleView getTurtle(){
+		return myTurtle;
 	}
 	
 	/**
@@ -58,16 +61,10 @@ class EnvironmentDisplayManager {
 		myPane.prefHeightProperty().set(1000);
 		myScrollPane.setContent(myPane);
 		
-//		myEnvironmentDisplay = new Canvas(Double.MAX_VALUE, Double.MAX_VALUE);
-//		gc = myEnvironmentDisplay.getGraphicsContext2D();
-//		myPane.getChildren().add(myEnvironmentDisplay);
-		Image image = new Image(getClass().getClassLoader().getResourceAsStream(TURTLE_IMAGE));
-		imageView = new ImageView(image);
-		imageView.setFitHeight(50);
-		imageView.setFitWidth(50);
-		imageView.setX(myPane.getPrefWidth()/2);
-		imageView.setY(myPane.getPrefHeight()/2);
-		myPane.getChildren().add(imageView);
+		myTurtle = new TurtleView();
+		myTurtle.setPosition(convertXCoordinate(myTurtle.getX()), convertYCoordinate(myTurtle.getY()));
+		myPane.getChildren().add(myTurtle.getImageView());
+		
 		myScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
 		myScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		myScrollPane.setOnScrollStarted(event -> didScroll());
@@ -75,22 +72,25 @@ class EnvironmentDisplayManager {
 		myScrollPane.layout();
 		myScrollPane.setHvalue(0.5);
 		myScrollPane.layout();
-		myScrollPane.setVvalue(0.5);
-		
-		
-		
-		Line line = new Line(0, 150, 200,150);   
-		line.setStrokeWidth(20); 
-		line.setStroke(Color.web("000000")); 
-		myPane.getChildren().add(line);
-		
-		Line line2 = new Line(200,150,200,300);
-		line2.setStrokeWidth(10);
-		line2.setStroke(Color.web("000000")); 
-		myPane.getChildren().add(line2);
+		myScrollPane.setVvalue(0.5);		
 
+	}
+	
+	void updateTurtle(){
+		System.out.println("moved!");
+		myTurtle.setPosition(convertXCoordinate(myTurtle.getX()), convertYCoordinate(myTurtle.getY()));
+	}
+	
+	private void drawLine(double oldX, double oldY, double newX, double newY) {
 		
-		//gc.drawImage(imageView.getImage(), width/2-image.getWidth()/2, height/2-image.getHeight()/2);
+	}
+	
+	private double convertXCoordinate(double x){
+		return myPane.getPrefWidth()/2 + x;
+	}
+	
+	private double convertYCoordinate(double y){
+		return myPane.getPrefHeight()/2 - y;
 	}
 	
 	void didScroll(){
@@ -132,7 +132,7 @@ class EnvironmentDisplayManager {
 	}
 
 	void setTurtleImage(Image image) {
-		imageView.setImage(image);;
+		myTurtle.setImage(image);
 	}
 	
 }

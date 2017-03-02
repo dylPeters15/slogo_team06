@@ -2,6 +2,7 @@ package frontend.simulation;
 
 import backend.states.State;
 import backend.states.StatesList;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -17,7 +18,7 @@ import javafx.scene.paint.Color;
  * @author Andreas Santos
  *
  */
-public class SimulationPaneManager implements SimulationMenuBarDelegate {
+public class SimulationPaneManager implements SimulationMenuBarDelegate, ListChangeListener<State> {
 	private static final double DEFAULT_WIDTH = 1000;
 	private static final double DEFAULT_HEIGHT = 1000;
 	
@@ -27,13 +28,18 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	
 	private SimulationMenuBarManager simulationMenuBarManager;
 	private EnvironmentDisplayManager environmentDisplayManager;
+	private StatesList<State> statesList;
 	
 	// Constructors that will be present when this interface is turned into a
 	// class:
-	public SimulationPaneManager(StatesList<State> statesList){
+	public SimulationPaneManager(StatesList<State> s){
 		initialize();
+		statesList = s;
+		statesList.addListener(this);
 	}
 	// public SimulationPaneManager(double width, double height);
+	
+	
 	
 	/**
 	 * Sets the width of the Parent object that holds all of the UI components.
@@ -144,5 +150,11 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate {
 	 */
 	public void setPenColor(Color color) {
 		// TODO Auto-generated method stub	
+	}
+	
+	@Override
+	public void onChanged(ListChangeListener.Change<? extends State> c) {
+		environmentDisplayManager.getTurtle().update(statesList.poll().getActor());
+		environmentDisplayManager.updateTurtle();
 	}
 }
