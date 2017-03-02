@@ -78,9 +78,11 @@ class EnvironmentDisplayManager {
 	}
 
 	void updateTurtle() {
-		drawLine(myTurtle.getPreviousX(), myTurtle.getPreviousY(),
-				convertXCoordinate(myTurtle.getX()),
-				convertYCoordinate(myTurtle.getY()));
+		if (myTurtle.penDown()) {
+			drawLine(myTurtle.getPreviousX(), myTurtle.getPreviousY(),
+					convertXCoordinate(myTurtle.getX()),
+					convertYCoordinate(myTurtle.getY()));
+		}
 		myTurtle.setPosition(convertXCoordinate(myTurtle.getX()),
 				convertYCoordinate(myTurtle.getY()));
 	}
