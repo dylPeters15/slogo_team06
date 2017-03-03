@@ -16,17 +16,7 @@ public class Minus extends Command {
 	public Minus(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		return -a;
-	}
-
+	
 	@Override
 	public double runCommand(double a, double b) throws SlogoException {
 		throw new SlogoException("IncorrectNumOfParameters: 0");

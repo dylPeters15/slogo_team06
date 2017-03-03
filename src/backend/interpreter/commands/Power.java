@@ -16,17 +16,7 @@ public class Power extends Command {
 	public Power(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
+	
 	/**
 	 * @param a: the base of the power
 	 * @param b: the exponent of the power

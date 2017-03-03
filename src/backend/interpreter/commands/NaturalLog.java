@@ -16,11 +16,6 @@ public class NaturalLog extends Command {
 	public NaturalLog(StatesList<State> list) {
 		super(list);
 	}
-	
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
 
 	@Override
 	public double runCommand(double a) throws SlogoException {
@@ -30,11 +25,6 @@ public class NaturalLog extends Command {
 		else {
 			throw new SlogoException("NegativeParameters");
 		}
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 	@Override

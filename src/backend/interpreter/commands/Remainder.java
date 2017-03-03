@@ -16,17 +16,7 @@ public class Remainder extends Command {
 	public Remainder(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
+	
 	@Override
 	public double runCommand(double a, double b) throws SlogoException {
 		return (int)a % (int)b;
