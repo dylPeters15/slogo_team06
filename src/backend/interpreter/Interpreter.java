@@ -43,6 +43,7 @@ public class Interpreter {
 	}
 
 	public void interpret(String text) throws SlogoException{
+//		System.out.println("In interpret the input string is: " + text);
 		try{
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
 			parse(words);
@@ -90,7 +91,6 @@ public class Interpreter {
 				}
 			}
 			try{
-
 				if(com.needsVarParams()){
 					com.setVarMap(variables);
 					if(com.isNestedCommand()){
@@ -101,7 +101,6 @@ public class Interpreter {
 						for(int i=0; i<com.numParamsNeeded(); i++){
 							getConstant(words, word, com, params, i);
 						}
-
 						return com.runCommand(params);
 					}
 				}
@@ -134,6 +133,7 @@ public class Interpreter {
 					}
 					else {
 						if(com.numParamsNeeded() == 2){ // if
+							// remove the if statement
 							word = words.pop();
 							while (!type.getSymbol(word).equals("ListEnd")) {
 								word = words.pop();
@@ -141,6 +141,7 @@ public class Interpreter {
 							return 0;
 						}
 						else if (com.numParamsNeeded() == 3) { // else if
+							// remove the if statement
 							if (!words.isEmpty()) {
 								word = words.pop();
 								while (!type.getSymbol(word).equals("ListEnd")) {
@@ -158,41 +159,9 @@ public class Interpreter {
 				}
 				else if (com.ifDefineNewCommands()) { // TO
 					com.setVarMap(variables);
-					String commandName = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						commandName = commandName + word + " ";
-						word = words.pop();
-					}
-					commandName = commandName.substring(0, commandName.length()-1); // remove the last blank
-					// make new variables and put into variable map
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListEnd")) {
-						String variable = "make ";
-						variable = variable + word + " " + words.pop();
-						interpret(variable);
-						word = words.pop();
-					}					
-					String commands = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						word = words.pop();
-					}
-					int numOfFrontBracket = 1;
-					int numOfEndBracket = 0;
-					while (!type.getSymbol(word).equals("ListEnd") || numOfFrontBracket != numOfEndBracket) {
-						commands = commands + word + " ";
-						if (!words.isEmpty()){
-							word = words.pop();
-						}
-						else {
-							throw new SlogoException("ExceptedBracket");
-						}
-						if (type.getSymbol(word).equals("ListStart")) numOfFrontBracket ++;
-						if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
-					}
-					commands = commands + "]";
-					return com.runCommand(commandName, commands);
+					double result = com.runCommand(words);
+					interpret(com.getVariablesString());
+					return result;
 				}
 				else{
 					if(com.numParamsNeeded() == 1){
@@ -223,7 +192,8 @@ public class Interpreter {
 				interpret(command);
 			}
 		}
-		else if (type.getSymbol(word).equals("ListStart")) {
+		else if (type.getSymbol(word).equals("ListStart")) { 
+			// remove the brackets, and parse all inside words
 			LinkedList<String> bracketWords = new LinkedList<>();
 			word = words.pop();			
 			int numOfFrontBracket = 1;
@@ -267,14 +237,9 @@ public class Interpreter {
 	}
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
 			throws SlogoException {
-		
-		System.out.println(params.toString());
-		
 		word = words.pop();		
 		if(com.paramsNeeded().get(i).equals("Commands") && com.paramsNeeded().get(i+1).equals("ListEnd")){
-			
-			while( (!type.getSymbol(word).equals("ListEnd") || countOf(params, "[") > (countOf(params, "]") + 1))
-					&& !words.isEmpty() ){
+			while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
 				params.add(word);
 				word = words.pop();
 			}
@@ -295,17 +260,6 @@ public class Interpreter {
 		else if( com.paramsNeeded().get(i).equals("ListStart") ||  com.paramsNeeded().get(i).equals("ListEnd")){
 			throw new SlogoException("ExceptedBracket");
 		}
-	}
-	
-	private int countOf(List<String> params, String search){
-	int count = 0;
-		for(String s:params){
-			if(s.contains(search)){
-				count++;
-			}
-				
-		}
-		return count;
 	}
 	
 	private boolean isConstant(String word) {
