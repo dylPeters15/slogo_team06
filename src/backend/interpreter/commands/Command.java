@@ -26,16 +26,39 @@ public abstract class Command {
 	public Command(StatesList<State> list){
 		statesList = list;
 	}
+	
+	public static Command getCommand(String cn, StatesList<State> statesList) throws SlogoException {
+		Command comm;
+		try {
+			Class<?> myClass = Class.forName("backend.interpreter.commands." + cn);
+			@SuppressWarnings("unchecked")
+			Constructor<Command> constructor = (Constructor<Command>) myClass.getConstructor(StatesList.class);
+			comm = (Command) constructor.newInstance(statesList);
+		} 
+		catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
+				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new SlogoException("CommandDoesNotExist:commandName");
+		}
+		return comm;
+	}	
 
-	public abstract double runCommand() throws SlogoException;
-	public abstract double runCommand(double a) throws SlogoException;
-	public abstract double runCommand(double a, double b) throws SlogoException;
-	public double runCommand(String commandName, String commands) throws SlogoException{
-		throw new SlogoException("IncorrectParamType");
+	public double runCommand() throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters");
+	}
+	
+	public double runCommand(double a) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters");
+	}
+	public double runCommand(double a, double b) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters");
 	}
 
 	public double runCommand(List<String> words) throws SlogoException{
 		throw new SlogoException("IncorrectParamType");
+	}
+
+	public void setStatesList(StatesList<State> statesList) {
+		this.statesList = statesList;
 	}
 	
 	public StatesList<State> getStatesList() {
@@ -52,19 +75,10 @@ public abstract class Command {
 	
 	protected void addNewState(State state){
 		statesList.add(state);
-	}
-	
-	protected void removeNewState() {
-		statesList.removeLast();
-	}
-	
-	public void setStatesList(StatesList<State> statesList) {
-		this.statesList = statesList;
-	}
+	}	
 
 	public abstract Integer numParamsNeeded();
 	public abstract List<String> paramsNeeded();
-	
 	
 	public boolean needsVarParams(){
 		return DEF_NEEDS_VAR_PARAM;
@@ -77,6 +91,7 @@ public abstract class Command {
 	public boolean needsPriorCheck() {
 		return DEF_NEEDS_PRIOR_CHECK;
     }
+	
 	public boolean isNestedCommand(){
 		return DEF_REPEAT;
 	}
@@ -92,32 +107,12 @@ public abstract class Command {
 	public void setVarMap(ObservableMap<String, String> variables){
 		this.variables = variables;
 	}
-
-	public static Command getCommand(String commandName, StatesList<State> statesList) throws SlogoException {
-		Command comm;
-		try {
-			Class<?> myClass = Class.forName("backend.interpreter.commands." + commandName);
-			@SuppressWarnings("unchecked")
-			Constructor<Command> constructor = (Constructor<Command>) myClass.getConstructor(StatesList.class);
-			comm = (Command) constructor.newInstance(statesList);
-		} catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
-				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			throw new SlogoException("CommandDoesNotExist:commandName");
-		}
-		return comm;
-	}	
 	
 	/**
 	 * @return the variables
 	 */
 	protected ObservableMap<String,String> getVariables() {
 		return variables;
-	}
-	/**
-	 * @param variables the variables to set
-	 */
-	protected void setVariables(ObservableMap<String,String> variables) {
-		this.variables = variables;
 	}
 
 	public String getVariablesString() {

@@ -17,21 +17,6 @@ public class MakeUserInstruction extends Command {
 	public MakeUserInstruction(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
 	
 	@Override
 	public double runCommand(List<String> words) throws SlogoException {
@@ -73,17 +58,6 @@ public class MakeUserInstruction extends Command {
 			if (word.equals("]")) numOfEndBracket ++;
 		}
 		commands = commands + "]";
-		try {
-			getVariables().put(commandName, commands);
-			return 1;
-		}
-		catch (Exception e) {
-			return 0;
-		}
-	}
-	
-	@Override
-	public double runCommand(String commandName, String commands) throws SlogoException {
 		try {
 			getVariables().put(commandName, commands);
 			return 1;

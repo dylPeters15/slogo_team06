@@ -26,16 +26,6 @@ public class XCoordinate extends Command {
 	}
 
 	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}

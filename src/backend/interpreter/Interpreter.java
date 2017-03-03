@@ -13,10 +13,12 @@ import javafx.collections.ObservableMap;
  *
  */
 public class Interpreter {
+	
 	private StatesList<State> statesList;
 	private final String DEF_LANG =  "resources/languages/English";
 	private final String SYNTAX =  "resources/languages/Syntax";
 	public final String WHITESPACE = "\\s+";
+	private final String classPrefix = "backend.interpreter.commands.";
 	private ProgramParser langParser;
 	private ProgramParser type;
 	ResourceBundle resources;
@@ -29,12 +31,15 @@ public class Interpreter {
 		type = new ProgramParser();
 		setLanguage(DEF_LANG);
 	}		
+
+	public void setLanguage(String lang) {
+		resources = ResourceBundle.getBundle(DEF_LANG);
+		setParserPatterns(lang);
+	}
 	
 	private void setParserPatterns(String lang) {
-
 		langParser.clearPatterns();
 		type.clearPatterns();
-
 		// these are more specific, so add them first to ensure they are checked first
 		langParser.addPatterns(lang);
 		// these are more general so add them at the end
@@ -43,7 +48,6 @@ public class Interpreter {
 	}
 
 	public void interpret(String text) throws SlogoException{
-//		System.out.println("In interpret the input string is: " + text);
 		try{
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
 			parse(words);
@@ -70,6 +74,7 @@ public class Interpreter {
 		if(words.isEmpty()){
 			throw new SlogoException("IncorrectNumOfParameters");
 		}
+		// the first word in input, used to indicate input type
 		String word = words.pop();
 
 		if(isConstant(word)){
@@ -78,20 +83,20 @@ public class Interpreter {
 		else if(type.getSymbol(word).equals("Command")){
 			Command com = null;
 			try{
+				// generate a predefined command (not user-defined)
 				com = Command.getCommand(langParser.getSymbol(word), statesList);	
 			}
 			catch (SlogoException e){
 				if(!variables.containsKey(word)){
 					throw e;
 				}
-				else
-				{
-					interpret(variables.get(word));
-					return 0;
+				else{
+					// run the user-defined command
+					return parse(separateWords(variables.get(word).split(WHITESPACE)));
 				}
 			}
 			try{
-				if(com.needsVarParams()){
+				if(com.needsVarParams()){  // make variables
 					com.setVarMap(variables);
 					if(com.isNestedCommand()){
 						return handleNestedCommand(words, word, com);
@@ -107,10 +112,7 @@ public class Interpreter {
 				else if (com.needsPriorCheck()) { // if and if-else
 					double condition = recursiveParse(words);
 					if (condition != 0) {
-						if(com.numParamsNeeded() == 1){
-							return com.runCommand(condition);
-						}
-						else if(com.numParamsNeeded() == 2){ // if
+						if(com.numParamsNeeded() == 2){ // if
 							return com.runCommand(condition,recursiveParse(words));
 						}
 						else if (com.numParamsNeeded() == 3){ // else if
@@ -128,7 +130,7 @@ public class Interpreter {
 							return com.runCommand(condition, executedStatement);
 						}
 						else {
-							return com.runCommand();
+							throw new SlogoException("CommandDoesNotExist");
 						}
 					}
 					else {
@@ -153,6 +155,9 @@ public class Interpreter {
 							}
 							double executedStatement = recursiveParse(words);
 							return com.runCommand(condition, executedStatement);
+						}
+						else {
+							throw new SlogoException("CommandDoesNotExist");
 						}
 					}
 
@@ -273,11 +278,6 @@ public class Interpreter {
 		}
 		String toReplace = e.getText().substring(0,indexOfCustomMessage);
 		e.setText(e.getText().replaceAll(toReplace, resources.getString(toReplace)));
-	}
-
-	public void setLanguage(String lang) {
-		resources = ResourceBundle.getBundle(DEF_LANG);
-		setParserPatterns(lang);
 	}
 
 }

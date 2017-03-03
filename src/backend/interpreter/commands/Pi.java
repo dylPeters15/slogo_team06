@@ -21,17 +21,7 @@ public class Pi extends Command {
 	public double runCommand() throws SlogoException {
 		return Math.PI;
 	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
+	
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;

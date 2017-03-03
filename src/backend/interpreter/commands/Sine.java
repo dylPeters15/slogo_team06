@@ -16,11 +16,6 @@ public class Sine extends Command {
 	public Sine(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
 	
     /**
      * @param a: an angle represented as degree
@@ -28,11 +23,6 @@ public class Sine extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		return Math.sin(Math.toRadians(a));
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 	@Override
