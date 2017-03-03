@@ -120,4 +120,8 @@ public abstract class Command {
 		this.variables = variables;
 	}
 
+	public String getVariablesString() {
+		return null;
+	}
+
 }
