@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import backend.Model;
 import frontend.editor.EditorPaneManager;
 import frontend.editor.EditorPaneManagerDelegate;
@@ -33,16 +32,16 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	private TabPane editorTabPane;
 	private TabPane simulationTabPane;
 
-	private ObservableList<Pair<EditorPaneManager, SimulationPaneManager>> editorSimulationPairs;
+	private ObservableList<Workspace> workspaces;
 
-	private int numWorkspaces;
+	private int numWorkspacesThatHaveExisted;
 
 	public SlogoController() {
 		this(new Stage());
 	}
 
 	public SlogoController(Stage stage) {
-		numWorkspaces = 0;
+		numWorkspacesThatHaveExisted = 0;
 		editorStage = stage;
 		simulationStage = new Stage();
 
@@ -55,15 +54,14 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		editorStage.setTitle(EDITOR_TITLE);
 		simulationStage.setTitle(SIMULATOR_TITLE);
 
-		editorSimulationPairs = FXCollections.observableArrayList();
-		editorSimulationPairs
-				.addListener(new ListChangeListener<Pair<EditorPaneManager, SimulationPaneManager>>() {
-					@Override
-					public void onChanged(
-							javafx.collections.ListChangeListener.Change<? extends Pair<EditorPaneManager, SimulationPaneManager>> change) {
-						pairsModified(change);
-					}
-				});
+		workspaces = FXCollections.observableArrayList();
+		workspaces.addListener(new ListChangeListener<Workspace>() {
+			@Override
+			public void onChanged(
+					javafx.collections.ListChangeListener.Change<? extends Workspace> change) {
+				pairsModified(change);
+			}
+		});
 
 		Tab addTab = new Tab("+");
 		addTab.setClosable(false);
@@ -79,8 +77,10 @@ public class SlogoController implements EditorPaneManagerDelegate {
 							Tab oldTab, Tab newTab) {
 						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
 							addWorkspace();
-						} else if (!newTab.equals(addTab)){
-							simulationTabPane.getSelectionModel().select(editorTabPane.getSelectionModel().getSelectedIndex());
+						} else if (!newTab.equals(addTab)) {
+							simulationTabPane.getSelectionModel().select(
+									editorTabPane.getSelectionModel()
+											.getSelectedIndex());
 						}
 					}
 				});
@@ -93,8 +93,10 @@ public class SlogoController implements EditorPaneManagerDelegate {
 							Tab oldTab, Tab newTab) {
 						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
 							addWorkspace();
-						} else if (!newTab.equals(addTab)){
-							editorTabPane.getSelectionModel().select(simulationTabPane.getSelectionModel().getSelectedIndex());
+						} else if (!newTab.equals(addTab)) {
+							editorTabPane.getSelectionModel().select(
+									simulationTabPane.getSelectionModel()
+											.getSelectedIndex());
 						}
 					}
 				});
@@ -106,38 +108,24 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	}
 
 	private void pairsModified(
-			ListChangeListener.Change<? extends Pair<EditorPaneManager, SimulationPaneManager>> change) {
+			ListChangeListener.Change<? extends Workspace> change) {
 		if (change.next() && change.wasAdded()) {
-			for (Pair<EditorPaneManager, SimulationPaneManager> pair : change
-					.getAddedSubList()) {
-				Tab editorTab = new Tab("Workspace " + numWorkspaces, pair
-						.getKey().getParent());
-				editorTab.setOnClosed(event -> remove(pair));
+			for (Workspace workspace : change.getAddedSubList()) {
+				workspace.editorTab.setOnClosed(event -> remove(workspace));
 				editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
-						editorTab);
+						workspace.editorTab);
 
-				Tab simulationTab = new Tab("Workspace " + numWorkspaces++,
-						pair.getValue().getParent());
-				simulationTab.setOnClosed(event -> remove(pair));
+				workspace.simulationTab.setOnClosed(event -> remove(workspace));
 				simulationTabPane.getTabs().add(
-						simulationTabPane.getTabs().size() - 1, simulationTab);
+						simulationTabPane.getTabs().size() - 1,
+						workspace.simulationTab);
 			}
 		} else if (change.wasRemoved()) {
-			for (Pair<EditorPaneManager, SimulationPaneManager> pair : change
-					.getRemoved()) {
-				removeTabForEditorPane(pair.getKey());
-				removeTabForSimulationPane(pair.getValue());
+			for (Workspace workspace : change.getRemoved()) {
+				editorTabPane.getTabs().remove(workspace.editorTab);
+				simulationTabPane.getTabs().remove(workspace.simulationTab);
 			}
 		}
-		for (int i = 0; i < editorTabPane.getTabs().size() - 2; i++) {
-			editorTabPane.getTabs().get(i).setClosable(true);
-			simulationTabPane.getTabs().get(i).setClosable(true);
-		}
-		editorTabPane.getTabs().get(editorTabPane.getTabs().size() - 2)
-				.setClosable(true);
-		simulationTabPane.getTabs().get(simulationTabPane.getTabs().size() - 2)
-				.setClosable(true);
-
 		editorTabPane
 				.selectionModelProperty()
 				.get()
@@ -150,65 +138,55 @@ public class SlogoController implements EditorPaneManagerDelegate {
 						simulationTabPane.getTabs().size() - 2));
 	}
 
-	private void removeTabForEditorPane(EditorPaneManager editor) {
-		Tab toRemove = null;
-		for (Tab editorTab : editorTabPane.getTabs()) {
-			if (editorTab.getContent() != null
-					&& editorTab.getContent().equals(editor.getParent())) {
-				toRemove = editorTab;
-			}
-		}
-		if (toRemove != null) {
-			editorTabPane.getTabs().remove(toRemove);
-		}
-	}
-
-	private void removeTabForSimulationPane(SimulationPaneManager sim) {
-		Tab toRemove = null;
-		for (Tab simulationTab : simulationTabPane.getTabs()) {
-			if (simulationTab.getContent() != null
-					&& simulationTab.getContent().equals(sim.getParent())) {
-				toRemove = simulationTab;
-			}
-		}
-		if (toRemove != null) {
-			simulationTabPane.getTabs().remove(toRemove);
-		}
-	}
-
-	private void remove(Pair<EditorPaneManager, SimulationPaneManager> pair) {
-		if (editorSimulationPairs.contains(pair)) {
-			editorSimulationPairs.remove(pair);
+	private void remove(Workspace workspace) {
+		if (workspaces.contains(workspace)) {
+			workspaces.remove(workspace);
 		}
 	}
 
 	private void addWorkspace() {
-		Model model = new Model();
-		EditorPaneManager editorPane = new EditorPaneManager(this,model);
-		SimulationPaneManager simPane = new SimulationPaneManager(
-				model.getStatesList());
-		Pair<EditorPaneManager, SimulationPaneManager> pair = new Pair<EditorPaneManager, SimulationPaneManager>(
-				editorPane, simPane);
-		editorSimulationPairs.add(pair);
+		Workspace workspace = new Workspace();
+		workspace.model = new Model();
+		workspace.editor = new EditorPaneManager(this, workspace.model);
+		workspace.simulation = new SimulationPaneManager(
+				workspace.model.getStatesList());
+
+		workspace.editorScene = new Scene(workspace.editor.getParent());
+		workspace.simulationScene = new Scene(workspace.simulation.getParent());
+
+		workspace.editorTab = new Tab("Workspace "
+				+ numWorkspacesThatHaveExisted, workspace.editorScene.getRoot());
+		workspace.simulationTab = new Tab("Workspace "
+				+ numWorkspacesThatHaveExisted++,
+				workspace.simulationScene.getRoot());
+		workspaces.add(workspace);
 	}
 
 	@Override
 	public void didChangeLanguage(EditorPaneManager editor,
 			ResourceBundle newLanguage) {
-		for (Pair<EditorPaneManager, SimulationPaneManager> pair : editorSimulationPairs) {
-			if (pair.getValue().equals(editor)) {
-				// pair.getValue().setLanguage(newLanguage);
+		for (Workspace workspace : workspaces) {
+			if (workspace.editor.equals(editor)) {
+				// workspace.simulation.setLanguage(newLanguage);
 			}
 		}
 	}
 
 	@Override
 	public void didChangeStylesheet(EditorPaneManager editor, String stylesheet) {
-		for (Pair<EditorPaneManager, SimulationPaneManager> pair : editorSimulationPairs) {
-			if (pair.getKey().equals(editor)) {
-				pair.getValue().setStyleSheet(stylesheet);
+		for (Workspace workspace : workspaces) {
+			if (workspace.editor.equals(editor)) {
+				workspace.simulation.setStyleSheet(stylesheet);
 			}
 		}
+	}
+
+	class Workspace {
+		Scene editorScene, simulationScene;
+		EditorPaneManager editor;
+		SimulationPaneManager simulation;
+		Tab editorTab, simulationTab;
+		Model model;
 	}
 
 }
