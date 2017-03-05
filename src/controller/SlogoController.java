@@ -3,6 +3,8 @@
  */
 package controller;
 
+import java.util.ResourceBundle;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,13 +17,14 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import backend.Model;
 import frontend.editor.EditorPaneManager;
+import frontend.editor.EditorPaneManagerDelegate;
 import frontend.simulation.SimulationPaneManager;
 
 /**
  * @author Dylan Peters
  *
  */
-public class SlogoController {
+public class SlogoController implements EditorPaneManagerDelegate {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private Stage editorStage;
@@ -76,6 +79,8 @@ public class SlogoController {
 							Tab oldTab, Tab newTab) {
 						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
 							addWorkspace();
+						} else if (!newTab.equals(addTab)){
+							simulationTabPane.getSelectionModel().select(editorTabPane.getSelectionModel().getSelectedIndex());
 						}
 					}
 				});
@@ -88,6 +93,8 @@ public class SlogoController {
 							Tab oldTab, Tab newTab) {
 						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
 							addWorkspace();
+						} else if (!newTab.equals(addTab)){
+							editorTabPane.getSelectionModel().select(simulationTabPane.getSelectionModel().getSelectedIndex());
 						}
 					}
 				});
@@ -108,6 +115,7 @@ public class SlogoController {
 				editorTab.setOnClosed(event -> remove(pair));
 				editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
 						editorTab);
+
 				Tab simulationTab = new Tab("Workspace " + numWorkspaces++,
 						pair.getValue().getParent());
 				simulationTab.setOnClosed(event -> remove(pair));
@@ -176,12 +184,31 @@ public class SlogoController {
 
 	private void addWorkspace() {
 		Model model = new Model();
-		EditorPaneManager editorPane = new EditorPaneManager();
+		EditorPaneManager editorPane = new EditorPaneManager(this,model);
 		SimulationPaneManager simPane = new SimulationPaneManager(
 				model.getStatesList());
 		Pair<EditorPaneManager, SimulationPaneManager> pair = new Pair<EditorPaneManager, SimulationPaneManager>(
 				editorPane, simPane);
 		editorSimulationPairs.add(pair);
+	}
+
+	@Override
+	public void didChangeLanguage(EditorPaneManager editor,
+			ResourceBundle newLanguage) {
+		for (Pair<EditorPaneManager, SimulationPaneManager> pair : editorSimulationPairs) {
+			if (pair.getValue().equals(editor)) {
+				// pair.getValue().setLanguage(newLanguage);
+			}
+		}
+	}
+
+	@Override
+	public void didChangeStylesheet(EditorPaneManager editor, String stylesheet) {
+		for (Pair<EditorPaneManager, SimulationPaneManager> pair : editorSimulationPairs) {
+			if (pair.getKey().equals(editor)) {
+				pair.getValue().setStyleSheet(stylesheet);
+			}
+		}
 	}
 
 }

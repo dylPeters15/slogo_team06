@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
 import frontend.help.HelpPaneManager;
-import frontend.simulation.SimulationPaneManager;
 
 /**
  * This class will be of public visibility, so it will be visible to any class
@@ -66,15 +65,24 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private TerminalDisplayManager terminalDisplayManager;
 	private EditorMenuBarManager editorMenuBarManager;
 	private VariableDisplayManager variableDisplayManager;
-	private Stage simulationStage;
 
 	private Model model;
+
+	private EditorPaneManagerDelegate delegate;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
 	 */
 	public EditorPaneManager() {
 		this(DEFAULT_LANGUAGE);
+	}
+
+	public EditorPaneManager(EditorPaneManagerDelegate delegate) {
+		this(delegate, null);
+	}
+
+	public EditorPaneManager(EditorPaneManagerDelegate delegate, Model model) {
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_LANGUAGE, delegate, model);
 	}
 
 	/**
@@ -115,9 +123,38 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            pane.
 	 */
 	public EditorPaneManager(double width, double height, String language) {
+		this(width, height, language, null);
+	}
+
+	public EditorPaneManager(double width, double height, String language,
+			EditorPaneManagerDelegate delegate) {
+		this(width,height,language,delegate,null);
+	}
+	
+
+	public EditorPaneManager(double width, double height, String language,
+			EditorPaneManagerDelegate delegate, Model model) {
+		setModel(model);
+		setDelegate(delegate);
 		populateLanguageMap();
 		initialize(language);
 		setLanguage(language);
+	}
+	
+	public void setModel(Model model){
+		this.model = model;
+	}
+	
+	public Model getModel(){
+		return model;
+	}
+	
+	public void setDelegate(EditorPaneManagerDelegate delegate) {
+		this.delegate = delegate;
+	}
+
+	public EditorPaneManagerDelegate getDelegate() {
+		return delegate;
 	}
 
 	/**
@@ -175,8 +212,13 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		terminalDisplayManager.setLanguageResourceBundle(myResources);
 		editorMenuBarManager.setLanguageResourceBundle(myResources);
 		variableDisplayManager.setLanguageResourceBundle(myResources);
-		model.setResourceBundle(DEFAULT_RESOURCE_PACKAGE
-						+ languageToPropertyName.get(language));
+		if (model != null) {
+			model.setResourceBundle(DEFAULT_RESOURCE_PACKAGE
+					+ languageToPropertyName.get(language));
+		}
+		if (delegate != null) {
+			delegate.didChangeLanguage(this, myResources);
+		}
 	}
 
 	/**
@@ -274,7 +316,6 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 				displayErrorDialog(e);
 			}
 		}
-		simulationStage.show();
 	}
 
 	private void printError(SlogoException e) {
@@ -312,8 +353,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
-		simulationStage.getScene().getRoot().getStylesheets().clear();
-		simulationStage.getScene().getRoot().getStylesheets().add(styleSheet);
+		if (delegate != null) {
+			delegate.didChangeStylesheet(this, styleSheet);
+		}
 	}
 
 	private void populateLanguageMap() {
@@ -328,17 +370,16 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void initialize(String language) {
-		model = new Model();
-
 		ResourceBundle myResources = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
 						+ languageToPropertyName.get(language));
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
+		
 		variableDisplayManager = new VariableDisplayManager(this, myResources,
 				model.getVariables());
-		
+
 		SplitPane terminalAndVarTable = new SplitPane();
 		terminalAndVarTable.setOrientation(Orientation.HORIZONTAL);
 		terminalAndVarTable.getItems().add(terminalDisplayManager.getRegion());
@@ -346,20 +387,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		terminalAndVarTable.setDividerPositions(0.8);
 
 		borderPane.setCenter(terminalAndVarTable);
-//		borderPane.setRight(variableDisplayManager.getRegion());
+		// borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
-		simulationStage = new Stage();
-		SimulationPaneManager simulationPaneManager = new SimulationPaneManager(
-				model.getStatesList());
-		simulationStage.setScene(new Scene(simulationPaneManager.getParent()));
-
 		setStyleSheet(DEFAULT_STYLE_SHEET);
-	}
-	
-	public void showStage(){
-		if (simulationStage != null){
-			simulationStage.show();
-		}
 	}
 }
