@@ -26,6 +26,8 @@ import frontend.simulation.SimulationPaneManager;
 public class SlogoController implements EditorPaneManagerDelegate {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
+	private static final String DEFAULT_LANGUAGE = "English";
+	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 	private Stage editorStage;
 	private Stage simulationStage;
 
@@ -35,6 +37,8 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	private ObservableList<Workspace> workspaces;
 
 	private int numWorkspacesThatHaveExisted;
+	
+	private ResourceBundle myResources;
 
 	public SlogoController() {
 		this(new Stage());
@@ -151,10 +155,13 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	@Override
 	public void didChangeLanguage(EditorPaneManager editor,
 			ResourceBundle newLanguage) {
+		myResources = newLanguage;
 		for (Workspace workspace : workspaces) {
 			if (workspace.editor.equals(editor)) {
 				// workspace.simulation.setLanguage(newLanguage);
 			}
+			workspace.editorTab.setText(newLanguage.getString("Workspace") + " " + workspace.editorTab.getText().substring(workspace.editorTab.getText().indexOf(" ")+1));
+			workspace.simulationTab.setText(newLanguage.getString("Workspace") + " " + workspace.simulationTab.getText().substring(workspace.simulationTab.getText().indexOf(" ")+1));
 		}
 	}
 
@@ -175,17 +182,20 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		Model model;
 
 		public Workspace(EditorPaneManagerDelegate editorDelegate) {
+			if (myResources == null){
+				myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE);
+			}
 			model = new Model();
 			editor = new EditorPaneManager(editorDelegate, model);
+			editor.setLanguage(myResources.getBaseBundleName().substring(myResources.getBaseBundleName().indexOf("/")+1));
 			simulation = new SimulationPaneManager(model.getStatesList());
 
 			editorScene = new Scene(editor.getParent());
 			simulationScene = new Scene(simulation.getParent());
-
-			editorTab = new Tab(String.valueOf(numWorkspacesThatHaveExisted),
+			editorTab = new Tab(myResources.getString("Workspace") + " " + String.valueOf(numWorkspacesThatHaveExisted),
 					editorScene.getRoot());
 			simulationTab = new Tab(
-					String.valueOf(numWorkspacesThatHaveExisted++),
+					String.valueOf(myResources.getString("Workspace") + " " + numWorkspacesThatHaveExisted++),
 					simulationScene.getRoot());
 		}
 	}
