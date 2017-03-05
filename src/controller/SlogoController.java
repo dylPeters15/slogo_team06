@@ -145,21 +145,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	}
 
 	private void addWorkspace() {
-		Workspace workspace = new Workspace();
-		workspace.model = new Model();
-		workspace.editor = new EditorPaneManager(this, workspace.model);
-		workspace.simulation = new SimulationPaneManager(
-				workspace.model.getStatesList());
-
-		workspace.editorScene = new Scene(workspace.editor.getParent());
-		workspace.simulationScene = new Scene(workspace.simulation.getParent());
-
-		workspace.editorTab = new Tab("Workspace "
-				+ numWorkspacesThatHaveExisted, workspace.editorScene.getRoot());
-		workspace.simulationTab = new Tab("Workspace "
-				+ numWorkspacesThatHaveExisted++,
-				workspace.simulationScene.getRoot());
-		workspaces.add(workspace);
+		workspaces.add(new Workspace(this));
 	}
 
 	@Override
@@ -187,6 +173,21 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		SimulationPaneManager simulation;
 		Tab editorTab, simulationTab;
 		Model model;
+
+		public Workspace(EditorPaneManagerDelegate editorDelegate) {
+			model = new Model();
+			editor = new EditorPaneManager(editorDelegate, model);
+			simulation = new SimulationPaneManager(model.getStatesList());
+
+			editorScene = new Scene(editor.getParent());
+			simulationScene = new Scene(simulation.getParent());
+
+			editorTab = new Tab(String.valueOf(numWorkspacesThatHaveExisted),
+					editorScene.getRoot());
+			simulationTab = new Tab(
+					String.valueOf(numWorkspacesThatHaveExisted++),
+					simulationScene.getRoot());
+		}
 	}
 
 }
