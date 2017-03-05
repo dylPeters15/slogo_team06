@@ -3,10 +3,6 @@
  */
 package backend.interpreter.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
@@ -23,7 +19,7 @@ public class Right extends Left {
 	}
 	
 	@Override
-	public double runCommand(double distance) {
+	public double runCommand(double distance) throws SlogoException {
 		return super.runCommand(-distance);
 	}
 	

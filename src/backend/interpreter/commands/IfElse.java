@@ -16,17 +16,7 @@ public class IfElse extends Command {
 	public IfElse(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
+	
 	@Override
 	public double runCommand(double condition, double command) throws SlogoException {
 		return command;

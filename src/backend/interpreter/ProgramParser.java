@@ -23,9 +23,9 @@ public class ProgramParser {
     public void addPatterns (String syntax) {
         ResourceBundle resources = ResourceBundle.getBundle(syntax);
         addPatterns(resources);
-       
     }
-    public void addPatterns(ResourceBundle resources){
+    
+    private void addPatterns(ResourceBundle resources){
     	 Enumeration<String> iter = resources.getKeys();
          while (iter.hasMoreElements()) {
              String key = iter.nextElement();

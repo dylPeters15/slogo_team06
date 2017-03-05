@@ -16,20 +16,10 @@ public class Tangent extends Command {
 	public Tangent(StatesList<State> list) {
 		super(list);
 	}
-
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
+	
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		return Math.tan(Math.toRadians(a));
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 	@Override
