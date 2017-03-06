@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import frontend.UIChild;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -30,8 +31,7 @@ import javafx.scene.layout.Region;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends
-		EditorPaneManagerChild<EditorMenuBarDelegate> {
+class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
 	private ObservableList<String> languages = FXCollections
 			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
 					"Italiano", "Português", "Russkiy", "Español");
@@ -75,12 +75,12 @@ class EditorMenuBarManager extends
 	 *         interact with the program's options
 	 */
 	@Override
-	Region getRegion() {
+	public Region getRegion() {
 		return myMenuBar;
 	}
 
 	@Override
-	void setLanguageResourceBundle(ResourceBundle language) {
+	public void setLanguageResourceBundle(ResourceBundle language) {
 		populateMenuBar(language);
 	}
 

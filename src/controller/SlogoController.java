@@ -199,7 +199,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 			editor.setLanguage(defaultLanguage);
 			simulation = new SimulationPaneManager(model.getStatesList());
 
-			editorScene = new Scene(editor.getParent());
+			editorScene = new Scene(editor.getRegion());
 			simulationScene = new Scene(simulation.getParent());
 			editorTab = new Tab(defaultLanguage.getString("Workspace") + " "
 					+ String.valueOf(numWorkspacesThatHaveExisted),

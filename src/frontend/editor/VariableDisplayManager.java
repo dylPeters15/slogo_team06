@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
+import frontend.UIChild;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -37,8 +38,7 @@ import javafx.scene.text.TextAlignment;
  * @author Dylan Peters
  *
  */
-class VariableDisplayManager extends
-		EditorPaneManagerChild<VariableDisplayDelegate> {
+class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
@@ -46,18 +46,6 @@ class VariableDisplayManager extends
 	private ObservableList<Variable> variables;
 
 	private ObservableMap<String, String> varMap;
-
-	/**
-	 * Creates a new instance of VariableDisplayManager. Sets all values except
-	 * language to default.
-	 * 
-	 * @param language
-	 *            the language with which to display the text in the variable
-	 *            display.
-	 */
-	// VariableDisplayManager(ResourceBundle language) {
-	// this(null, language,null);
-	// }
 
 	/**
 	 * Creates a new instance of VariableDisplayManager. Sets all values except
@@ -92,7 +80,7 @@ class VariableDisplayManager extends
 	 *            a string representing the language to be displayed
 	 */
 	@Override
-	void setLanguageResourceBundle(ResourceBundle language) {
+	public void setLanguageResourceBundle(ResourceBundle language) {
 		if (names != null) {
 			names.setText(language.getString("Name"));
 		}
@@ -100,9 +88,10 @@ class VariableDisplayManager extends
 		if (values != null) {
 			values.setText(language.getString("Value"));
 		}
-		
-		if (table != null){
-			Label placeHolder = new Label(language.getString("TablePlaceholder"));
+
+		if (table != null) {
+			Label placeHolder = new Label(
+					language.getString("TablePlaceholder"));
 			placeHolder.setWrapText(true);
 			placeHolder.setTextAlignment(TextAlignment.CENTER);
 			table.setPlaceholder(placeHolder);
@@ -119,7 +108,7 @@ class VariableDisplayManager extends
 	 *         interact with the program
 	 */
 	@Override
-	Region getRegion() {
+	public Region getRegion() {
 		return table;
 	}
 
