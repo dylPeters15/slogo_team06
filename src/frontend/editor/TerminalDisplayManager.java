@@ -235,6 +235,7 @@ class TerminalDisplayManager extends
 	}
 
 	private void clearAllPressed() {
+		textInputAreas.clear();
 		addTextArea(new TextInputArea("", prompt));
 	}
 
