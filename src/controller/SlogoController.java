@@ -132,6 +132,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 				simulationTabPane.getTabs().remove(workspace.simulationTab);
 			}
 		}
+		setClosingPolicy();
 		editorTabPane
 				.selectionModelProperty()
 				.get()
@@ -142,6 +143,22 @@ public class SlogoController implements EditorPaneManagerDelegate {
 				.get()
 				.select(simulationTabPane.getTabs().get(
 						simulationTabPane.getTabs().size() - 2));
+	}
+
+	private void setClosingPolicy() {
+		if (editorTabPane.getTabs().size() == 2) {
+			for (Tab tab : editorTabPane.getTabs()) {
+				tab.setClosable(false);
+			}
+			for (Tab tab : simulationTabPane.getTabs()) {
+				tab.setClosable(false);
+			}
+		} else {
+			for (int i = 0; i < editorTabPane.getTabs().size() - 1; i++) {
+				editorTabPane.getTabs().get(i).setClosable(true);
+				simulationTabPane.getTabs().get(i).setClosable(true);
+			}
+		}
 	}
 
 	private void remove(Workspace workspace) {
