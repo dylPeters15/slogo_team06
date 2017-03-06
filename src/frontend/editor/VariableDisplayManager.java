@@ -5,8 +5,6 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -212,45 +210,9 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 		});
 
 		table.getColumns().add(values);
-		// variables.add(new Variable("asdf", "3.0",true));
+
 		table.setEditable(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-	}
-
-	public class Variable implements Comparable<Variable> {
-
-		private StringProperty nameProperty;
-		private StringProperty valueProperty;
-		private boolean isNumber;
-
-		Variable(String name, String value, boolean isNumber) {
-			nameProperty = new SimpleStringProperty(name);
-			valueProperty = new SimpleStringProperty(value);
-			this.isNumber = isNumber;
-		}
-
-		public StringProperty nameProperty() {
-			return nameProperty;
-		}
-
-		public StringProperty valueProperty() {
-			return valueProperty;
-		}
-
-		public boolean isNumber() {
-			return isNumber;
-		}
-
-		@Override
-		public int compareTo(Variable other) {
-			return this.nameProperty().get()
-					.compareTo(other.nameProperty().get());
-		}
-
-		public boolean equals(Variable other) {
-			return this.nameProperty().get().equals(other.nameProperty().get());
-		}
 
 	}
 

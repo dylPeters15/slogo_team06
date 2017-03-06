@@ -315,6 +315,15 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 			}
 		}
 	}
+	
+	@Override
+	public void setStyleSheet(String styleSheet) {
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(styleSheet);
+		if (getDelegate() != null) {
+			getDelegate().didChangeStylesheet(this, styleSheet);
+		}
+	}
 
 	private void printError(SlogoException e) {
 		terminalDisplayManager.printText(e.getText());
@@ -346,15 +355,6 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		alert.getDialogPane().setExpanded(true);
 
 		alert.showAndWait();
-	}
-
-	@Override
-	public void setStyleSheet(String styleSheet) {
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(styleSheet);
-		if (getDelegate() != null) {
-			getDelegate().didChangeStylesheet(this, styleSheet);
-		}
 	}
 
 	private void populateLanguageMap() {
