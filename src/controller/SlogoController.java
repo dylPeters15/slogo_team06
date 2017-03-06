@@ -37,8 +37,8 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	private ObservableList<Workspace> workspaces;
 
 	private int numWorkspacesThatHaveExisted;
-	
-	private ResourceBundle myResources;
+
+	private ResourceBundle defaultLanguage;
 
 	public SlogoController() {
 		this(new Stage());
@@ -46,6 +46,8 @@ public class SlogoController implements EditorPaneManagerDelegate {
 
 	public SlogoController(Stage stage) {
 		numWorkspacesThatHaveExisted = 0;
+		defaultLanguage = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ DEFAULT_LANGUAGE);
 		editorStage = stage;
 		simulationStage = new Stage();
 
@@ -155,13 +157,23 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	@Override
 	public void didChangeLanguage(EditorPaneManager editor,
 			ResourceBundle newLanguage) {
-		myResources = newLanguage;
 		for (Workspace workspace : workspaces) {
 			if (workspace.editor.equals(editor)) {
 				// workspace.simulation.setLanguage(newLanguage);
+				workspace.editorTab
+						.setText(newLanguage.getString("Workspace")
+								+ " "
+								+ workspace.editorTab.getText().substring(
+										workspace.editorTab.getText().indexOf(
+												" ") + 1));
+				workspace.simulationTab.setText(newLanguage
+						.getString("Workspace")
+						+ " "
+						+ workspace.simulationTab.getText()
+								.substring(
+										workspace.simulationTab.getText()
+												.indexOf(" ") + 1));
 			}
-			workspace.editorTab.setText(newLanguage.getString("Workspace") + " " + workspace.editorTab.getText().substring(workspace.editorTab.getText().indexOf(" ")+1));
-			workspace.simulationTab.setText(newLanguage.getString("Workspace") + " " + workspace.simulationTab.getText().substring(workspace.simulationTab.getText().indexOf(" ")+1));
 		}
 	}
 
@@ -182,20 +194,20 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		Model model;
 
 		public Workspace(EditorPaneManagerDelegate editorDelegate) {
-			if (myResources == null){
-				myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE);
-			}
 			model = new Model();
 			editor = new EditorPaneManager(editorDelegate, model);
-			editor.setLanguage(myResources.getBaseBundleName().substring(myResources.getBaseBundleName().indexOf("/")+1));
+			editor.setLanguage(defaultLanguage);
 			simulation = new SimulationPaneManager(model.getStatesList());
 
 			editorScene = new Scene(editor.getParent());
 			simulationScene = new Scene(simulation.getParent());
-			editorTab = new Tab(myResources.getString("Workspace") + " " + String.valueOf(numWorkspacesThatHaveExisted),
+			editorTab = new Tab(defaultLanguage.getString("Workspace") + " "
+					+ String.valueOf(numWorkspacesThatHaveExisted),
 					editorScene.getRoot());
-			simulationTab = new Tab(
-					String.valueOf(myResources.getString("Workspace") + " " + numWorkspacesThatHaveExisted++),
+			simulationTab = new Tab(String.valueOf(defaultLanguage
+					.getString("Workspace")
+					+ " "
+					+ numWorkspacesThatHaveExisted++),
 					simulationScene.getRoot());
 		}
 	}

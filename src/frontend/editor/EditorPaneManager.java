@@ -69,12 +69,15 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	private Model model;
 
 	private EditorPaneManagerDelegate delegate;
+	
+	private ResourceBundle myResources;
+	
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
 	 */
 	public EditorPaneManager() {
-		this(DEFAULT_LANGUAGE);
+		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE));
 	}
 
 	public EditorPaneManager(EditorPaneManagerDelegate delegate) {
@@ -82,7 +85,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	public EditorPaneManager(EditorPaneManagerDelegate delegate, Model model) {
-		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_LANGUAGE, delegate, model);
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE), delegate, model);
 	}
 
 	/**
@@ -93,7 +96,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the language with which to display the text in the editor
 	 *            pane.
 	 */
-	public EditorPaneManager(String language) {
+	public EditorPaneManager(ResourceBundle language) {
 		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, language);
 	}
 
@@ -107,7 +110,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the height to display the editor pane.
 	 */
 	public EditorPaneManager(double width, double height) {
-		this(width, height, DEFAULT_LANGUAGE);
+		this(width, height, ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE));
 	}
 
 	/**
@@ -122,22 +125,22 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the language with which to display the text in the editor
 	 *            pane.
 	 */
-	public EditorPaneManager(double width, double height, String language) {
+	public EditorPaneManager(double width, double height, ResourceBundle language) {
 		this(width, height, language, null);
 	}
 
-	public EditorPaneManager(double width, double height, String language,
+	public EditorPaneManager(double width, double height, ResourceBundle language,
 			EditorPaneManagerDelegate delegate) {
 		this(width,height,language,delegate,null);
 	}
 	
 
-	public EditorPaneManager(double width, double height, String language,
+	public EditorPaneManager(double width, double height, ResourceBundle language,
 			EditorPaneManagerDelegate delegate, Model model) {
 		setModel(model);
 		setDelegate(delegate);
-		populateLanguageMap();
 		initialize(language);
+		populateLanguageMap();
 		setLanguage(language);
 	}
 	
@@ -205,16 +208,13 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	public void setLanguage(String language) {
-		ResourceBundle myResources = ResourceBundle
-				.getBundle(DEFAULT_RESOURCE_PACKAGE
-						+ languageToPropertyName.get(language));
+	public void setLanguage(ResourceBundle language) {
+		myResources = language;
 		terminalDisplayManager.setLanguageResourceBundle(myResources);
 		editorMenuBarManager.setLanguageResourceBundle(myResources);
 		variableDisplayManager.setLanguageResourceBundle(myResources);
 		if (model != null) {
-			model.setResourceBundle(DEFAULT_RESOURCE_PACKAGE
-					+ languageToPropertyName.get(language));
+			model.setResourceBundle(myResources.getBaseBundleName());
 		}
 		if (delegate != null) {
 			delegate.didChangeLanguage(this, myResources);
@@ -248,7 +248,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the language to display the program in
 	 */
 	public void didSelectLanguage(String language) {
-		setLanguage(language);
+		setLanguage(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+languageToPropertyName.get(language)));
 	}
 
 	/**
@@ -369,10 +369,7 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		languageToPropertyName.put("Español", "Spanish");
 	}
 
-	private void initialize(String language) {
-		ResourceBundle myResources = ResourceBundle
-				.getBundle(DEFAULT_RESOURCE_PACKAGE
-						+ languageToPropertyName.get(language));
+	private void initialize(ResourceBundle myResources) {
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
