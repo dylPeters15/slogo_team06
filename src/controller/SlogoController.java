@@ -196,7 +196,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		public Workspace(EditorPaneManagerDelegate editorDelegate) {
 			model = new Model();
 			editor = new EditorPaneManager(editorDelegate, model);
-			editor.setLanguage(defaultLanguage);
+			editor.setLanguageResourceBundle(defaultLanguage);
 			simulation = new SimulationPaneManager(model.getStatesList());
 
 			editorScene = new Scene(editor.getRegion());
