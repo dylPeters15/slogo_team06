@@ -6,6 +6,7 @@ package frontend.help;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -40,8 +41,9 @@ class ExampleCommandDisplayManager extends UIChild<UIChildDelegate> {
 		exampleCommandsResource = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE + DEFAULT_EXAMPLE_RESOURCE);
 		vbox = new VBox();
-		populateVBox(language);
 		scrollPane = new ScrollPane();
+		vbox.setPadding(new Insets(10));
+		populateVBox(language);
 		scrollPane.setContent(vbox);
 	}
 
@@ -86,6 +88,7 @@ class ExampleCommandDisplayManager extends UIChild<UIChildDelegate> {
 			sb.append(" ");
 		}
 		textArea.setText(sb.toString().trim());
+		textArea.setWrapText(true);
 	}
 
 }
