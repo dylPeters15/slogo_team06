@@ -3,8 +3,6 @@
  */
 package frontend.editor;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -72,7 +70,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 
 	private ResourceBundle myResources;
 
-	private Collection<HelpPaneManager> helpPaneManagers;
+	private Stage helpPaneStage;
+	private HelpPaneManager helpPaneManager;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
@@ -204,10 +203,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		if (getDelegate() != null) {
 			getDelegate().didChangeLanguage(this, myResources);
 		}
-		if (helpPaneManagers != null) {
-			for (HelpPaneManager help : helpPaneManagers) {
-				help.setLanguageResourceBundle(language);
-			}
+		if (helpPaneManager != null) {
+			helpPaneManager.setLanguageResourceBundle(language);
 		}
 	}
 
@@ -223,6 +220,10 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	@Override
 	public Region getRegion() {
 		return borderPane;
+	}
+
+	public void close() {
+		helpPaneStage.close();
 	}
 
 	// EditorMenuBarDelegate methods:
@@ -265,14 +266,10 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	 * use the program by printing it to the terminal portion of the display.
 	 */
 	public void help() {
-		Stage helpStage = new Stage();
-		HelpPaneManager helpPaneManager = new HelpPaneManager(myResources);
-		helpPaneManager.setStyleSheet(borderPane.getStylesheets().get(0));
-		helpStage.setScene(new Scene(helpPaneManager.getRegion()));
-		helpStage.show();
-		helpPaneManagers.add(helpPaneManager);
-		helpStage.setOnCloseRequest(event -> helpPaneManagers
-				.remove(helpPaneManager));
+		if (helpPaneStage != null) {
+			helpPaneStage.show();
+			helpPaneStage.toFront();
+		}
 	}
 
 	// VariableDisplayDelegate methods:
@@ -323,8 +320,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		if (getDelegate() != null) {
 			getDelegate().didChangeStylesheet(this, styleSheet);
 		}
-		for (HelpPaneManager help : helpPaneManagers) {
-			help.setStyleSheet(styleSheet);
+		if (helpPaneManager != null) {
+			helpPaneManager.setStyleSheet(styleSheet);
 		}
 	}
 
@@ -372,7 +369,7 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	}
 
 	private void initialize(ResourceBundle myResources) {
-		helpPaneManagers = new ArrayList<HelpPaneManager>();
+
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
@@ -391,5 +388,10 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
 		setLanguageResourceBundle(myResources);
+
+		helpPaneStage = new Stage();
+		helpPaneManager = new HelpPaneManager(myResources);
+		helpPaneManager.setStyleSheet(borderPane.getStylesheets().get(0));
+		helpPaneStage.setScene(new Scene(helpPaneManager.getRegion()));
 	}
 }

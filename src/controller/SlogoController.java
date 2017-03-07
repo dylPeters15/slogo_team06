@@ -51,6 +51,9 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		editorStage = stage;
 		simulationStage = new Stage();
 
+		editorStage.setOnCloseRequest(event -> requestAllClose());
+		simulationStage.setOnCloseRequest(event -> requestAllClose());
+
 		editorTabPane = new TabPane();
 		simulationTabPane = new TabPane();
 
@@ -111,6 +114,14 @@ public class SlogoController implements EditorPaneManagerDelegate {
 
 		editorStage.show();
 		simulationStage.show();
+	}
+
+	private void requestAllClose() {
+		for (Workspace workspace : workspaces) {
+			workspace.editor.close();
+		}
+		editorStage.close();
+		simulationStage.close();
 	}
 
 	private void pairsModified(
