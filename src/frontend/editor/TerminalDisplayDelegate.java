@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import frontend.UIChildDelegate;
+
 /**
  * This interface will be of default visibility, so it will only be visible to
  * other members of its package. Therefore, it will be part of the internal API
@@ -36,7 +38,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface TerminalDisplayDelegate extends EditorPaneManagerChildDelegate {
+interface TerminalDisplayDelegate extends UIChildDelegate {
 
 	/**
 	 * This method is called by the TerminalDisplayManager to indicate to the

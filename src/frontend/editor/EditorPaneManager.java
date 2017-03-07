@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -18,9 +17,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
+import frontend.UIChild;
 import frontend.help.HelpPaneManager;
 
 /**
@@ -51,10 +52,9 @@ import frontend.help.HelpPaneManager;
  * @author Dylan Peters
  *
  */
-public class EditorPaneManager implements EditorMenuBarDelegate,
-		VariableDisplayDelegate, TerminalDisplayDelegate {
-	private static final double DEFAULT_WIDTH = 600;
-	private static final double DEFAULT_HEIGHT = 600;
+public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
+		implements EditorMenuBarDelegate, VariableDisplayDelegate,
+		TerminalDisplayDelegate {
 	private static final String DEFAULT_LANGUAGE = "English";
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
@@ -68,49 +68,17 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 
 	private Model model;
 
-	private EditorPaneManagerDelegate delegate;
-	
 	private ResourceBundle myResources;
-	
+
+	private Stage helpPaneStage;
+	private HelpPaneManager helpPaneManager;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
 	 */
 	public EditorPaneManager() {
-		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE));
-	}
-
-	public EditorPaneManager(EditorPaneManagerDelegate delegate) {
-		this(delegate, null);
-	}
-
-	public EditorPaneManager(EditorPaneManagerDelegate delegate, Model model) {
-		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE), delegate, model);
-	}
-
-	/**
-	 * Creates a new instance of EditorPaneManager. Sets all values except
-	 * language to default.
-	 * 
-	 * @param language
-	 *            the language with which to display the text in the editor
-	 *            pane.
-	 */
-	public EditorPaneManager(ResourceBundle language) {
-		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, language);
-	}
-
-	/**
-	 * Creates a new instance of EditorPaneManager. Sets all values except width
-	 * and height to default.
-	 * 
-	 * @param width
-	 *            the width to display the editor pane.
-	 * @param height
-	 *            the height to display the editor pane.
-	 */
-	public EditorPaneManager(double width, double height) {
-		this(width, height, ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+DEFAULT_LANGUAGE));
+		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ DEFAULT_LANGUAGE));
 	}
 
 	/**
@@ -125,39 +93,48 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the language with which to display the text in the editor
 	 *            pane.
 	 */
-	public EditorPaneManager(double width, double height, ResourceBundle language) {
-		this(width, height, language, null);
+	public EditorPaneManager(ResourceBundle language) {
+		this(language, null, null);
 	}
 
-	public EditorPaneManager(double width, double height, ResourceBundle language,
+	public EditorPaneManager(EditorPaneManagerDelegate delegate) {
+		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ DEFAULT_LANGUAGE), delegate, null);
+	}
+
+	public EditorPaneManager(Model model) {
+		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ DEFAULT_LANGUAGE), null, model);
+	}
+
+	public EditorPaneManager(ResourceBundle language,
 			EditorPaneManagerDelegate delegate) {
-		this(width,height,language,delegate,null);
+		this(language, delegate, null);
 	}
-	
 
-	public EditorPaneManager(double width, double height, ResourceBundle language,
-			EditorPaneManagerDelegate delegate, Model model) {
-		setModel(model);
-		setDelegate(delegate);
-		initialize(language);
-		populateLanguageMap();
-		setLanguage(language);
+	public EditorPaneManager(ResourceBundle language, Model model) {
+		this(language, null, model);
 	}
-	
-	public void setModel(Model model){
+
+	public EditorPaneManager(EditorPaneManagerDelegate delegate, Model model) {
+		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+				+ DEFAULT_LANGUAGE), delegate, model);
+	}
+
+	public EditorPaneManager(ResourceBundle language,
+			EditorPaneManagerDelegate delegate, Model model) {
+		super(delegate, language);
+		populateLanguageMap();
+		setModel(model);
+		initialize(language);
+	}
+
+	public void setModel(Model model) {
 		this.model = model;
 	}
-	
-	public Model getModel(){
-		return model;
-	}
-	
-	public void setDelegate(EditorPaneManagerDelegate delegate) {
-		this.delegate = delegate;
-	}
 
-	public EditorPaneManagerDelegate getDelegate() {
-		return delegate;
+	public Model getModel() {
+		return model;
 	}
 
 	/**
@@ -208,16 +185,26 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	public void setLanguage(ResourceBundle language) {
+	@Override
+	public void setLanguageResourceBundle(ResourceBundle language) {
 		myResources = language;
-		terminalDisplayManager.setLanguageResourceBundle(myResources);
-		editorMenuBarManager.setLanguageResourceBundle(myResources);
-		variableDisplayManager.setLanguageResourceBundle(myResources);
+		if (terminalDisplayManager != null) {
+			terminalDisplayManager.setLanguageResourceBundle(myResources);
+		}
+		if (editorMenuBarManager != null) {
+			editorMenuBarManager.setLanguageResourceBundle(myResources);
+		}
+		if (variableDisplayManager != null) {
+			variableDisplayManager.setLanguageResourceBundle(myResources);
+		}
 		if (model != null) {
 			model.setResourceBundle(myResources.getBaseBundleName());
 		}
-		if (delegate != null) {
-			delegate.didChangeLanguage(this, myResources);
+		if (getDelegate() != null) {
+			getDelegate().didChangeLanguage(this, myResources);
+		}
+		if (helpPaneManager != null) {
+			helpPaneManager.setLanguageResourceBundle(language);
 		}
 	}
 
@@ -230,8 +217,13 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * @return Parent containing all the UI components that allow the user to
 	 *         interact with the Editor portion of the program
 	 */
-	public Parent getParent() {
+	@Override
+	public Region getRegion() {
 		return borderPane;
+	}
+
+	public void close() {
+		helpPaneStage.close();
 	}
 
 	// EditorMenuBarDelegate methods:
@@ -248,7 +240,9 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 *            the language to display the program in
 	 */
 	public void didSelectLanguage(String language) {
-		setLanguage(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE+languageToPropertyName.get(language)));
+		setLanguageResourceBundle(ResourceBundle
+				.getBundle(DEFAULT_RESOURCE_PACKAGE
+						+ languageToPropertyName.get(language)));
 	}
 
 	/**
@@ -272,9 +266,10 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	 * use the program by printing it to the terminal portion of the display.
 	 */
 	public void help() {
-		Stage helpStage = new Stage();
-		helpStage.setScene(new Scene(new HelpPaneManager().getParent()));
-		helpStage.show();
+		if (helpPaneStage != null) {
+			helpPaneStage.show();
+			helpPaneStage.toFront();
+		}
 	}
 
 	// VariableDisplayDelegate methods:
@@ -318,6 +313,18 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		}
 	}
 
+	@Override
+	public void setStyleSheet(String styleSheet) {
+		borderPane.getStylesheets().clear();
+		borderPane.getStylesheets().add(styleSheet);
+		if (getDelegate() != null) {
+			getDelegate().didChangeStylesheet(this, styleSheet);
+		}
+		if (helpPaneManager != null) {
+			helpPaneManager.setStyleSheet(styleSheet);
+		}
+	}
+
 	private void printError(SlogoException e) {
 		terminalDisplayManager.printText(e.getText());
 	}
@@ -350,14 +357,6 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		alert.showAndWait();
 	}
 
-	public void setStyleSheet(String styleSheet) {
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(styleSheet);
-		if (delegate != null) {
-			delegate.didChangeStylesheet(this, styleSheet);
-		}
-	}
-
 	private void populateLanguageMap() {
 		languageToPropertyName.put("Zhōngwén", "Chinese");
 		languageToPropertyName.put("English", "English");
@@ -370,10 +369,11 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 	}
 
 	private void initialize(ResourceBundle myResources) {
+
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);
-		
+
 		variableDisplayManager = new VariableDisplayManager(this, myResources,
 				model.getVariables());
 
@@ -384,9 +384,14 @@ public class EditorPaneManager implements EditorMenuBarDelegate,
 		terminalAndVarTable.setDividerPositions(0.8);
 
 		borderPane.setCenter(terminalAndVarTable);
-		// borderPane.setRight(variableDisplayManager.getRegion());
 		borderPane.setTop(editorMenuBarManager.getRegion());
 
 		setStyleSheet(DEFAULT_STYLE_SHEET);
+		setLanguageResourceBundle(myResources);
+
+		helpPaneStage = new Stage();
+		helpPaneManager = new HelpPaneManager(myResources);
+		helpPaneManager.setStyleSheet(borderPane.getStylesheets().get(0));
+		helpPaneStage.setScene(new Scene(helpPaneManager.getRegion()));
 	}
 }

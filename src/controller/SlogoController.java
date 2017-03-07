@@ -51,6 +51,9 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		editorStage = stage;
 		simulationStage = new Stage();
 
+		editorStage.setOnCloseRequest(event -> requestAllClose());
+		simulationStage.setOnCloseRequest(event -> requestAllClose());
+
 		editorTabPane = new TabPane();
 		simulationTabPane = new TabPane();
 
@@ -113,6 +116,14 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		simulationStage.show();
 	}
 
+	private void requestAllClose() {
+		for (Workspace workspace : workspaces) {
+			workspace.editor.close();
+		}
+		editorStage.close();
+		simulationStage.close();
+	}
+
 	private void pairsModified(
 			ListChangeListener.Change<? extends Workspace> change) {
 		if (change.next() && change.wasAdded()) {
@@ -132,6 +143,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 				simulationTabPane.getTabs().remove(workspace.simulationTab);
 			}
 		}
+		setClosingPolicy();
 		editorTabPane
 				.selectionModelProperty()
 				.get()
@@ -142,6 +154,22 @@ public class SlogoController implements EditorPaneManagerDelegate {
 				.get()
 				.select(simulationTabPane.getTabs().get(
 						simulationTabPane.getTabs().size() - 2));
+	}
+
+	private void setClosingPolicy() {
+		if (editorTabPane.getTabs().size() == 2) {
+			for (Tab tab : editorTabPane.getTabs()) {
+				tab.setClosable(false);
+			}
+			for (Tab tab : simulationTabPane.getTabs()) {
+				tab.setClosable(false);
+			}
+		} else {
+			for (int i = 0; i < editorTabPane.getTabs().size() - 1; i++) {
+				editorTabPane.getTabs().get(i).setClosable(true);
+				simulationTabPane.getTabs().get(i).setClosable(true);
+			}
+		}
 	}
 
 	private void remove(Workspace workspace) {
@@ -196,10 +224,10 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		public Workspace(EditorPaneManagerDelegate editorDelegate) {
 			model = new Model();
 			editor = new EditorPaneManager(editorDelegate, model);
-			editor.setLanguage(defaultLanguage);
+			editor.setLanguageResourceBundle(defaultLanguage);
 			simulation = new SimulationPaneManager(model.getStatesList());
 
-			editorScene = new Scene(editor.getParent());
+			editorScene = new Scene(editor.getRegion());
 			simulationScene = new Scene(simulation.getParent());
 			editorTab = new Tab(defaultLanguage.getString("Workspace") + " "
 					+ String.valueOf(numWorkspacesThatHaveExisted),

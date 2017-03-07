@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import frontend.UIChildDelegate;
+
 /**
  * 
  * This interface will be of default visibility, so it will only be visible to
@@ -36,7 +38,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayDelegate extends EditorPaneManagerChildDelegate{
+interface VariableDisplayDelegate extends UIChildDelegate {
 
 	/**
 	 * This method is called when the user changes the value of a variable in
