@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -69,6 +71,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	private Model model;
 
 	private ResourceBundle myResources;
+
+	private Collection<HelpPaneManager> helpPaneManagers;
 
 	/**
 	 * Creates a new instance of EditorPaneManager. Sets all values to default.
@@ -200,6 +204,11 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		if (getDelegate() != null) {
 			getDelegate().didChangeLanguage(this, myResources);
 		}
+		if (helpPaneManagers != null) {
+			for (HelpPaneManager help : helpPaneManagers) {
+				help.setLanguageResourceBundle(language);
+			}
+		}
 	}
 
 	/**
@@ -257,8 +266,13 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	 */
 	public void help() {
 		Stage helpStage = new Stage();
-		helpStage.setScene(new Scene(new HelpPaneManager().getRegion()));
+		HelpPaneManager helpPaneManager = new HelpPaneManager(myResources);
+		helpPaneManager.setStyleSheet(borderPane.getStylesheets().get(0));
+		helpStage.setScene(new Scene(helpPaneManager.getRegion()));
 		helpStage.show();
+		helpPaneManagers.add(helpPaneManager);
+		helpStage.setOnCloseRequest(event -> helpPaneManagers
+				.remove(helpPaneManager));
 	}
 
 	// VariableDisplayDelegate methods:
@@ -309,6 +323,9 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		if (getDelegate() != null) {
 			getDelegate().didChangeStylesheet(this, styleSheet);
 		}
+		for (HelpPaneManager help : helpPaneManagers) {
+			help.setStyleSheet(styleSheet);
+		}
 	}
 
 	private void printError(SlogoException e) {
@@ -355,6 +372,7 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	}
 
 	private void initialize(ResourceBundle myResources) {
+		helpPaneManagers = new ArrayList<HelpPaneManager>();
 		borderPane = new BorderPane();
 		terminalDisplayManager = new TerminalDisplayManager(this, myResources);
 		editorMenuBarManager = new EditorMenuBarManager(this, myResources);

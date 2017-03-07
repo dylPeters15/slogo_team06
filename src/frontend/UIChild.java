@@ -27,8 +27,12 @@ public abstract class UIChild<D extends UIChildDelegate> {
 	}
 
 	public UIChild(D delegate, ResourceBundle language) {
-		setLanguageResourceBundle(language);
-		setDelegate(delegate);
+		if (language != null) {
+			setLanguageResourceBundle(language);
+		}
+		if (delegate != null) {
+			setDelegate(delegate);
+		}
 	}
 
 	public D getDelegate() {
