@@ -204,7 +204,7 @@ public class SlogoController implements WorkspaceDelegate {
 					.getText()
 					.substring(
 							workspaceToTabs.get(workspace).getKey().getText()
-									.indexOf(" ") + 1));
+									.lastIndexOf(" ") + 1));
 			workspaceToTabs
 					.get(workspace)
 					.getKey()

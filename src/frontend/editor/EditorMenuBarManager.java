@@ -32,9 +32,8 @@ import frontend.UIChild;
  *
  */
 class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
-	private ObservableList<String> languages = FXCollections
-			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
-					"Italiano", "Português", "Russkiy", "Español");
+	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+	private static final String LANGUAGE_LIST = "LanguageList";
 
 	private Map<String, String> styleMap;
 
@@ -96,7 +95,9 @@ class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
 				.setOnMousePressed(event -> seeUserDefinedCommands());
 		myMenuBar.getChildren().add(seeUserDefinedCommands);
 
-		ComboBox<String> selectLanguage = new ComboBox<String>(languages);
+		ComboBox<String> selectLanguage = new ComboBox<String>(
+				FXCollections.observableArrayList(ResourceBundle.getBundle(
+						DEFAULT_RESOURCE_PACKAGE + LANGUAGE_LIST).keySet()).sorted());
 		selectLanguage.setValue(language.getString("Language"));
 
 		selectLanguage.setOnAction(event -> didSelectLanguage(selectLanguage
