@@ -12,7 +12,7 @@ import frontend.UIChildDelegate;
  *
  */
 public interface EditorPaneManagerDelegate extends UIChildDelegate {
-	void didChangeLanguage(EditorPaneManager editor, ResourceBundle newLanguage);
+	void didChangeToLanguage(ResourceBundle newLanguage);
 
-	void didChangeStylesheet(EditorPaneManager editor, String stylesheet);
+	void didChangeToStylesheet(String stylesheet);
 }

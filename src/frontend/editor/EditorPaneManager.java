@@ -3,8 +3,6 @@
  */
 package frontend.editor;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.geometry.Orientation;
@@ -58,8 +56,7 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	private static final String DEFAULT_LANGUAGE = "English";
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
-
-	private Map<String, String> languageToPropertyName = new HashMap<String, String>();
+	private static final String LANGUAGE_LIST = "LanguageList";
 
 	private BorderPane borderPane;
 	private TerminalDisplayManager terminalDisplayManager;
@@ -124,7 +121,6 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	public EditorPaneManager(ResourceBundle language,
 			EditorPaneManagerDelegate delegate, Model model) {
 		super(delegate, language);
-		populateLanguageMap();
 		setModel(model);
 		initialize(language);
 	}
@@ -201,7 +197,7 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 			model.setResourceBundle(myResources.getBaseBundleName());
 		}
 		if (getDelegate() != null) {
-			getDelegate().didChangeLanguage(this, myResources);
+			getDelegate().didChangeToLanguage(myResources);
 		}
 		if (helpPaneManager != null) {
 			helpPaneManager.setLanguageResourceBundle(language);
@@ -242,7 +238,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	public void didSelectLanguage(String language) {
 		setLanguageResourceBundle(ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE
-						+ languageToPropertyName.get(language)));
+						+ ResourceBundle.getBundle(
+								DEFAULT_RESOURCE_PACKAGE + LANGUAGE_LIST).getString(language)));
 	}
 
 	/**
@@ -317,8 +314,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
-		if (getDelegate() != null) {
-			getDelegate().didChangeStylesheet(this, styleSheet);
+		if (getDelegate() != null && styleSheet != null) {
+			getDelegate().didChangeToStylesheet(styleSheet);
 		}
 		if (helpPaneManager != null) {
 			helpPaneManager.setStyleSheet(styleSheet);
@@ -355,17 +352,6 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 		alert.getDialogPane().setExpanded(true);
 
 		alert.showAndWait();
-	}
-
-	private void populateLanguageMap() {
-		languageToPropertyName.put("Zhōngwén", "Chinese");
-		languageToPropertyName.put("English", "English");
-		languageToPropertyName.put("Français", "French");
-		languageToPropertyName.put("Deutsche", "German");
-		languageToPropertyName.put("Italiano", "Italian");
-		languageToPropertyName.put("Português", "Portuguese");
-		languageToPropertyName.put("Russkiy", "Russian");
-		languageToPropertyName.put("Español", "Spanish");
 	}
 
 	private void initialize(ResourceBundle myResources) {
