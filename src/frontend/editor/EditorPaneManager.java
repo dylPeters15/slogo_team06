@@ -201,7 +201,7 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 			model.setResourceBundle(myResources.getBaseBundleName());
 		}
 		if (getDelegate() != null) {
-			getDelegate().didChangeLanguage(this, myResources);
+			getDelegate().didChangeToLanguage(myResources);
 		}
 		if (helpPaneManager != null) {
 			helpPaneManager.setLanguageResourceBundle(language);
@@ -317,8 +317,8 @@ public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
 	public void setStyleSheet(String styleSheet) {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(styleSheet);
-		if (getDelegate() != null) {
-			getDelegate().didChangeStylesheet(this, styleSheet);
+		if (getDelegate() != null && styleSheet != null) {
+			getDelegate().didChangeToStylesheet(styleSheet);
 		}
 		if (helpPaneManager != null) {
 			helpPaneManager.setStyleSheet(styleSheet);

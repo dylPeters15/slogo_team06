@@ -3,6 +3,8 @@
  */
 package controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -14,16 +16,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import backend.Model;
-import frontend.editor.EditorPaneManager;
-import frontend.editor.EditorPaneManagerDelegate;
-import frontend.simulation.SimulationPaneManager;
+import javafx.util.Pair;
 
 /**
  * @author Dylan Peters
  *
  */
-public class SlogoController implements EditorPaneManagerDelegate {
+public class SlogoController implements WorkspaceDelegate {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private static final String DEFAULT_LANGUAGE = "English";
@@ -35,19 +34,22 @@ public class SlogoController implements EditorPaneManagerDelegate {
 	private TabPane simulationTabPane;
 
 	private ObservableList<Workspace> workspaces;
+	private Map<Workspace, Pair<Tab, Tab>> workspaceToTabs;
 
 	private int numWorkspacesThatHaveExisted;
 
-	private ResourceBundle defaultLanguage;
+	private ResourceBundle language;
 
 	public SlogoController() {
 		this(new Stage());
 	}
 
 	public SlogoController(Stage stage) {
-		numWorkspacesThatHaveExisted = 0;
-		defaultLanguage = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
+		language = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
 				+ DEFAULT_LANGUAGE);
+		numWorkspacesThatHaveExisted = 0;
+		workspaceToTabs = new HashMap<Workspace, Pair<Tab, Tab>>();
+
 		editorStage = stage;
 		simulationStage = new Stage();
 
@@ -68,7 +70,7 @@ public class SlogoController implements EditorPaneManagerDelegate {
 			@Override
 			public void onChanged(
 					javafx.collections.ListChangeListener.Change<? extends Workspace> change) {
-				pairsModified(change);
+				workspacesModified(change);
 			}
 		});
 
@@ -118,29 +120,44 @@ public class SlogoController implements EditorPaneManagerDelegate {
 
 	private void requestAllClose() {
 		for (Workspace workspace : workspaces) {
-			workspace.editor.close();
+			workspace.close();
 		}
 		editorStage.close();
 		simulationStage.close();
 	}
 
-	private void pairsModified(
+	private void workspacesModified(
 			ListChangeListener.Change<? extends Workspace> change) {
 		if (change.next() && change.wasAdded()) {
 			for (Workspace workspace : change.getAddedSubList()) {
-				workspace.editorTab.setOnClosed(event -> remove(workspace));
+				workspaceToTabs.put(
+						workspace,
+						new Pair<Tab, Tab>(new Tab(language
+								.getString("Workspace")
+								+ " "
+								+ numWorkspacesThatHaveExisted, workspace
+								.getEditorRegion()), new Tab(language
+								.getString("Workspace")
+								+ " "
+								+ numWorkspacesThatHaveExisted++, workspace
+								.getSimulationRegion())));
+				workspaceToTabs.get(workspace).getKey()
+						.setOnClosed(event -> workspaces.remove(workspace));
 				editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
-						workspace.editorTab);
+						workspaceToTabs.get(workspace).getKey());
 
-				workspace.simulationTab.setOnClosed(event -> remove(workspace));
+				workspaceToTabs.get(workspace).getValue()
+						.setOnClosed(event -> workspaces.remove(workspace));
 				simulationTabPane.getTabs().add(
 						simulationTabPane.getTabs().size() - 1,
-						workspace.simulationTab);
+						workspaceToTabs.get(workspace).getValue());
 			}
 		} else if (change.wasRemoved()) {
 			for (Workspace workspace : change.getRemoved()) {
-				editorTabPane.getTabs().remove(workspace.editorTab);
-				simulationTabPane.getTabs().remove(workspace.simulationTab);
+				editorTabPane.getTabs().remove(
+						workspaceToTabs.get(workspace).getKey());
+				simulationTabPane.getTabs().remove(
+						workspaceToTabs.get(workspace).getValue());
 			}
 		}
 		setClosingPolicy();
@@ -172,72 +189,34 @@ public class SlogoController implements EditorPaneManagerDelegate {
 		}
 	}
 
-	private void remove(Workspace workspace) {
-		if (workspaces.contains(workspace)) {
-			workspaces.remove(workspace);
-		}
-	}
-
 	private void addWorkspace() {
 		workspaces.add(new Workspace(this));
 	}
 
 	@Override
-	public void didChangeLanguage(EditorPaneManager editor,
+	public void didChangeLanguage(Workspace workspace,
 			ResourceBundle newLanguage) {
-		for (Workspace workspace : workspaces) {
-			if (workspace.editor.equals(editor)) {
-				// workspace.simulation.setLanguage(newLanguage);
-				workspace.editorTab
-						.setText(newLanguage.getString("Workspace")
-								+ " "
-								+ workspace.editorTab.getText().substring(
-										workspace.editorTab.getText().indexOf(
-												" ") + 1));
-				workspace.simulationTab.setText(newLanguage
-						.getString("Workspace")
-						+ " "
-						+ workspace.simulationTab.getText()
-								.substring(
-										workspace.simulationTab.getText()
-												.indexOf(" ") + 1));
-			}
+		this.language = newLanguage;
+		if (workspaceToTabs.containsKey(workspace)) {
+			int workspaceNum = Integer.parseInt(workspaceToTabs
+					.get(workspace)
+					.getKey()
+					.getText()
+					.substring(
+							workspaceToTabs.get(workspace).getKey().getText()
+									.indexOf(" ") + 1));
+			workspaceToTabs
+					.get(workspace)
+					.getKey()
+					.setText(
+							newLanguage.getString("Workspace") + " "
+									+ workspaceNum);
+			workspaceToTabs
+					.get(workspace)
+					.getValue()
+					.setText(
+							newLanguage.getString("Workspace") + " "
+									+ workspaceNum);
 		}
 	}
-
-	@Override
-	public void didChangeStylesheet(EditorPaneManager editor, String stylesheet) {
-		for (Workspace workspace : workspaces) {
-			if (workspace.editor.equals(editor)) {
-				workspace.simulation.setStyleSheet(stylesheet);
-			}
-		}
-	}
-
-	class Workspace {
-		Scene editorScene, simulationScene;
-		EditorPaneManager editor;
-		SimulationPaneManager simulation;
-		Tab editorTab, simulationTab;
-		Model model;
-
-		public Workspace(EditorPaneManagerDelegate editorDelegate) {
-			model = new Model();
-			editor = new EditorPaneManager(editorDelegate, model);
-			editor.setLanguageResourceBundle(defaultLanguage);
-			simulation = new SimulationPaneManager(model.getStatesList());
-
-			editorScene = new Scene(editor.getRegion());
-			simulationScene = new Scene(simulation.getParent());
-			editorTab = new Tab(defaultLanguage.getString("Workspace") + " "
-					+ String.valueOf(numWorkspacesThatHaveExisted),
-					editorScene.getRoot());
-			simulationTab = new Tab(String.valueOf(defaultLanguage
-					.getString("Workspace")
-					+ " "
-					+ numWorkspacesThatHaveExisted++),
-					simulationScene.getRoot());
-		}
-	}
-
 }
