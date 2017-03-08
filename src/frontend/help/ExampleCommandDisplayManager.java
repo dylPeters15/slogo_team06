@@ -12,14 +12,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.PlaceHolder;
+import frontend.EmptyDelegate;
 
 /**
  * @author Dylan Peters
  *
  */
-class ExampleCommandDisplayManager extends UIChild<UIChildDelegate> {
+class ExampleCommandDisplayManager extends PlaceHolder<EmptyDelegate> {
 	private static final String DEFAULT_LANGUAGE_RESOURCE_PACKAGE = "resources.languages/";
 	private static final String DEFAULT_LANGUAGE = "English";
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources/";

@@ -3,7 +3,7 @@
  */
 package frontend.editor;
 
-import frontend.UIChildDelegate;
+import frontend.EmptyDelegate;
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -38,7 +38,7 @@ import frontend.UIChildDelegate;
  * @author Dylan Peters
  *
  */
-interface TerminalDisplayDelegate extends UIChildDelegate {
+interface TerminalDisplayDelegate extends EmptyDelegate {
 
 	/**
 	 * This method is called by the TerminalDisplayManager to indicate to the

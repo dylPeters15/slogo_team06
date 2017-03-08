@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import frontend.UIChild;
+import frontend.PlaceHolder;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -31,7 +31,7 @@ import frontend.UIChild;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
+class EditorMenuBarManager extends PlaceHolder<EditorMenuBarDelegate> {
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
 	private static final String LANGUAGE_LIST = "LanguageList";
 

@@ -6,10 +6,10 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.PlaceHolder;
+import frontend.EmptyDelegate;
 
-public class HelpPaneManager extends UIChild<UIChildDelegate> {
+public class HelpPaneManager extends PlaceHolder<EmptyDelegate> {
 	private static final double DEFAULT_WIDTH = 600;
 	private static final double DEFAULT_HEIGHT = 600;
 

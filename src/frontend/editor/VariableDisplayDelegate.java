@@ -3,7 +3,7 @@
  */
 package frontend.editor;
 
-import frontend.UIChildDelegate;
+import frontend.EmptyDelegate;
 
 /**
  * 
@@ -38,7 +38,7 @@ import frontend.UIChildDelegate;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayDelegate extends UIChildDelegate {
+interface VariableDisplayDelegate extends EmptyDelegate {
 
 	/**
 	 * This method is called when the user changes the value of a variable in

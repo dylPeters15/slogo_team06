@@ -4,10 +4,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.PlaceHolder;
+import frontend.EmptyDelegate;
 
-class URLBarManager extends UIChild<UIChildDelegate> {
+class URLBarManager extends PlaceHolder<EmptyDelegate> {
 
 	private HBox myMenuBar;
 	private TextField myURLDisplay;

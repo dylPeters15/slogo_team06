@@ -19,7 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
-import frontend.UIChild;
+import frontend.PlaceHolder;
 import frontend.help.HelpPaneManager;
 
 /**
@@ -50,7 +50,7 @@ import frontend.help.HelpPaneManager;
  * @author Dylan Peters
  *
  */
-public class EditorPaneManager extends UIChild<EditorPaneManagerDelegate>
+public class EditorPaneManager extends PlaceHolder<EditorPaneManagerDelegate>
 		implements EditorMenuBarDelegate, VariableDisplayDelegate,
 		TerminalDisplayDelegate {
 	private static final String DEFAULT_LANGUAGE = "English";

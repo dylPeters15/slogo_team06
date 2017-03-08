@@ -14,7 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import frontend.UIChild;
+import frontend.PlaceHolder;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -33,7 +33,7 @@ import frontend.UIChild;
  * @author Dylan Peters
  *
  */
-class TerminalDisplayManager extends UIChild<TerminalDisplayDelegate> {
+class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;

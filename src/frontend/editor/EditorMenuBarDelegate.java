@@ -3,7 +3,7 @@
  */
 package frontend.editor;
 
-import frontend.UIChildDelegate;
+import frontend.EmptyDelegate;
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -40,7 +40,7 @@ import frontend.UIChildDelegate;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarDelegate extends UIChildDelegate {
+interface EditorMenuBarDelegate extends EmptyDelegate {
 
 	/**
 	 * This method is called when the user selects to change the language in
