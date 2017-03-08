@@ -35,6 +35,36 @@ class TextInputArea {
 		initMouseEvents();
 	}
 
+	void setPrompt(String prompt) {
+		textArea.setPromptText(prompt);
+	}
+
+	void setText(String text) {
+		textArea.setText(text);
+	}
+
+	String getText() {
+		return textArea.getText();
+	}
+
+	Region getRegion() {
+		return stackPane;
+	}
+
+	void greyOut(boolean grey) {
+		if (grey) {
+			textArea.setEditable(false);
+			if (!stackPane.getChildren().contains(glassPane)) {
+				stackPane.getChildren().add(glassPane);
+			}
+		} else {
+			textArea.setEditable(true);
+			if (stackPane.getChildren().contains(glassPane)) {
+				stackPane.getChildren().remove(glassPane);
+			}
+		}
+	}
+
 	private void initStackPane() {
 		stackPane = new StackPane();
 	}
@@ -85,36 +115,6 @@ class TextInputArea {
 				.setBackground(new Background(new BackgroundFill((Paint) Color
 						.color(0.5, 0.5, 0.5, 0.4), new CornerRadii(0),
 						new Insets(0)))));
-	}
-
-	void setPrompt(String prompt) {
-		textArea.setPromptText(prompt);
-	}
-
-	void setText(String text) {
-		textArea.setText(text);
-	}
-
-	String getText() {
-		return textArea.getText();
-	}
-
-	Region getRegion() {
-		return stackPane;
-	}
-
-	void greyOut(boolean grey) {
-		if (grey) {
-			textArea.setEditable(false);
-			if (!stackPane.getChildren().contains(glassPane)) {
-				stackPane.getChildren().add(glassPane);
-			}
-		} else {
-			textArea.setEditable(true);
-			if (stackPane.getChildren().contains(glassPane)) {
-				stackPane.getChildren().remove(glassPane);
-			}
-		}
 	}
 
 }
