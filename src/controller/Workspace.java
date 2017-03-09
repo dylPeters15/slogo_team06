@@ -6,6 +6,7 @@ package controller;
 import java.util.ResourceBundle;
 
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import backend.Model;
 import frontend.editor.EditorPaneManager;
 import frontend.editor.EditorPaneManagerDelegate;
@@ -38,12 +39,19 @@ public class Workspace implements EditorPaneManagerDelegate {
 
 	public Workspace(ResourceBundle language, WorkspaceDelegate delegate) {
 		Model model = new Model();
+
 		simulation = new SimulationPaneManager(model.getStatesList());
+		simulation.setLanguageResourceBundle(language);
+		new Scene(simulation.getObject());
+
 		editor = new EditorPaneManager(model);
 		editor.setDelegate(this);
 		editor.setLanguageResourceBundle(language);
+		new Scene(editor.getObject());
+
 		setDelegate(delegate);
 		setLanguage(language);
+
 	}
 
 	public void setDelegate(WorkspaceDelegate delegate) {

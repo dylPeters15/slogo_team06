@@ -5,7 +5,6 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
-
 /**
  * This interface will be of default visibility, so it will only be visible to
  * other members of its package. Therefore, it will be part of the internal API

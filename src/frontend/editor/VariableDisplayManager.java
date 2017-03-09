@@ -55,20 +55,6 @@ class VariableDisplayManager extends
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	// VariableDisplayManager(VariableDisplayDelegate delegate,
-	// ResourceBundle language, ObservableMap<String, String> variableMap) {
-	// initializeTable();
-	// this.varMap = variableMap;
-	// variableMap.addListener(new MapChangeListener<String, String>() {
-	// @Override
-	// public void onChanged(
-	// javafx.collections.MapChangeListener.Change<? extends String, ? extends
-	// String> arg0) {
-	// update();
-	// }
-	// });
-	// }
-
 	VariableDisplayManager(ObservableMap<String, String> variableMap) {
 		initializeTable();
 		this.varMap = variableMap;
@@ -229,12 +215,6 @@ class VariableDisplayManager extends
 
 			}
 		};
-	}
-
-	@Override
-	protected void styleSheetDidChange() {
-		table.getStylesheets().clear();
-		table.getStylesheets().add(getStyleSheet());
 	}
 
 }

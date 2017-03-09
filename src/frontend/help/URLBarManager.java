@@ -45,12 +45,6 @@ class URLBarManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 	}
 
 	@Override
-	public void styleSheetDidChange() {
-		myMenuBar.getStylesheets().clear();
-		myMenuBar.getStylesheets().add(getStyleSheet());
-	}
-
-	@Override
 	public EmptyDelegate createNonActiveDelegate() {
 		return new EmptyDelegate() {
 		};

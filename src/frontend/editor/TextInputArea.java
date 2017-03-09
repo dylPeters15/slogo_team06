@@ -20,7 +20,7 @@ import frontend.SlogoBaseUIManager;
  * @author Dylan Peters
  *
  */
-class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Region>{
+class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Region> {
 
 	StackPane stackPane;
 	TextArea textArea;
@@ -121,14 +121,8 @@ class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Region>{
 	}
 
 	@Override
-	protected void styleSheetDidChange() {
-		stackPane.getStylesheets().clear();
-		stackPane.getStylesheets().add(getStyleSheet());
-	}
-	
-	@Override
 	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate(){
+		return new EmptyDelegate() {
 		};
 	}
 
