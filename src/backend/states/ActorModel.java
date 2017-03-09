@@ -32,6 +32,9 @@ public abstract class ActorModel {
 		initFromActor(actor);
 	}
 
+	/**
+	 * @param actor
+	 */
 	public void initFromActor(ActorModel actor){
 		pos = actor.getPos();
 		heading = actor.getHeading();
@@ -39,6 +42,9 @@ public abstract class ActorModel {
 		visible = actor.getVisible();
 	}
 	
+	/**
+	 * @param distance
+	 */
 	public void moveForward(double distance){
 		double x = pos.getX();
 		double y = pos.getY();
@@ -50,33 +56,60 @@ public abstract class ActorModel {
         return (double)Math.round(value * 1000000) / 1000000; //you can change this to round up the value(for two position use 100...)
     }
 	
+	/**
+	 * @param distance
+	 */
 	public void moveBackward(double distance){
 		moveForward(-distance);
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean getVisible() {
 		return visible;
 	}
+	/**
+	 * @param v
+	 */
 	public void setVisible(boolean v) {
 		visible = v;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean getPenUp() {
 		return penUp;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Point2D.Double getPos() {
 		return pos;
 	}
+	/**
+	 * @param pos
+	 */
 	public void setPos(Point2D.Double pos) {
 		this.pos = pos;
 	}
+	/**
+	 * @return
+	 */
 	public double getHeading() {
 		return heading;
 	}
+	/**
+	 * @param heading
+	 */
 	public void setHeading(Double heading) {
 		this.heading = heading%360;
 	}
+	/**
+	 * @param penUp
+	 */
 	public void setPenUp(boolean penUp) {
 		this.penUp = penUp;
 	}

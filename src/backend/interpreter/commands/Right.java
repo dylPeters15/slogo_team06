@@ -14,10 +14,16 @@ import backend.states.StatesList;
  */
 public class Right extends Left {
 
+	/**
+	 * @param list
+	 */
 	public Right(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Left#runCommand(double)
+	 */
 	@Override
 	public double runCommand(double distance) throws SlogoException {
 		return super.runCommand(-distance);

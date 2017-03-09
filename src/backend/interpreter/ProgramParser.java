@@ -15,11 +15,17 @@ public class ProgramParser {
     private List<Entry<String, Pattern>> mySymbols;
 
 
+    /**
+     * 
+     */
     public ProgramParser () {
     	clearPatterns();
     }
 
     // adds the given resource file to this language's recognized types
+    /**
+     * @param syntax
+     */
     public void addPatterns (String syntax) {
         ResourceBundle resources = ResourceBundle.getBundle(syntax);
         addPatterns(resources);
@@ -36,6 +42,10 @@ public class ProgramParser {
          }
     }
     // returns the language's type associated with the given text if one exists 
+    /**
+     * @param text
+     * @return
+     */
     public String getSymbol (String text) {
         final String ERROR = "NO MATCH";
         for (Entry<String, Pattern> e : mySymbols) {
@@ -52,6 +62,9 @@ public class ProgramParser {
         return regex.matcher(text).matches();
     }
 
+	/**
+	 * 
+	 */
 	public void clearPatterns() {
 		 mySymbols = new ArrayList<>();	
 	}

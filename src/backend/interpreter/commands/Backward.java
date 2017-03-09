@@ -18,10 +18,16 @@ import backend.states.StatesList;
  */
 public class Backward extends Forward {
 
+	/**
+	 * @param list
+	 */
 	public Backward(StatesList<State> list) {
 		super(list);
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Forward#runCommand(double)
+	 */
 	@Override
 	public double runCommand(double distance) {
 		return super.runCommand(-distance);

@@ -16,6 +16,9 @@ public class TurtleModel extends ActorModel {
 		
 	}
 
+	/**
+	 * 
+	 */
 	public TurtleModel() {
 		setVector(DEF_POS.getY(),DEF_POS.getY(),DEF_HEADING);
 		
