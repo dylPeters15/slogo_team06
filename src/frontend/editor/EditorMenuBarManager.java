@@ -120,19 +120,15 @@ class EditorMenuBarManager extends
 			styleSheetSelector.setValue(styles.get(0));
 		}
 		styleSheetSelector
-				.setOnAction(event -> setStyleSheet(styleSheetSelector
+				.setOnAction(event -> setStyleSheetTo(styleSheetSelector
 						.getValue()));
 		myMenuBar.getChildren().add(styleSheetSelector);
 
 	}
 
-	// private void setStyleSheet(String styleSheet) {
-	// if (getDelegate() != null
-	// && getDelegate() instanceof EditorMenuBarDelegate) {
-	// ((EditorMenuBarDelegate) getDelegate()).setStyleSheet(styleMap
-	// .get(styleSheet));
-	// }
-	// }
+	private void setStyleSheetTo(String styleSheet) {
+		getDelegate().didSelectStyleSheet(styleMap.get(styleSheet));
+	}
 
 	private void seeUserDefinedCommands() {
 		if (getDelegate() != null) {
@@ -157,8 +153,8 @@ class EditorMenuBarManager extends
 	private void populateStyleMap(ResourceBundle language) {
 		styleMap = new HashMap<String, String>();
 		styleMap.put(language.getString("DefaultTheme"),
-				"resources/default.css");
-		styleMap.put(language.getString("DarkTheme"), "resources/darktheme.css");
+				"resources/styles/default.css");
+		styleMap.put(language.getString("DarkTheme"), "resources/styles/darktheme.css");
 	}
 
 	@Override
@@ -166,7 +162,7 @@ class EditorMenuBarManager extends
 		return new EditorMenuBarDelegate() {
 
 			@Override
-			public void setStyleSheet(String stylesheet) {
+			public void didSelectStyleSheet(String stylesheet) {
 
 			}
 

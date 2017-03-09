@@ -64,62 +64,6 @@ public class EditorPaneManager extends
 	private Stage helpPaneStage;
 	private HelpPaneManager helpPaneManager;
 
-	// /**
-	// * Creates a new instance of EditorPaneManager. Sets all values to
-	// default.
-	// */
-	// public EditorPaneManager() {
-	// this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-	// + DEFAULT_LANGUAGE));
-	// }
-	//
-	// /**
-	// * Creates a new instance of EditorPaneManager. Sets all values except
-	// * width, height, and language to default.
-	// *
-	// * @param width
-	// * the width to display the editor pane.
-	// * @param height
-	// * the height to display the editor pane.
-	// * @param language
-	// * the language with which to display the text in the editor
-	// * pane.
-	// */
-	// public EditorPaneManager(ResourceBundle language) {
-	// this(language, null, null);
-	// }
-	//
-	// public EditorPaneManager(EditorPaneManagerDelegate delegate) {
-	// this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-	// + DEFAULT_LANGUAGE), delegate, null);
-	// }
-	//
-	// public EditorPaneManager(Model model) {
-	// this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-	// + DEFAULT_LANGUAGE), null, model);
-	// }
-	//
-	// public EditorPaneManager(ResourceBundle language,
-	// EditorPaneManagerDelegate delegate) {
-	// this(language, delegate, null);
-	// }
-	//
-	// public EditorPaneManager(ResourceBundle language, Model model) {
-	// this(language, null, model);
-	// }
-	//
-	// public EditorPaneManager(EditorPaneManagerDelegate delegate, Model model)
-	// {
-	// this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-	// + DEFAULT_LANGUAGE), delegate, model);
-	// }
-	//
-	// public EditorPaneManager(ResourceBundle language,
-	// EditorPaneManagerDelegate delegate, Model model) {
-	// super(delegate, language);
-	// setModel(model);
-	// initialize(language);
-	// }
 	public EditorPaneManager(Model model) {
 		setModel(model);
 		initialize();
@@ -190,7 +134,7 @@ public class EditorPaneManager extends
 		variableDisplayManager
 				.setLanguageResourceBundle(getLanguageResourceBundle());
 		helpPaneManager.setLanguageResourceBundle(getLanguageResourceBundle());
-		
+
 		model.setResourceBundle(getLanguageResourceBundle().getBaseBundleName());
 		getDelegate().didChangeToLanguage(getLanguageResourceBundle());
 	}
@@ -302,7 +246,7 @@ public class EditorPaneManager extends
 	protected void styleSheetDidChange() {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(getStyleSheet());
-		getDelegate().didChangeToStylesheet(getStyleSheet());
+		System.out.println(getStyleSheet());
 		helpPaneManager.setStyleSheet(getStyleSheet());
 	}
 
@@ -390,6 +334,20 @@ public class EditorPaneManager extends
 
 			}
 		};
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * frontend.editor.EditorMenuBarDelegate#setStyleSheetTo(java.lang.String)
+	 */
+	@Override
+	public void didSelectStyleSheet(String stylesheet) {
+		System.out.println("asdf" + stylesheet);
+		setStyleSheet(stylesheet);
+
+		getDelegate().didChangeToStylesheet(getStyleSheet());
 	}
 
 }

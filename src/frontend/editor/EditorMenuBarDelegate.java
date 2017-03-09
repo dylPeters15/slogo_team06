@@ -67,6 +67,6 @@ interface EditorMenuBarDelegate {
 	 */
 	void help();
 
-	void setStyleSheet(String stylesheet);
+	void didSelectStyleSheet(String stylesheet);
 
 }

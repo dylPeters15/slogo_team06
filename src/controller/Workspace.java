@@ -6,7 +6,6 @@ package controller;
 import java.util.ResourceBundle;
 
 import javafx.scene.Parent;
-import javafx.scene.layout.Region;
 import backend.Model;
 import frontend.editor.EditorPaneManager;
 import frontend.editor.EditorPaneManagerDelegate;
@@ -64,8 +63,8 @@ public class Workspace implements EditorPaneManagerDelegate {
 		return editor.getObject();
 	}
 
-	public Region getSimulationRegion() {
-		return (Region) simulation.getParent();
+	public Parent getSimulationRegion() {
+		return simulation.getObject();
 	}
 
 	@Override
@@ -78,6 +77,7 @@ public class Workspace implements EditorPaneManagerDelegate {
 	@Override
 	public void didChangeToStylesheet(String stylesheet) {
 		simulation.setStyleSheet(stylesheet);
+		editor.setStyleSheet(stylesheet);
 	}
 
 	public void close() {
