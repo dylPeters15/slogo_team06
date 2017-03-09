@@ -154,7 +154,6 @@ public class Interpreter {
 			return handleInstCommand(com, words, word);
 		}
 		catch (SlogoException e){
-			e.setText(e.getText()+"->"+word);
 			throw e;
 		}
 	}
