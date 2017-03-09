@@ -53,13 +53,6 @@ interface EditorMenuBarDelegate {
 	void didSelectLanguage(ResourceBundle language);
 
 	/**
-	 * This method is called when the user wants to see a list of the
-	 * user-defined commands. The class implementing this interface should
-	 * somehow display all the commands the user has defined.
-	 */
-	void seeUserDefinedCommands();
-
-	/**
 	 * This method is called when the user wants to see a help page. The class
 	 * implementing this method should display a list of all possible commands,
 	 * as well as basic protocol about how to use the program.

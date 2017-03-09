@@ -36,12 +36,6 @@ public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 	}
 
 	@Override
-	public void styleSheetDidChange() {
-		split.getStylesheets().clear();
-		split.getStylesheets().add(getStyleSheet());
-	}
-
-	@Override
 	public void languageResourceBundleDidChange() {
 		htmlDisplayManager
 				.setLanguageResourceBundle(getLanguageResourceBundle());

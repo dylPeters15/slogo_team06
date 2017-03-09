@@ -18,8 +18,7 @@ import frontend.SlogoBaseUIManager;
  * @author Dylan Peters
  *
  */
-class ExampleCommandDisplayManager extends
-		SlogoBaseUIManager<Region> {
+class ExampleCommandDisplayManager extends SlogoBaseUIManager<Region> {
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources/";
 	private static final String DEFAULT_EXAMPLE_RESOURCE = "ExampleCommands";
 	private static final String COMMENT_DELIMITER = "#";
@@ -56,7 +55,6 @@ class ExampleCommandDisplayManager extends
 				"ExampleCommands"));
 		vbox.getChildren().add(title);
 		initCommands(getLanguageResourceBundle());
-		setStyleSheet(null);
 	}
 
 	private void initCommands(ResourceBundle language) {
