@@ -87,8 +87,8 @@ public class State {
 		penSize = size;
 	}
 	
-	public Double getShape() {
-		return (double)turtleShape;
+	public int getShape() {
+		return turtleShape;
 	}
 	
 	public void setShape(int shape) {

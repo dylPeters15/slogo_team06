@@ -26,6 +26,16 @@ public enum ColorList {
 		return color;
 	}
 	
+	public static int setColor(int index, int r, int g, int b) {
+		if (ColorList.fromInt(index) != null) {
+			ColorList.fromInt(index).color = Color.rgb(r,g,b);
+			return index;
+		}
+		else {
+			return (-1);
+		}
+	}
+	
 	public static ColorList fromInt(int index) {
 		for (ColorList cl: ColorList.values()) {
 			if (cl.getIndex() == index) return cl;

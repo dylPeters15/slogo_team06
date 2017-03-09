@@ -53,6 +53,10 @@ public abstract class Command {
 	public double runCommand(double a, double b) throws SlogoException {
 		throw new SlogoException("IncorrectNumOfParameters");
 	}
+	
+	public double runCommand(double a, double b, double c, double d) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters");
+	}
 
 	public double runCommand(List<String> words) throws SlogoException{
 		throw new SlogoException("IncorrectParamType");
