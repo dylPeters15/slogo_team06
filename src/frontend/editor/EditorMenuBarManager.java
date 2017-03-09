@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -30,7 +30,7 @@ import frontend.SlogoBaseUIManager;
  *
  */
 class EditorMenuBarManager extends
-		SlogoBaseUIManager<EditorMenuBarDelegate, Parent> {
+		SlogoDelegatedUIManager<EditorMenuBarDelegate, Parent> {
 
 	private HBox myMenuBar;
 
@@ -89,7 +89,8 @@ class EditorMenuBarManager extends
 		myMenuBar.getChildren().add(help);
 
 		ObservableList<String> styles = FXCollections
-				.observableArrayList(getPossibleStyleSheetNamesAndFileNames().keySet());
+				.observableArrayList(getPossibleStyleSheetNamesAndFileNames()
+						.keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
@@ -102,7 +103,8 @@ class EditorMenuBarManager extends
 	}
 
 	private void setStyleSheetTo(String styleSheet) {
-		getDelegate().didSelectStyleSheet(getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
+		getDelegate().didSelectStyleSheet(
+				getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
 	}
 
 	private void seeUserDefinedCommands() {

@@ -12,7 +12,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import frontend.EmptyDelegate;
 import frontend.SlogoBaseUIManager;
 
 /**
@@ -20,7 +19,7 @@ import frontend.SlogoBaseUIManager;
  *
  */
 class ExampleCommandDisplayManager extends
-		SlogoBaseUIManager<EmptyDelegate, Region> {
+		SlogoBaseUIManager<Region> {
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources/";
 	private static final String DEFAULT_EXAMPLE_RESOURCE = "ExampleCommands";
 	private static final String COMMENT_DELIMITER = "#";
@@ -85,12 +84,6 @@ class ExampleCommandDisplayManager extends
 		}
 		textArea.setText(sb.toString().trim());
 		textArea.setWrapText(true);
-	}
-
-	@Override
-	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate() {
-		};
 	}
 
 }

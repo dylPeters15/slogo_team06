@@ -1,15 +1,13 @@
 package frontend.simulation;
 
-import backend.states.State;
-import backend.states.StatesList;
-import frontend.EmptyDelegate;
-import frontend.SlogoBaseUIManager;
 import javafx.collections.ListChangeListener;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import backend.states.State;
+import backend.states.StatesList;
+import frontend.SlogoBaseUIManager;
 
 /**
  * Manager for simulation window
@@ -21,7 +19,7 @@ import javafx.scene.paint.Color;
  * @author Andreas Santos
  *
  */
-public class SimulationPaneManager extends SlogoBaseUIManager<EmptyDelegate, Region> 
+public class SimulationPaneManager extends SlogoBaseUIManager<Region> 
 								implements SimulationMenuBarDelegate, ListChangeListener<State>  {
 	
 	private BorderPane borderPane;
@@ -159,16 +157,11 @@ public class SimulationPaneManager extends SlogoBaseUIManager<EmptyDelegate, Reg
 		}
 	}
 
-	@Override
-	protected void styleSheetDidChange(){
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(getStyleSheet());
-	}
-
-	@Override
-	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate() {};
-	}
+//	@Override
+//	protected void styleSheetDidChange(){
+//		borderPane.getStylesheets().clear();
+//		borderPane.getStylesheets().add(getStyleSheet());
+//	}
 	
 	@Override
 	protected void languageResourceBundleDidChange() {

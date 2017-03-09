@@ -16,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.TextAlignment;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -35,7 +35,7 @@ import frontend.SlogoBaseUIManager;
  *
  */
 class VariableDisplayManager extends
-		SlogoBaseUIManager<VariableDisplayDelegate, Parent> {
+		SlogoDelegatedUIManager<VariableDisplayDelegate, Parent> {
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
@@ -135,12 +135,7 @@ class VariableDisplayManager extends
 	}
 
 	private boolean varListHasVarWithName(String varName) {
-		for (Variable var : variables) {
-			if (var.nameProperty().get().equals(varName)) {
-				return true;
-			}
-		}
-		return false;
+		return indexOfVarWithName(varName) != -1;
 	}
 
 	private int indexOfVarWithName(String varName) {
@@ -177,23 +172,15 @@ class VariableDisplayManager extends
 						.getRow());
 				if (varChanged.isNumber()) {
 					if (isNumber(event.getNewValue())) {
-						varChanged.valueProperty().set(event.getNewValue());
-						varMap.put(varChanged.nameProperty().get(),
-								event.getNewValue());
+						setVar(varChanged, event.getNewValue());
 					} else {
-						variables.remove(varChanged);
-						variables.add(varChanged);
-						variables.sort(null);
+						resetVar(varChanged);
 					}
 				} else {
 					if (isNumber(event.getNewValue())) {
-						variables.remove(varChanged);
-						variables.add(varChanged);
-						variables.sort(null);
+						resetVar(varChanged);
 					} else {
-						varChanged.valueProperty().set(event.getNewValue());
-						varMap.put(varChanged.nameProperty().get(),
-								event.getNewValue());
+						setVar(varChanged, event.getNewValue());
 					}
 				}
 			}
@@ -215,6 +202,17 @@ class VariableDisplayManager extends
 
 			}
 		};
+	}
+
+	private void setVar(Variable varChanged, String newValue) {
+		varChanged.valueProperty().set(newValue);
+		varMap.put(varChanged.nameProperty().get(), newValue);
+	}
+
+	private void resetVar(Variable varChanged) {
+		variables.remove(varChanged);
+		variables.add(varChanged);
+		variables.sort(null);
 	}
 
 }

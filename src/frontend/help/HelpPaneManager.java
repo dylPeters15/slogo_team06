@@ -4,10 +4,9 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import frontend.EmptyDelegate;
 import frontend.SlogoBaseUIManager;
 
-public class HelpPaneManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
+public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 	private static final String HELP_PAGE = "http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands.php";
 
 	private SplitPane split;
@@ -77,12 +76,6 @@ public class HelpPaneManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 		split.getItems().add(borderPane);
 		exampleCommandDisplayManager = new ExampleCommandDisplayManager();
 		split.getItems().add(exampleCommandDisplayManager.getObject());
-	}
-
-	@Override
-	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate() {
-		};
 	}
 
 }

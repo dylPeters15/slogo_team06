@@ -19,7 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 import frontend.help.HelpPaneManager;
 
 /**
@@ -51,7 +51,7 @@ import frontend.help.HelpPaneManager;
  *
  */
 public class EditorPaneManager extends
-		SlogoBaseUIManager<EditorPaneManagerDelegate, Parent> implements
+		SlogoDelegatedUIManager<EditorPaneManagerDelegate, Parent> implements
 		EditorMenuBarDelegate, VariableDisplayDelegate, TerminalDisplayDelegate {
 
 	private BorderPane borderPane;
@@ -242,12 +242,12 @@ public class EditorPaneManager extends
 		}
 	}
 
-	@Override
-	protected void styleSheetDidChange() {
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(getStyleSheet());
-		helpPaneManager.setStyleSheet(getStyleSheet());
-	}
+//	@Override
+//	protected void styleSheetDidChange() {
+//		borderPane.getStylesheets().clear();
+//		borderPane.getStylesheets().add(getStyleSheet());
+//		helpPaneManager.setStyleSheet(getStyleSheet());
+//	}
 
 	private void printError(SlogoException e) {
 		terminalDisplayManager.printText(e.getText());
