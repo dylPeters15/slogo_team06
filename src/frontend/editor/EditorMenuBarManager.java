@@ -59,6 +59,30 @@ class EditorMenuBarManager extends
 		return myMenuBar;
 	}
 
+	/**
+	 * This is the concrete implementation of the createNonActiveDelegate method
+	 * declared in the Delegated interface.
+	 * 
+	 * This implementation creates an instance of EditorMenuBar in which all of
+	 * the methods do nothing, as is specified by the Delegated interface.
+	 */
+	@Override
+	public EditorMenuBarDelegate createNonActiveDelegate() {
+		return new EditorMenuBarDelegate() {
+			@Override
+			public void userDidRequestChangeToStylesheet(String stylesheet) {
+			}
+
+			@Override
+			public void help() {
+			}
+
+			@Override
+			public void userDidRequestChangeToLanguage(ResourceBundle language) {
+			}
+		};
+	}
+
 	@Override
 	protected void languageResourceBundleDidChange() {
 		populateMenuBar();
@@ -97,13 +121,13 @@ class EditorMenuBarManager extends
 	}
 
 	private void setStyleSheetTo(String styleSheet) {
-		getDelegate().didSelectStyleSheet(
+		getDelegate().userDidRequestChangeToStylesheet(
 				getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
 	}
 
 	private void didSelectLanguage(String language) {
 		if (getDelegate() != null) {
-			getDelegate().didSelectLanguage(
+			getDelegate().userDidRequestChangeToLanguage(
 					getPossibleResourceBundleNamesAndResourceBundles().get(
 							language));
 		}
@@ -113,27 +137,6 @@ class EditorMenuBarManager extends
 		if (getDelegate() != null) {
 			getDelegate().help();
 		}
-	}
-
-	@Override
-	public EditorMenuBarDelegate createNonActiveDelegate() {
-		return new EditorMenuBarDelegate() {
-
-			@Override
-			public void didSelectStyleSheet(String stylesheet) {
-
-			}
-
-			@Override
-			public void help() {
-
-			}
-
-			@Override
-			public void didSelectLanguage(ResourceBundle language) {
-
-			}
-		};
 	}
 
 }

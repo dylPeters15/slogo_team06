@@ -15,7 +15,6 @@ public abstract class SlogoDelegatedUIManager<D, T extends Parent> extends
 	private D delegate;
 
 	public SlogoDelegatedUIManager() {
-
 		delegate = createNonActiveDelegate();
 	}
 

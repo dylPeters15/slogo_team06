@@ -6,11 +6,14 @@ package frontend.editor;
 import java.util.ResourceBundle;
 
 /**
+ * This interface allows the EditorPaneManager to 
  * @author Dylan Peters
  *
  */
 public interface EditorPaneManagerDelegate {
-	void didChangeToLanguage(ResourceBundle newLanguage);
 
-	void didChangeToStylesheet(String stylesheet);
+	void userDidRequestChangeToLanguage(ResourceBundle newLanguage);
+
+	void userDidRequestChangeToStylesheet(String stylesheet);
+
 }

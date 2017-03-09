@@ -64,15 +64,38 @@ public class EditorPaneManager extends
 	private Stage helpPaneStage;
 	private HelpPaneManager helpPaneManager;
 
+	/**
+	 * Creates a new instance of EditorPaneManager and sets all values to
+	 * default.
+	 * 
+	 * @param model
+	 *            the model that the editorPaneManager should update when the
+	 *            user types a command
+	 */
 	public EditorPaneManager(Model model) {
 		setModel(model);
 		initialize();
 	}
 
+	/**
+	 * Sets the model that the editorPaneManager should update when the user
+	 * types a command
+	 * 
+	 * @param model
+	 *            the model that the editorPaneManager should update when the
+	 *            user types a command
+	 */
 	public void setModel(Model model) {
 		this.model = model;
 	}
 
+	/**
+	 * Gets the model that the editorPaneManager updates when the user types a
+	 * command
+	 * 
+	 * @return the model that the editorPaneManager updates when the user types
+	 *         a command
+	 */
 	public Model getModel() {
 		return model;
 	}
@@ -136,7 +159,8 @@ public class EditorPaneManager extends
 		helpPaneManager.setLanguageResourceBundle(getLanguageResourceBundle());
 
 		model.setResourceBundle(getLanguageResourceBundle().getBaseBundleName());
-		getDelegate().didChangeToLanguage(getLanguageResourceBundle());
+		getDelegate().userDidRequestChangeToLanguage(
+				getLanguageResourceBundle());
 	}
 
 	/**
@@ -153,7 +177,10 @@ public class EditorPaneManager extends
 		return borderPane;
 	}
 
-	public void close() {
+	/**
+	 * Closes all the windows created by this EditorPaneManager
+	 */
+	public void closeAllChildWindows() {
 		helpPaneStage.close();
 	}
 
@@ -170,20 +197,8 @@ public class EditorPaneManager extends
 	 * @param language
 	 *            the language to display the program in
 	 */
-	public void didSelectLanguage(ResourceBundle resourceBundle) {
+	public void userDidRequestChangeToLanguage(ResourceBundle resourceBundle) {
 		setLanguageResourceBundle(resourceBundle);
-	}
-
-	/**
-	 * This is the implementation of the method in the EditorMenuBarDelegate
-	 * interface.
-	 * 
-	 * This method is called when the user wants to see a list of the
-	 * user-defined commands. This method displays all the commands the user has
-	 * defined by printing them in the terminal portion of the display.
-	 */
-	public void seeUserDefinedCommands() {
-
 	}
 
 	/**
@@ -196,7 +211,6 @@ public class EditorPaneManager extends
 	 */
 	public void help() {
 		if (helpPaneStage != null) {
-			System.out.println(helpPaneManager.getStyleSheet());
 			helpPaneStage.show();
 			helpPaneStage.toFront();
 		}
@@ -241,6 +255,41 @@ public class EditorPaneManager extends
 				displayErrorDialog(e);
 			}
 		}
+	}
+
+	/**
+	 * This is the concrete implementation of the method declared in
+	 * EditorMenuBarDelegate. It is called when the user requests to change the
+	 * theme.
+	 */
+	@Override
+	public void userDidRequestChangeToStylesheet(String stylesheet) {
+		setStyleSheet(stylesheet);
+		getDelegate().userDidRequestChangeToStylesheet(getStyleSheet());
+	}
+
+	/**
+	 * This is the concrete implementation of the createNonActiveDelegate method
+	 * declared in the Delegated interface.
+	 * 
+	 * This implementation creates an instance of WorkspaceDelegate in which all
+	 * of the methods do nothing, as is specified by the Delegated interface.
+	 */
+	@Override
+	public EditorPaneManagerDelegate createNonActiveDelegate() {
+		return new EditorPaneManagerDelegate() {
+
+			@Override
+			public void userDidRequestChangeToStylesheet(String stylesheet) {
+
+			}
+
+			@Override
+			public void userDidRequestChangeToLanguage(
+					ResourceBundle newLanguage) {
+
+			}
+		};
 	}
 
 	@Override
@@ -314,34 +363,6 @@ public class EditorPaneManager extends
 
 		setLanguageResourceBundle(getLanguageResourceBundle());
 		setStyleSheet(getStyleSheet());
-	}
-
-	@Override
-	public EditorPaneManagerDelegate createNonActiveDelegate() {
-		return new EditorPaneManagerDelegate() {
-
-			@Override
-			public void didChangeToStylesheet(String stylesheet) {
-
-			}
-
-			@Override
-			public void didChangeToLanguage(ResourceBundle newLanguage) {
-
-			}
-		};
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * frontend.editor.EditorMenuBarDelegate#setStyleSheetTo(java.lang.String)
-	 */
-	@Override
-	public void didSelectStyleSheet(String stylesheet) {
-		setStyleSheet(stylesheet);
-		getDelegate().didChangeToStylesheet(getStyleSheet());
 	}
 
 }

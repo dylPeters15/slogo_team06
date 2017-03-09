@@ -8,8 +8,7 @@ package frontend.editor;
  * other members of its package. Therefore, it will be part of the internal API
  * of the front end.
  * 
- * This interface (which is intended to be an interface in the implementation of
- * the project as well) is designed to allow the TerminalDisplayManager to
+ * This interface is designed to allow the TerminalDisplayManager to
  * communicate with the EditorPaneManager class when the user enters a command
  * in the TerminalDisplay.
  * 

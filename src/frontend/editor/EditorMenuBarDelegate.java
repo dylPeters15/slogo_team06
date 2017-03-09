@@ -10,8 +10,7 @@ import java.util.ResourceBundle;
  * other members of its package. Therefore, it will be part of the internal API
  * of the front end.
  * 
- * This interface (which is intended to be an interface in the implementation of
- * the project as well) is designed to allow the EditorMenuBar to communicate
+ * This interface is designed to allow the EditorMenuBar to communicate
  * with the EditorPaneManager class when the user interacts with a Control
  * component in the EditorMenuBar.
  * 
@@ -50,7 +49,7 @@ interface EditorMenuBarDelegate {
 	 * @param language
 	 *            the language to display the program in
 	 */
-	void didSelectLanguage(ResourceBundle language);
+	void userDidRequestChangeToLanguage(ResourceBundle language);
 
 	/**
 	 * This method is called when the user wants to see a help page. The class
@@ -59,6 +58,14 @@ interface EditorMenuBarDelegate {
 	 */
 	void help();
 
-	void didSelectStyleSheet(String stylesheet);
+	/**
+	 * This method is called when the user selects to change the stylesheet with
+	 * which the program is displayed. The class implementing this method should
+	 * change the stylesheet for every UI item being displayed on the screen.
+	 * 
+	 * @param stylesheet
+	 *            the stylesheet to skin the program with
+	 */
+	void userDidRequestChangeToStylesheet(String stylesheet);
 
 }
