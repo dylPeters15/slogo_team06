@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Parent;
 
@@ -17,7 +19,7 @@ import com.sun.javafx.collections.UnmodifiableObservableMap;
  *
  */
 public abstract class SlogoBaseUIManager<T extends Parent> implements
-		ObjectManager<T>, LanguageResource, UsesStyleSheets {
+		ObjectManager<T>{
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_LANGUAGE_KEY = "DefaultLanguageResource";
@@ -25,41 +27,21 @@ public abstract class SlogoBaseUIManager<T extends Parent> implements
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_STYLE_KEY = "DefaultSyleSheet";
 
-	private ResourceBundle language;
-	private String styleSheet;
+	private ObjectProperty<ResourceBundle> language;
+	private ObjectProperty<String> styleSheet;
 
 	public SlogoBaseUIManager() {
-		language = createDefaultResourceBundle();
-		styleSheet = createDefaultStyleSheet();
+		language = new SimpleObjectProperty<ResourceBundle>();
+		language.setValue(createDefaultResourceBundle());
+		styleSheet = new SimpleObjectProperty<String>();
+		styleSheet.setValue(createDefaultStyleSheet());
 	}
 
-	@Override
-	public final void setLanguageResourceBundle(ResourceBundle language) {
-		if (language == null) {
-			language = createDefaultResourceBundle();
-		}
-		this.language = language;
-		languageResourceBundleDidChange();
-	}
-
-	@Override
-	public final ResourceBundle getLanguageResourceBundle() {
+	public ObjectProperty<ResourceBundle> getLanguage() {
 		return language;
 	}
 
-	@Override
-	public final void setStyleSheet(String stylesheet) {
-		if (styleSheet == null) {
-			styleSheet = createDefaultStyleSheet();
-		}
-		this.styleSheet = stylesheet;
-		getObject().getStylesheets().clear();
-		getObject().getStylesheets().add(this.styleSheet);
-		styleSheetDidChange();
-	}
-
-	@Override
-	public final String getStyleSheet() {
+	public ObjectProperty<String> getStyleSheet() {
 		return styleSheet;
 	}
 
@@ -79,19 +61,11 @@ public abstract class SlogoBaseUIManager<T extends Parent> implements
 		ResourceBundle fileBundle = ResourceBundle
 				.getBundle(STYLE_RESOURCE_LIST);
 		for (String key : fileBundle.keySet()) {
-			map.put(getLanguageResourceBundle().getString(key),
+			map.put(getLanguage().getValue().getString(key),
 					fileBundle.getString(key));
 		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
 				.unmodifiableObservableMap(FXCollections.observableMap(map));
-	}
-
-	protected void languageResourceBundleDidChange() {
-
-	}
-
-	protected void styleSheetDidChange() {
-
 	}
 
 	private ResourceBundle createDefaultResourceBundle() {
