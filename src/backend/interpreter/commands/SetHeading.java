@@ -46,16 +46,4 @@ public class SetHeading extends Command {
 		return NUM_PARAMS;
 	}
 
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double x, double y) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
-
-
-
 }

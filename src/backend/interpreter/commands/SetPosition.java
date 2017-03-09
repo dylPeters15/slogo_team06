@@ -30,21 +30,12 @@ public class SetPosition extends Command {
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
-	
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
 
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
 
 	@Override
 	public double runCommand(double x, double y) throws SlogoException {

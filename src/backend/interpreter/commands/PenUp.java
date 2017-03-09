@@ -32,11 +32,6 @@ public class PenUp extends Command {
 	}
 	
 	@Override
-	public double runCommand(double distance) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");	
-	}
-
-	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
@@ -48,12 +43,5 @@ public class PenUp extends Command {
 		addNewState(newState);
 		return 0;
 	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
-
-
 
 }

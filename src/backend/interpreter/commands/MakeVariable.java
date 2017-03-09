@@ -46,24 +46,6 @@ public class MakeVariable extends Command {
 	public boolean needsVarParams(){
 		return true;
 	}
-	
-	/**
-	 * @return 1 if the pen is down, 0 if the pen is up
-	 */
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectParamType");
-	}
 
 	@Override
 	public Integer numParamsNeeded() {

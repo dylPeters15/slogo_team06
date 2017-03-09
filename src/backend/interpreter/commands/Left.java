@@ -45,16 +45,5 @@ public class Left extends Command {
 		return NUM_PARAMS;
 	}
 
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
-
-
 
 }
