@@ -21,9 +21,16 @@ public class SetBackground extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
-		newState.setBGColor(ColorList.fromInt((int)Math.round(a)));
-		addNewState(newState);
-		return a;
+		ColorList newColor = ColorList.fromInt((int)Math.round(a));
+		if (newColor != null) {
+			newState.setBGColor(newColor);
+			System.out.println(newState.getBGColor().toString());
+			addNewState(newState);
+			return a;
+		}
+		else {
+			throw new SlogoException("ParamOutOfRange");
+		}
 	}
 
 	@Override

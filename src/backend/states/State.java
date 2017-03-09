@@ -55,7 +55,7 @@ public class State {
 		this.clear = clear;
 	}
 	
-	public ColorList getBGColorList() {
+	private ColorList getBGColorList() {
 		return bgColor;
 	}
 	
@@ -67,7 +67,7 @@ public class State {
 		bgColor = color;
 	}
 	
-	public ColorList getPenColorList() {
+	private ColorList getPenColorList() {
 		return penColor;
 	}
 	
