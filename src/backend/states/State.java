@@ -127,7 +127,6 @@ public class State {
 		this.clear = clear;
 	}
 
-
 	
 	
 }
