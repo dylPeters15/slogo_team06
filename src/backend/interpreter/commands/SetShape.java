@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Exceptions.SlogoException;
+import backend.states.ShapeList;
 import backend.states.State;
 import backend.states.StatesList;
 
@@ -20,10 +21,16 @@ public class SetShape extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
-		// TODO excpetion values
-		newState.setShape((int)Math.round(a));
-		addNewState(newState);
-		return a;
+		ShapeList newShapeList = ShapeList.fromInt((int)Math.round(a));
+		if (newShapeList != null) {
+			newState.setTurtleShapeChanged(true);
+			newState.setTurtleShape(newShapeList);
+			addNewState(newState);
+			return a;
+		}
+		else {
+			throw new SlogoException("ParamOutOfRange");
+		}
 	}
 
 	@Override

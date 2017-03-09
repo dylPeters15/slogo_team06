@@ -19,7 +19,7 @@ public class GetShape extends Command {
 	
 	@Override
 	public double runCommand() throws SlogoException {
-		return this.getLastState().getShape();
+		return this.getLastState().getTurtleShape().getIndex();
 	}
 
 	@Override

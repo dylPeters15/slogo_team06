@@ -23,6 +23,7 @@ public class SetBackground extends Command {
 		State newState = getNewState();
 		ColorList newColor = ColorList.fromInt((int)Math.round(a));
 		if (newColor != null) {
+			newState.setBGColorChanged(true);
 			newState.setBGColor(newColor);
 			addNewState(newState);
 			return a;
