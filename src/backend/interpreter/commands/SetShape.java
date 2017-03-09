@@ -21,7 +21,8 @@ public class SetShape extends Command {
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
 		// TODO excpetion values
-		newState.setShape((int)Math.round(a));
+		newState.setTurtleShapeChanged(true);
+		newState.setTurtleShape((int)Math.round(a));
 		addNewState(newState);
 		return a;
 	}

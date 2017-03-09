@@ -9,6 +9,8 @@ import backend.interpreter.commands.Command;
 import backend.states.*;
 import javafx.collections.ObservableMap;
 /**
+ * 
+ * The class to interpret user input commands.
  * @author Tavo Loaiza
  *
  */
@@ -20,9 +22,16 @@ public class Interpreter {
 	public final String WHITESPACE = "\\s+";
 	private ProgramParser langParser;
 	private ProgramParser type;
-	ResourceBundle resources;
+	private ResourceBundle resources;
 	private ObservableMap<String,String> variables;
 
+	/**
+	 * Constructor of the Interpreter class.
+	 * Takes the statesList and variablesList from the model.
+	 * Get called from the Model class.
+	 * @param statesList
+	 * @param variables
+	 */
 	public Interpreter(StatesList<State> statesList, ObservableMap<String, String> variables){
 		this.variables = variables;
 		this.statesList = statesList;
@@ -31,6 +40,10 @@ public class Interpreter {
 		setLanguage(DEF_LANG);
 	}		
 
+	/**
+	 * Method to set display language.
+	 * @param lang
+	 */
 	public void setLanguage(String lang) {
 		resources = ResourceBundle.getBundle(DEF_LANG);
 		setParserPatterns(lang);
@@ -46,6 +59,11 @@ public class Interpreter {
 		type.addPatterns(SYNTAX);
 	}
 
+	/**
+	 * The main method to interpret user input commands
+	 * @param text: the user input commands in String form
+	 * @throws SlogoException
+	 */
 	public void interpret(String text) throws SlogoException{
 		try{
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
@@ -57,10 +75,23 @@ public class Interpreter {
 		}
 	}
 
+	/**
+	 * Separate an array of Strings into a LinkedList of words by blanks
+	 * @param text: an array of Strings
+	 * @return
+	 * @throws SlogoException
+	 */
 	private LinkedList<String> separateWords (String[] text) throws SlogoException {	
 		return new LinkedList<String>(Arrays.asList(text));
 	}
 
+	/**
+	 * The method to parse inputs.
+	 * The method stops until all input words are parsed.
+	 * @param words
+	 * @return
+	 * @throws SlogoException
+	 */
 	private double parse(LinkedList<String> words) throws SlogoException {
 		double result = 0;
 		while (!words.isEmpty()) {
@@ -69,9 +100,16 @@ public class Interpreter {
 		return result;
 	}
 
+	/**
+	 * The method to parse a group in inputs.
+	 * Can be called for several times to parse different parts of an input.
+	 * @param words
+	 * @return
+	 * @throws SlogoException
+	 */
 	private double recursiveParse(LinkedList<String> words) throws SlogoException{
 		checkIfEmpty(words);
-		String word = words.pop();
+		String word = words.pop();  // get the first word to determine input type
 		if(isConstant(word)){
 			return Double.parseDouble(word);
 		}
@@ -90,6 +128,17 @@ public class Interpreter {
 			return parse(extractWordsInList(words));
 		}
 		throw new SlogoException("IncorrectNumOfParameters");
+	}
+	
+
+	private void checkIfEmpty(LinkedList<String> words) throws SlogoException {
+		if(words.isEmpty()){
+			throw new SlogoException("IncorrectNumOfParameters");
+		}
+	}
+
+	private boolean isConstant(String word) {
+		return langParser.getSymbol(word).equals("Constant");
 	}
 	
 	private double handleCommand(String word, LinkedList<String> words) throws SlogoException{
@@ -208,12 +257,6 @@ public class Interpreter {
 		return params;
 	}
 
-	private void checkIfEmpty(LinkedList<String> words) throws SlogoException {
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters");
-		}
-	}
-
 	private LinkedList<String> extractWordsInList(LinkedList<String> words) throws SlogoException {
 		String word;
 		// remove the brackets, and parse all inside words
@@ -315,10 +358,6 @@ public class Interpreter {
 			}
 		}
 		words.addFirst(word);
-	}
-
-	private boolean isConstant(String word) {
-		return langParser.getSymbol(word).equals("Constant");
 	}
 
 	public void translateError(SlogoException e){

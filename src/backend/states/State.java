@@ -22,16 +22,22 @@ public class State {
 	private List<Integer> activeList;
 	private ActorCompositeModel multiActor;
 	private boolean clear;
+	private boolean bgColorChanged;
 	private ColorList bgColor;
+	private boolean penColorChanged;
 	private ColorList penColor;
+	private boolean penSizeChanged;
 	private Double penSize;
+	private boolean turtleShapeChanged;
 	private int turtleShape;
 	
 	public State(State state){
 	    initFields();
+	    // default changed indicators are all false;
 		bgColor = state.getBGColorList();
 		penColor = state.getPenColorList();
 		penSize = state.getPenSize();
+		turtleShape = state.getTurtleShape();
 		setActiveList(state.getActiveList());
 		multiActor.set(actors, activeList);
 		maxId = state.getMaxId();
@@ -65,9 +71,14 @@ public class State {
 	private void initFields() {
 		maxId = 0;
 		clear = false;
+		bgColorChanged = false;
 		bgColor = ColorList.WHITE;
+		penColorChanged = false;
 		penColor = ColorList.BLACK;
+		penSizeChanged = false;
 		penSize = 1.0;
+		turtleShapeChanged = false;
+		turtleShape = 0;
 		actors = new HashMap<Integer,ActorModel>();
 		activeList = new ArrayList<Integer>();
 		activeList.add(1);
@@ -137,6 +148,9 @@ public class State {
 		this.clear = clear;
 	}
 
+	public boolean getBGColorChanged() {
+		return bgColorChanged;
+	}
 	
 	public ColorList getBGColorList() {
 		return bgColor;
@@ -146,8 +160,16 @@ public class State {
 		return bgColor.getColor();
 	}
 	
+	public void setBGColorChanged(boolean changed) {
+		bgColorChanged = changed;
+	}
+	
 	public void setBGColor(ColorList color) {
 		bgColor = color;
+	}
+	
+	public boolean getPenColorChanged() {
+		return penColorChanged;
 	}
 	
 	public ColorList getPenColorList() {
@@ -158,23 +180,43 @@ public class State {
 		return penColor.getColor();
 	}
 	
+	public void setPenColorChanged(boolean changed) {
+		penColorChanged = changed;
+	}
+	
 	public void setPenColor(ColorList color) {
 		penColor = color;
+	}
+	
+	public boolean getPenSizeChanged() {
+		return penSizeChanged;
 	}
 	
 	public Double getPenSize() {
 		return penSize;
 	}
 	
+	public void setPenSizeChanged(boolean changed) {
+		penSizeChanged = changed;
+	}
+	
 	public void setPenSize(double size) {
 		penSize = size;
 	}
 	
-	public int getShape() {
+	public boolean getTurtleShapeChanged() {
+		return turtleShapeChanged;
+	}
+	
+	public void setTurtleShapeChanged(boolean changed) {
+		turtleShapeChanged = changed;
+	}
+	
+	public int getTurtleShape() {
 		return turtleShape;
 	}
 	
-	public void setShape(int shape) {
+	public void setTurtleShape(int shape) {
 		turtleShape = shape;
 	}
 
