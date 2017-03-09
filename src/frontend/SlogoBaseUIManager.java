@@ -17,7 +17,7 @@ import javafx.scene.Parent;
  * @author Dylan Peters
  *
  */
-public abstract class SlogoBaseUIManager<D extends EmptyDelegate, T extends Parent>
+public abstract class SlogoBaseUIManager<D, T extends Parent>
 		extends SlogoBaseObjectManager<D, T> implements UsesStyleSheets {
 	private static final String STYLESHEET_RESOURCE_POINTER = "resources.styles/StylePointer";
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";

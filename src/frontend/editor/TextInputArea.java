@@ -4,6 +4,7 @@
 package frontend.editor;
 
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -13,12 +14,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
 
 /**
  * @author Dylan Peters
  *
  */
-class TextInputArea {
+class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Parent>{
 
 	StackPane stackPane;
 	TextArea textArea;
@@ -47,7 +50,8 @@ class TextInputArea {
 		return textArea.getText();
 	}
 
-	Region getRegion() {
+	@Override
+	Parent getObject() {
 		return stackPane;
 	}
 
