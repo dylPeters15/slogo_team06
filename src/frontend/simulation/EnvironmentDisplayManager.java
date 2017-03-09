@@ -1,6 +1,7 @@
 package frontend.simulation;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
@@ -9,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -22,7 +24,7 @@ import javafx.scene.shape.Line;
  * @author Andreas
  *
  */
-class EnvironmentDisplayManager {
+class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	private ScrollPane myScrollPane;
 	private Pane myPane;
@@ -32,6 +34,7 @@ class EnvironmentDisplayManager {
 	// private static final String TURTLE_IMAGE = "turtleicon.png";
 	private TurtleView myTurtle;
 	private Color penColor;
+	private Double penWidth;
 
 	EnvironmentDisplayManager(int width, int height) {
 		// this.width = width;
@@ -51,7 +54,7 @@ class EnvironmentDisplayManager {
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	Region getRegion() {
+	public Region getObject() {
 		return myScrollPane;
 	}
 
@@ -77,6 +80,7 @@ class EnvironmentDisplayManager {
 		myScrollPane.setVvalue(0.5);
 
 		penColor = Color.BLACK;
+		penWidth = 1.;
 
 	}
 
@@ -96,6 +100,7 @@ class EnvironmentDisplayManager {
 		Line line = new Line(startX + x, startY + y, endX + x, endY + y);
 		line.setStroke(penColor);
 		line.setFill(penColor);
+		line.setStrokeWidth(penWidth);
 		myPane.getChildren().add(line);
 	}
 
@@ -196,9 +201,12 @@ class EnvironmentDisplayManager {
 	void setPenColor(Color color) {
 		penColor = color;
 	}
+	
+	void setPenWidth(Double d){
+		penWidth = d;
+	}
 
 	void clearScreen() {
-		// myTurtle.setPosition(convertXCoordinate(0), convertYCoordinate(0));
 		myPane.getChildren().clear();
 		myPane.getChildren().add(myTurtle.getImageView());
 		home();

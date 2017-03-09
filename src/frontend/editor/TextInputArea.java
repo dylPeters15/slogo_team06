@@ -13,12 +13,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import frontend.SlogoBaseUIManager;
 
 /**
  * @author Dylan Peters
  *
  */
-class TextInputArea {
+class TextInputArea extends SlogoBaseUIManager<Region> {
 
 	StackPane stackPane;
 	TextArea textArea;
@@ -47,7 +48,8 @@ class TextInputArea {
 		return textArea.getText();
 	}
 
-	Region getRegion() {
+	@Override
+	public Region getObject() {
 		return stackPane;
 	}
 

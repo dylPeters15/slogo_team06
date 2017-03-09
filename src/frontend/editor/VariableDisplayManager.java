@@ -3,22 +3,20 @@
  */
 package frontend.editor;
 
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
-import frontend.UIChild;
+import frontend.SlogoDelegatedUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -36,7 +34,8 @@ import frontend.UIChild;
  * @author Dylan Peters
  *
  */
-class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
+class VariableDisplayManager extends
+		SlogoDelegatedUIManager<VariableDisplayDelegate, Parent> {
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
@@ -56,8 +55,7 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 	 *            the language with which to display the text in the variable
 	 *            display.
 	 */
-	VariableDisplayManager(VariableDisplayDelegate delegate,
-			ResourceBundle language, ObservableMap<String, String> variableMap) {
+	VariableDisplayManager(ObservableMap<String, String> variableMap) {
 		initializeTable();
 		this.varMap = variableMap;
 		variableMap.addListener(new MapChangeListener<String, String>() {
@@ -78,22 +76,14 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 	 *            a string representing the language to be displayed
 	 */
 	@Override
-	public void setLanguageResourceBundle(ResourceBundle language) {
-		if (names != null) {
-			names.setText(language.getString("Name"));
-		}
-
-		if (values != null) {
-			values.setText(language.getString("Value"));
-		}
-
-		if (table != null) {
-			Label placeHolder = new Label(
-					language.getString("TablePlaceholder"));
-			placeHolder.setWrapText(true);
-			placeHolder.setTextAlignment(TextAlignment.CENTER);
-			table.setPlaceholder(placeHolder);
-		}
+	public void languageResourceBundleDidChange() {
+		names.setText(getLanguageResourceBundle().getString("Name"));
+		values.setText(getLanguageResourceBundle().getString("Value"));
+		Label placeHolder = new Label(getLanguageResourceBundle().getString(
+				"TablePlaceholder"));
+		placeHolder.setWrapText(true);
+		placeHolder.setTextAlignment(TextAlignment.CENTER);
+		table.setPlaceholder(placeHolder);
 
 	}
 
@@ -106,7 +96,7 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 	 *         interact with the program
 	 */
 	@Override
-	public Region getRegion() {
+	public Parent getObject() {
 		return table;
 	}
 
@@ -145,12 +135,7 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 	}
 
 	private boolean varListHasVarWithName(String varName) {
-		for (Variable var : variables) {
-			if (var.nameProperty().get().equals(varName)) {
-				return true;
-			}
-		}
-		return false;
+		return indexOfVarWithName(varName) != -1;
 	}
 
 	private int indexOfVarWithName(String varName) {
@@ -187,23 +172,15 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 						.getRow());
 				if (varChanged.isNumber()) {
 					if (isNumber(event.getNewValue())) {
-						varChanged.valueProperty().set(event.getNewValue());
-						varMap.put(varChanged.nameProperty().get(),
-								event.getNewValue());
+						setVar(varChanged, event.getNewValue());
 					} else {
-						variables.remove(varChanged);
-						variables.add(varChanged);
-						variables.sort(null);
+						resetVar(varChanged);
 					}
 				} else {
 					if (isNumber(event.getNewValue())) {
-						variables.remove(varChanged);
-						variables.add(varChanged);
-						variables.sort(null);
+						resetVar(varChanged);
 					} else {
-						varChanged.valueProperty().set(event.getNewValue());
-						varMap.put(varChanged.nameProperty().get(),
-								event.getNewValue());
+						setVar(varChanged, event.getNewValue());
 					}
 				}
 			}
@@ -214,6 +191,28 @@ class VariableDisplayManager extends UIChild<VariableDisplayDelegate> {
 		table.setEditable(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+	}
+
+	@Override
+	public VariableDisplayDelegate createNonActiveDelegate() {
+		return new VariableDisplayDelegate() {
+
+			@Override
+			public void didChangeVariable(String name, Object value) {
+
+			}
+		};
+	}
+
+	private void setVar(Variable varChanged, String newValue) {
+		varChanged.valueProperty().set(newValue);
+		varMap.put(varChanged.nameProperty().get(), newValue);
+	}
+
+	private void resetVar(Variable varChanged) {
+		variables.remove(varChanged);
+		variables.add(varChanged);
+		variables.sort(null);
 	}
 
 }
