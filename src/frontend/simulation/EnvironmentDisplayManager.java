@@ -35,6 +35,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Parent
 	// private static final String TURTLE_IMAGE = "turtleicon.png";
 	private TurtleView myTurtle;
 	private Color penColor;
+	private Double penWidth;
 
 	EnvironmentDisplayManager(int width, int height) {
 		// this.width = width;
@@ -80,6 +81,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Parent
 		myScrollPane.setVvalue(0.5);
 
 		penColor = Color.BLACK;
+		penWidth = 1.;
 
 	}
 
@@ -99,6 +101,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Parent
 		Line line = new Line(startX + x, startY + y, endX + x, endY + y);
 		line.setStroke(penColor);
 		line.setFill(penColor);
+		line.setStrokeWidth(penWidth);
 		myPane.getChildren().add(line);
 	}
 
@@ -198,6 +201,10 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Parent
 
 	void setPenColor(Color color) {
 		penColor = color;
+	}
+	
+	void setPenWidth(Double d){
+		penWidth = d;
 	}
 
 	void clearScreen() {
