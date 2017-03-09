@@ -159,22 +159,27 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region>
 	public void onChanged(ListChangeListener.Change<? extends State> c) {
 		while (!statesList.isEmpty()){
 			State state = statesList.poll();
-			Color previousColor = Color.WHITE;
 			if (state.clearscreen()){
 				environmentDisplayManager.clearScreen();
 			} else {
-				environmentDisplayManager.setPenColor(state.getPenColor());
-				environmentDisplayManager.setPenWidth(state.getPenSize());
-				
-				if (!state.getBGColor().equals(previousColor)){
-					environmentDisplayManager.setBackgroundColor(state.getBGColor());
-					previousColor = state.getBGColor();
+				if (state.getPenColorChanged()){
+					environmentDisplayManager.setPenColor(state.getPenColor());
 				}
 				
+				if (state.getPenSizeChanged()){
+					environmentDisplayManager.setPenWidth(state.getPenSize());
+				}
+				
+				if (state.getBGColorChanged()){
+					environmentDisplayManager.setBackgroundColor(state.getBGColor());
+				}
+				
+				if (state.getTurtleShapeChanged()){
+					environmentDisplayManager.setTurtleImage(state.getTurtleShapeImage());
+				}
 				myActorsMap = state.getActorMap();
 				myActiveList = state.getActiveList();
 				updateTurtleViewMap();
-				//environmentDisplayManager.getTurtle().update(state.getActor());
 				environmentDisplayManager.updateTurtles(myActiveList, myActorsMap, myTurtleViewMap);
 			}
 		}
