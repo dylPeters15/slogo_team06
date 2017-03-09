@@ -22,8 +22,7 @@ public class SetPalette extends Command {
 	public double runCommand(double a, double b, double c, double d) throws SlogoException {
 		if ((int)b >= 0 && (int)b <= 255 && (int)c >= 0 && (int)c <= 255 && (int)d >= 0 && (int)b <= 255){
 			int index = ColorList.setColor((int)a, (int)b, (int)c, (int)d);
-			if (index != -1) {
-				return index;
+			if (index != -1) {return index;
 			}
 			else {
 				throw new SlogoException("ParamOutOfRange");
