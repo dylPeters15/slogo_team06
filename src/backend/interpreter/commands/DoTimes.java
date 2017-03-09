@@ -20,10 +20,16 @@ public class DoTimes extends Command {
 	private String var;
 	
 	
+	/**
+	 * @param list
+	 */
 	public DoTimes(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(java.util.List)
+	 */
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
@@ -44,26 +50,41 @@ public class DoTimes extends Command {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#isNestedCommand()
+	 */
 	@Override
 	public boolean isNestedCommand(){
 		return nested;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#nestedCommand()
+	 */
 	@Override
 	public List<String> nestedCommand(){
 		return commandToRun;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#needsVarParams()
+	 */
 	@Override
 	public boolean needsVarParams(){
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;

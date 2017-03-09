@@ -4,10 +4,17 @@ import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
+/**
+ * @author User
+ *
+ */
 public class IsShowing extends Command {
 	
 	private final int NUM_PARAMS = 0;
 
+	/**
+	 * @param list
+	 */
 	public IsShowing(StatesList<State> list) {
 		super(list);
 	}
@@ -20,6 +27,9 @@ public class IsShowing extends Command {
 		return (this.getLastState().getActors().getVisible()) ? 1 : 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;

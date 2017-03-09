@@ -18,6 +18,9 @@ import backend.states.StatesList;
  */
 public class SetPosition extends Command {
 
+	/**
+	 * @param list
+	 */
 	public SetPosition(StatesList<State> list) {
 		super(list);
 	}
@@ -26,17 +29,26 @@ public class SetPosition extends Command {
 	
 	private final int NUM_PARAMS = 2;
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(double, double)
+	 */
 	@Override
 	public double runCommand(double x, double y) throws SlogoException {
 		State newState = getNewState();

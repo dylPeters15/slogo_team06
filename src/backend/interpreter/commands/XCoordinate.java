@@ -8,6 +8,9 @@ public class XCoordinate extends Command {
 	
 	private final int NUM_PARAMS = 0;
 	
+	/**
+	 * @param list
+	 */
 	public XCoordinate(StatesList<State> list) {
 		super(list);
 	}
@@ -20,6 +23,9 @@ public class XCoordinate extends Command {
 		return this.getLastState().getActors().getPos().getX();
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;

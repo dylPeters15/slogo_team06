@@ -18,6 +18,9 @@ import backend.states.StatesList;
  */
 public class Forward extends Command {
 
+	/**
+	 * @param list
+	 */
 	public Forward(StatesList<State> list) {
 		super(list);
 	}
@@ -26,11 +29,17 @@ public class Forward extends Command {
 	
 	private final int NUM_PARAMS = 1;
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(double)
+	 */
 	@Override
 	public double runCommand(double distance) {
 		State newState = getNewState();
@@ -39,6 +48,9 @@ public class Forward extends Command {
 		return distance;		
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;

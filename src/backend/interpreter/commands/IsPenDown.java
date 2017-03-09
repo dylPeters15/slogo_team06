@@ -8,6 +8,9 @@ public class IsPenDown extends Command {
 	
 	private final int NUM_PARAMS = 0;
 	
+	/**
+	 * @param list
+	 */
 	public IsPenDown(StatesList<State> list) {
 		super(list);
 	}
@@ -20,16 +23,9 @@ public class IsPenDown extends Command {
 		return (!this.getLastState().getActors().getPenUp()) ? 1 : 0;
 	}
 
-	@Override
-	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;

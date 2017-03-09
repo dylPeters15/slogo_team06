@@ -13,6 +13,9 @@ public class Power extends Command {
 	private final int NUM_PARAMS = 2;
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "Constant"}));
 
+	/**
+	 * @param list
+	 */
 	public Power(StatesList<State> list) {
 		super(list);
 	}
@@ -21,16 +24,25 @@ public class Power extends Command {
 	 * @param a: the base of the power
 	 * @param b: the exponent of the power
 	 */
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(double, double)
+	 */
 	@Override
 	public double runCommand(double a, double b) throws SlogoException {
 		return Math.pow(a, b);
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;

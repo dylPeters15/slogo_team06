@@ -23,6 +23,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
      * 
      * @param queue
      */
+    /**
+     * @param queue
+     */
     public StatesList(Queue<E> queue) {
         this.queue = queue ;
     }
@@ -30,16 +33,25 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
     /**
      * Creates an ObservableQueue backed by a LinkedList.
      */
+    /**
+     * 
+     */
     public StatesList() {
         this(new LinkedList<>());
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Queue#offer(java.lang.Object)
+     */
     @Override
     public boolean offer(E e) {
         boolean result = queue.offer(e);
         return result ;
     }
 
+    /* (non-Javadoc)
+     * @see java.util.AbstractList#add(java.lang.Object)
+     */
     @Override
     public boolean add(E e) {
         beginChange() ;
@@ -59,6 +71,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
     	}
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Queue#remove()
+     */
     @Override
     public E remove() {
             E e = queue.remove();
@@ -66,6 +81,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
             return e;
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Queue#poll()
+     */
     @Override
     public E poll() {
         E e = queue.poll();
@@ -75,16 +93,25 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         return e ;
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Queue#element()
+     */
     @Override
     public E element() {
         return queue.element();
     }
 
+    /* (non-Javadoc)
+     * @see java.util.Queue#peek()
+     */
     @Override
     public E peek() {
         return queue.peek();
     }
 
+    /* (non-Javadoc)
+     * @see java.util.AbstractList#get(int)
+     */
     @Override
     public E get(int index) {
         Iterator<E> iterator = queue.iterator();
@@ -92,6 +119,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
         return iterator.next();
     }
     
+    /**
+     * @return
+     */
     public E getLast(){
     	if(queue.isEmpty()){
     		return placeHolder;
@@ -99,6 +129,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
     	return get(size()-1);
     }
     
+    /**
+     * @return
+     */
     public E removeLast() {
     	if (!queue.isEmpty()) {
     		E last = this.get(this.size() - 1);
@@ -110,6 +143,9 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
     	}
     }
     
+    /* (non-Javadoc)
+     * @see java.util.AbstractCollection#size()
+     */
     @Override
     public int size() {
         return queue.size();
