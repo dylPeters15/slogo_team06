@@ -150,6 +150,9 @@ public class SimulationPaneManager extends SlogoBaseUIManager<EmptyDelegate, Reg
 			if (state.clearscreen()){
 				environmentDisplayManager.clearScreen();
 			} else {
+//				environmentDisplayManager.setPenColor(state.getPenColor());
+//				environmentDisplayManager.setPenWidth(state.getPenSize());
+//				environmentDisplayManager.setBackgroundColor(state.getBGColor());
 				environmentDisplayManager.getTurtle().update(state.getActor());
 				environmentDisplayManager.updateTurtle();
 			}
