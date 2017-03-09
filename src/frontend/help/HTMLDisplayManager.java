@@ -1,5 +1,6 @@
 package frontend.help;
 
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -9,9 +10,11 @@ import frontend.SlogoBaseUIManager;
 
 class HTMLDisplayManager extends SlogoBaseUIManager<Region> {
 
-	private VBox myDisplay;
+	private BorderPane myDisplay;
 	private WebView browser;
 	private WebEngine webEngine;
+
+	private URLBarManager urlBarManager;
 
 	HTMLDisplayManager(String url) {
 		initialize(url);
@@ -31,16 +34,20 @@ class HTMLDisplayManager extends SlogoBaseUIManager<Region> {
 	}
 
 	private void initialize(String url) {
-		myDisplay = new VBox();
+		myDisplay = new BorderPane();
+		
+		urlBarManager = new URLBarManager(url);
+		
 		browser = new WebView();
 		VBox.setVgrow(browser, Priority.ALWAYS);
 		webEngine = browser.getEngine();
 
 		webEngine.load(url);
 
-		myDisplay.getChildren().add(browser);
+		myDisplay.setCenter(browser);
+//		myDisplay.setTop(urlBarManager.getObject());
 
-		browser.prefHeightProperty().bind(myDisplay.heightProperty());
-		browser.prefWidthProperty().bind(myDisplay.widthProperty());
+		browser.prefHeightProperty().bind(myDisplay.heightProperty().subtract(urlBarManager.getObject().getHeight()));
+		browser.prefWidthProperty().bind(myDisplay.prefWidthProperty());
 	}
 }
