@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.collections.ObservableMap;
 
 /**
  * @author Tavo
@@ -22,7 +21,6 @@ public class State {
 	private Map<Integer, ActorModel> actors;
 	private List<Integer> activeList;
 	private ActorCompositeModel multiActor;
-	
 	private boolean clear;
 	private ColorList bgColor;
 	private ColorList penColor;
@@ -31,7 +29,6 @@ public class State {
 	
 	public State(State state){
 	    initFields();
-		actor = new TurtleModel(state.getActor());
 		bgColor = state.getBGColorList();
 		penColor = state.getPenColorList();
 		penSize = state.getPenSize();
@@ -153,7 +150,7 @@ public class State {
 		bgColor = color;
 	}
 	
-	private ColorList getPenColorList() {
+	public ColorList getPenColorList() {
 		return penColor;
 	}
 	
