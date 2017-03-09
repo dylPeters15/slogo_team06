@@ -172,8 +172,11 @@ public class Interpreter {
 					if(com.numParamsNeeded() == 1){
 						return com.runCommand(recursiveParse(words));
 					}
-					if(com.numParamsNeeded() == 2){
+					else if(com.numParamsNeeded() == 2){
 						return com.runCommand(recursiveParse(words),recursiveParse(words));
+					}
+					else if (com.numParamsNeeded() == 4) {
+						return com.runCommand(recursiveParse(words),recursiveParse(words), recursiveParse(words), recursiveParse(words));
 					}
 					else {
 						return com.runCommand();
