@@ -44,7 +44,7 @@ public class HideTurtle extends Command {
 	@Override
 	public double runCommand() throws SlogoException {
 		State newState = getNewState();
-		newState.getActor().setVisible(false);
+		newState.getActors().setVisible(false);
 		addNewState(newState);
 		return 0;
 	}

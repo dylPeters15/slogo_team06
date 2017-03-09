@@ -22,7 +22,7 @@ public class XCoordinate extends Command {
 	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return this.getLastState().getActor().getPos().getX();
+		return this.getLastState().getActors().getPos().getX();
 	}
 
 	@Override

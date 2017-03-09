@@ -30,9 +30,9 @@ public class SetTowards extends Command {
 	@Override
 	public double runCommand(double a, double b) throws SlogoException {
 		State newState = getNewState();
-		double newAngle = Math.toDegrees(Math.atan(newState.getActor().getPos().getY() / newState.getActor().getPos().getX()));
-		double oldAngle = newState.getActor().getHeading();
-		newState.getActor().setHeading(newAngle);
+		double oldAngle = newState.getActors().getHeading();
+		newState.getActors().setTowards(a,b);
+		double newAngle = newState.getActors().getHeading();
 		addNewState(newState);
 		return (newAngle - oldAngle);
 	}

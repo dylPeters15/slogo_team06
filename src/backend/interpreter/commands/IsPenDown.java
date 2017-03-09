@@ -22,7 +22,7 @@ public class IsPenDown extends Command {
 	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return (!this.getLastState().getActor().getPenUp()) ? 1 : 0;
+		return (!this.getLastState().getActors().getPenUp()) ? 1 : 0;
 	}
 
 	@Override

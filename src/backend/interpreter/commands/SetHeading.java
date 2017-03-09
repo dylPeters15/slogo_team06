@@ -35,8 +35,8 @@ public class SetHeading extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
-		Double distance = Math.abs(newState.getActor().getHeading() - a)%360;
-		newState.getActor().setHeading(a);
+		Double distance = Math.abs(newState.getActors().getHeading() - a)%360;
+		newState.getActors().setHeading(a);
 		addNewState(newState);
 		return distance;
 	}
