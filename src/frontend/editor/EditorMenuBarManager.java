@@ -5,13 +5,18 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
-import frontend.SlogoDelegatedUIManager;
+import javafx.stage.Stage;
+import frontend.SlogoBaseUIManager;
+import frontend.help.HelpPaneManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -29,10 +34,12 @@ import frontend.SlogoDelegatedUIManager;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends
-		SlogoDelegatedUIManager<EditorMenuBarDelegate, Parent> {
+class EditorMenuBarManager extends SlogoBaseUIManager<Parent> {
 
 	private HBox myMenuBar;
+
+	private Stage helpPaneStage;
+	private HelpPaneManager helpPaneManager;
 
 	/**
 	 * Creates a new instance of EditorMenuBarManager. Sets all values except
@@ -43,6 +50,14 @@ class EditorMenuBarManager extends
 	 */
 	public EditorMenuBarManager() {
 		myMenuBar = new HBox();
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(
+					ObservableValue<? extends ResourceBundle> observable,
+					ResourceBundle oldLanguage, ResourceBundle newLanguage) {
+				populateMenuBar();
+			}
+		});
 		populateMenuBar();
 	}
 
@@ -59,33 +74,13 @@ class EditorMenuBarManager extends
 		return myMenuBar;
 	}
 
-	/**
-	 * This is the concrete implementation of the createNonActiveDelegate method
-	 * declared in the Delegated interface.
-	 * 
-	 * This implementation creates an instance of EditorMenuBar in which all of
-	 * the methods do nothing, as is specified by the Delegated interface.
-	 */
-	@Override
-	public EditorMenuBarDelegate createNonActiveDelegate() {
-		return new EditorMenuBarDelegate() {
-			@Override
-			public void userDidRequestChangeToStylesheet(String stylesheet) {
-			}
-
-			@Override
-			public void help() {
-			}
-
-			@Override
-			public void userDidRequestChangeToLanguage(ResourceBundle language) {
-			}
-		};
+	private void help() {
+		helpPaneStage.show();
+		helpPaneStage.toFront();
 	}
 
-	@Override
-	protected void languageResourceBundleDidChange() {
-		populateMenuBar();
+	public void close() {
+		helpPaneStage.close();
 	}
 
 	private void populateMenuBar() {
@@ -95,11 +90,11 @@ class EditorMenuBarManager extends
 				.observableArrayList(
 						getPossibleResourceBundleNamesAndResourceBundles()
 								.keySet()).sorted());
-		selectLanguage.setValue(getLanguageResourceBundle().getString(
-				"Language"));
+		selectLanguage.setValue(getLanguage().getValue().getString("Language"));
 
-		selectLanguage.setOnAction(event -> didSelectLanguage(selectLanguage
-				.getValue()));
+		selectLanguage.setOnAction(event -> getLanguage().setValue(
+				getPossibleResourceBundleNamesAndResourceBundles().get(
+						selectLanguage.getValue())));
 		myMenuBar.getChildren().add(selectLanguage);
 
 		ObservableList<String> styles = FXCollections
@@ -109,34 +104,20 @@ class EditorMenuBarManager extends
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
 		}
-		styleSheetSelector
-				.setOnAction(event -> setStyleSheetTo(styleSheetSelector
-						.getValue()));
+		styleSheetSelector.setOnAction(event -> getStyleSheet().setValue(
+				getPossibleStyleSheetNamesAndFileNames().get(
+						styleSheetSelector.getValue())));
 		myMenuBar.getChildren().add(styleSheetSelector);
 
-		Button help = new Button(getLanguageResourceBundle().getString("Help"));
+		Button help = new Button(getLanguage().getValue().getString("Help"));
 		help.setOnMousePressed(event -> help());
 		myMenuBar.getChildren().add(help);
+		helpPaneStage = new Stage();
 
-	}
-
-	private void setStyleSheetTo(String styleSheet) {
-		getDelegate().userDidRequestChangeToStylesheet(
-				getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
-	}
-
-	private void didSelectLanguage(String language) {
-		if (getDelegate() != null) {
-			getDelegate().userDidRequestChangeToLanguage(
-					getPossibleResourceBundleNamesAndResourceBundles().get(
-							language));
-		}
-	}
-
-	private void help() {
-		if (getDelegate() != null) {
-			getDelegate().help();
-		}
+		helpPaneManager = new HelpPaneManager();
+		helpPaneStage.setScene(new Scene(helpPaneManager.getObject()));
+		helpPaneManager.getStyleSheet().bind(getStyleSheet());
+		helpPaneManager.getLanguage().bind(getLanguage());
 	}
 
 }

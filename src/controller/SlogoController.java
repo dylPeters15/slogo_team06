@@ -42,7 +42,7 @@ import javafx.util.Pair;
  * @author Dylan Peters
  *
  */
-public class SlogoController implements WorkspaceDelegate {
+public class SlogoController {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private static final String DEFAULT_LANGUAGE = "English";
@@ -103,7 +103,6 @@ public class SlogoController implements WorkspaceDelegate {
 	 * @param newLanguage
 	 *            The language that the workspace is now displayed in.
 	 */
-	@Override
 	public void didChangeLanguage(Workspace workspace,
 			ResourceBundle newLanguage) {
 		if (workspaceToTabs.containsKey(workspace)) {
@@ -261,7 +260,16 @@ public class SlogoController implements WorkspaceDelegate {
 
 	private void addWorkspace() {
 		Workspace workspace = new Workspace();
-		workspace.setDelegate(this);
+		workspace.getLanguage().addListener(
+				new ChangeListener<ResourceBundle>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends ResourceBundle> observable,
+							ResourceBundle oldLanguage,
+							ResourceBundle newLanguage) {
+						didChangeLanguage(workspace, newLanguage);
+					}
+				});
 		workspaces.add(workspace);
 	}
 

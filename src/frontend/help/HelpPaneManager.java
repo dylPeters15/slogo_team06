@@ -18,7 +18,6 @@ public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 
 	public HelpPaneManager() {
 		initialize();
-		setStyleSheet(getStyleSheet());
 	}
 
 	/**
@@ -33,15 +32,6 @@ public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 	@Override
 	public Region getObject() {
 		return split;
-	}
-
-	@Override
-	public void languageResourceBundleDidChange() {
-		htmlDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
-		urlBarManager.setLanguageResourceBundle(getLanguageResourceBundle());
-		exampleCommandDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
 	}
 
 	private void initialize() {
@@ -70,6 +60,13 @@ public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 		split.getItems().add(borderPane);
 		exampleCommandDisplayManager = new ExampleCommandDisplayManager();
 		split.getItems().add(exampleCommandDisplayManager.getObject());
+		
+		urlBarManager.getLanguage().bind(getLanguage());
+		urlBarManager.getStyleSheet().bind(getStyleSheet());
+		htmlDisplayManager.getLanguage().bind(getLanguage());
+		htmlDisplayManager.getStyleSheet().bind(getStyleSheet());
+		exampleCommandDisplayManager.getLanguage().bind(getLanguage());
+		exampleCommandDisplayManager.getStyleSheet().bind(getStyleSheet());
 	}
 
 }

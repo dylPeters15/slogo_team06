@@ -5,13 +5,14 @@ package controller;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import backend.Model;
-import frontend.SlogoDelegatedUIManager;
+import frontend.SlogoBaseUIManager;
 import frontend.editor.EditorPaneManager;
-import frontend.editor.EditorPaneManagerDelegate;
 import frontend.simulation.SimulationPaneManager;
 
 /**
@@ -40,9 +41,7 @@ import frontend.simulation.SimulationPaneManager;
  * @author Dylan Peters
  *
  */
-public class Workspace extends
-		SlogoDelegatedUIManager<WorkspaceDelegate, Parent> implements
-		EditorPaneManagerDelegate {
+public class Workspace extends SlogoBaseUIManager<Parent> {
 
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
@@ -58,12 +57,30 @@ public class Workspace extends
 		new Scene(simulation.getObject());
 
 		editor = new EditorPaneManager(model);
-		editor.setDelegate(this);
 		new Scene(editor.getObject());
 
 		split = new SplitPane();
 		split.getItems().add(editor.getObject());
 		split.getItems().add(simulation.getObject());
+		
+		getLanguage().bind(editor.getLanguage());
+		getStyleSheet().bind(editor.getStyleSheet());
+		
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(ObservableValue<? extends ResourceBundle> observable,
+					ResourceBundle oldValue, ResourceBundle newValue) {
+				simulation.getLanguage().setValue(newValue);
+			}
+		});
+		getStyleSheet().addListener(new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				simulation.getStyleSheet().setValue(newValue);
+			}
+			
+		});
 
 	}
 
@@ -102,67 +119,12 @@ public class Workspace extends
 	}
 
 	/**
-	 * This is the concrete implementation of the method in WorkspaceDelegate.
-	 * This method is called by the EditorPaneManager when the user changes the
-	 * language.
-	 * 
-	 * This method changes the language ResourceBundle for both the editor and
-	 * simulation.
-	 */
-	@Override
-	public void userDidRequestChangeToLanguage(ResourceBundle newLanguage) {
-		getDelegate().didChangeLanguage(this, newLanguage);
-	}
-
-	/**
-	 * This is the concrete implementation of the method in WorkspaceDelegate.
-	 * This method is called by the EditorPaneManager when the user changes the
-	 * style.
-	 * 
-	 * This method changes the stylesheet for both the editor and simulation.
-	 */
-	@Override
-	public void userDidRequestChangeToStylesheet(String stylesheet) {
-		simulation.setStyleSheet(stylesheet);
-		editor.setStyleSheet(stylesheet);
-	}
-
-	/**
-	 * This is the concrete implementation of the createNonActiveDelegate method
-	 * declared in the Delegated interface.
-	 * 
-	 * This implementation creates an instance of WorkspaceDelegate in which all
-	 * of the methods do nothing, as is specified by the Delegated interface.
-	 */
-	@Override
-	public WorkspaceDelegate createNonActiveDelegate() {
-		return new WorkspaceDelegate() {
-			@Override
-			public void didChangeLanguage(Workspace workspace,
-					ResourceBundle newLanguage) {
-			}
-		};
-	}
-
-	/**
 	 * This method should be called when the Workspace is being closed. It
 	 * ensures that all windows created by the workspace are closed when the
 	 * workspace closes.
 	 */
 	public void pepareToClose() {
 		editor.closeAllChildWindows();
-	}
-
-	@Override
-	protected void languageResourceBundleDidChange() {
-		editor.setLanguageResourceBundle(getLanguageResourceBundle());
-		simulation.setLanguageResourceBundle(getLanguageResourceBundle());
-		userDidRequestChangeToLanguage(getLanguageResourceBundle());
-	}
-
-	@Override
-	protected void styleSheetDidChange() {
-		userDidRequestChangeToStylesheet(getStyleSheet());
 	}
 
 }

@@ -6,6 +6,8 @@ package frontend.help;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -37,11 +39,14 @@ class ExampleCommandDisplayManager extends SlogoBaseUIManager<Region> {
 		vbox.setPadding(new Insets(10));
 		populateVBox();
 		scrollPane.setContent(vbox);
-	}
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
 
-	@Override
-	public void languageResourceBundleDidChange() {
-		populateVBox();
+			@Override
+			public void changed(ObservableValue<? extends ResourceBundle> observable,
+					ResourceBundle oldValue, ResourceBundle newValue) {
+				populateVBox();
+			}
+		});
 	}
 
 	@Override
@@ -51,10 +56,10 @@ class ExampleCommandDisplayManager extends SlogoBaseUIManager<Region> {
 
 	private void populateVBox() {
 		vbox.getChildren().clear();
-		Label title = new Label(getLanguageResourceBundle().getString(
+		Label title = new Label(getLanguage().getValue().getString(
 				"ExampleCommands"));
 		vbox.getChildren().add(title);
-		initCommands(getLanguageResourceBundle());
+		initCommands(getLanguage().getValue());
 	}
 
 	private void initCommands(ResourceBundle language) {

@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Parent;
 
@@ -34,7 +36,14 @@ public abstract class SlogoBaseUIManager<T extends Parent> implements
 		language = new SimpleObjectProperty<ResourceBundle>();
 		language.setValue(createDefaultResourceBundle());
 		styleSheet = new SimpleObjectProperty<String>();
-		styleSheet.setValue(createDefaultStyleSheet());
+		styleSheet.addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				getObject().getStylesheets().clear();
+				getObject().getStylesheets().add(newValue);
+			}
+		});
 	}
 
 	public ObjectProperty<ResourceBundle> getLanguage() {
@@ -68,12 +77,12 @@ public abstract class SlogoBaseUIManager<T extends Parent> implements
 				.unmodifiableObservableMap(FXCollections.observableMap(map));
 	}
 
-	private ResourceBundle createDefaultResourceBundle() {
+	public ResourceBundle createDefaultResourceBundle() {
 		return ResourceBundle.getBundle(ResourceBundle.getBundle(
 				LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_LANGUAGE_KEY));
 	}
 
-	private String createDefaultStyleSheet() {
+	public String createDefaultStyleSheet() {
 		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(
 				DEFAULT_STYLE_KEY);
 	}
