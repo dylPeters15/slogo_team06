@@ -11,7 +11,7 @@ import backend.states.StatesList;
 
 public class Repeat extends Command {
 	
-	private final int NUM_PARAMS = 2;
+	private final int NUM_PARAMS = 4;
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant", "ListStart", "Commands", "ListEnd"}));
 	private int upperLimit;
 	private int index = 0;
@@ -26,6 +26,7 @@ public class Repeat extends Command {
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
+		System.out.println(words);
 		if(words.isEmpty()){
 			throw new SlogoException("IncorrectNumOfParameters: 0");
 		}
@@ -38,6 +39,7 @@ public class Repeat extends Command {
 				for(int i=2; i<words.size()-1; i++){
 					commandToRun.add(words.get(i));
 				}
+				System.out.println("CommandToRun: "+commandToRun);
 			}
 			else{
 				
