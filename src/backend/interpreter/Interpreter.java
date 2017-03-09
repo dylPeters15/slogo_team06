@@ -110,17 +110,17 @@ public class Interpreter {
 	private double recursiveParse(LinkedList<String> words) throws SlogoException{
 		checkIfEmpty(words);
 		String word = words.pop();  // get the first word to determine input type
-		if(isConstant(word)){
+		if(langParser.getSymbol(word).equals("Constant")){  // a constant
 			return Double.parseDouble(word);
 		}
-		else if(type.getSymbol(word).equals("Command")){
-			return handleCommand(word, words);
+		else if(type.getSymbol(word).equals("Command")){  // a pre-defined command
+			return handleCommand(words, word);
 		}
 		else if(type.getSymbol(word).equals("Variable")){
-			try{
+			try{ // a variable
 				return Double.parseDouble(variables.get(word.substring(1)));
 			}
-			catch (Exception e){
+			catch (Exception e){  // a user-defined command
 				interpretUserCommand(word);
 			}
 		}
@@ -136,15 +136,11 @@ public class Interpreter {
 			throw new SlogoException("IncorrectNumOfParameters");
 		}
 	}
-
-	private boolean isConstant(String word) {
-		return langParser.getSymbol(word).equals("Constant");
-	}
 	
-	private double handleCommand(String word, LinkedList<String> words) throws SlogoException{
+	private double handleCommand(LinkedList<String> words, String word) throws SlogoException{
 		Command com = null;
 		try{
-			// generate a predefined command (not user-defined)
+			// generate a pre-defined command (not user-defined)
 			com = Command.getCommand(langParser.getSymbol(word), statesList);	
 		}
 		catch (SlogoException e){
@@ -154,7 +150,7 @@ public class Interpreter {
 			// run the user-defined command
 			return parse(separateWords(variables.get(word).split(WHITESPACE)));
 		}
-		try{
+		try{ // run the pre-defined command
 			return handleInstCommand(com, words, word);
 		}
 		catch (SlogoException e){
@@ -176,22 +172,9 @@ public class Interpreter {
 			interpret(com.getVariablesString());
 			return result;
 		}
-		else{					
-			return handleCommonCommand(com, words);
+		else{	// normal commands				
+			return handleNormalCommand(com, words);
 		}
-	}
-	
-	private double handleCommonCommand(Command com, LinkedList<String> words) throws SlogoException{
-		if(com.numParamsNeeded() == 1){
-			return com.runCommand(recursiveParse(words));
-		}
-		else if(com.numParamsNeeded() == 2){
-			return com.runCommand(recursiveParse(words),recursiveParse(words));
-		}
-		else if (com.numParamsNeeded() == 4) {
-			return com.runCommand(recursiveParse(words),recursiveParse(words), recursiveParse(words), recursiveParse(words));
-		}
-		return com.runCommand();
 	}
 	
 	private double handleVarParam(Command com, LinkedList<String> words, String word) throws SlogoException{
@@ -219,7 +202,7 @@ public class Interpreter {
 		}
 		else {
 			if(com.numParamsNeeded() == 2){ // if
-				return removeIf(word, words);
+				return removeIf(words, word);
 			}
 			else if (com.numParamsNeeded() == 3) { // else if
 				removeElse(words, word);
@@ -230,13 +213,39 @@ public class Interpreter {
 		}
 	}
 	
-	private double removeIf(String word, LinkedList<String> words){
+	private double removeIf(LinkedList<String> words, String word){
 		// remove the if statement
 		word = words.pop();
 		while (!type.getSymbol(word).equals("ListEnd")) {
 			word = words.pop();
 		}
 		return 0;
+	}
+
+	private void removeElse(LinkedList<String> words, String word) throws SlogoException {
+		// remove the else statements
+		if (!words.isEmpty()) {
+			word = words.pop();
+			while (!type.getSymbol(word).equals("ListEnd")) {
+				word = words.pop();
+			}
+		}
+		else {
+			throw new SlogoException("IncorrectNumOfParameters");
+		}
+	}
+	
+	private double handleNormalCommand(Command com, LinkedList<String> words) throws SlogoException{
+		if(com.numParamsNeeded() == 1){
+			return com.runCommand(recursiveParse(words));
+		}
+		else if(com.numParamsNeeded() == 2){
+			return com.runCommand(recursiveParse(words),recursiveParse(words));
+		}
+		else if (com.numParamsNeeded() == 4) {
+			return com.runCommand(recursiveParse(words),recursiveParse(words), recursiveParse(words), recursiveParse(words));
+		}
+		return com.runCommand();
 	}
 	
 	private void interpretUserCommand(String word) throws SlogoException {
@@ -276,19 +285,6 @@ public class Interpreter {
 			if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
 		}
 		return bracketWords;
-	}
-
-	private void removeElse(LinkedList<String> words, String word) throws SlogoException {
-		// remove the else statements
-		if (!words.isEmpty()) {
-			word = words.pop();
-			while (!type.getSymbol(word).equals("ListEnd")) {
-				word = words.pop();
-			}
-		}
-		else {
-			throw new SlogoException("IncorrectNumOfParameters");
-		}
 	}
 
 	private double handleNestedCommand(LinkedList<String> words, String word, Command com) throws SlogoException {
