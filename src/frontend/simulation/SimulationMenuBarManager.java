@@ -2,7 +2,10 @@ package frontend.simulation;
 
 import java.io.File;
 
-import frontend.SlogoDelegatedUIManager;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -13,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -27,23 +31,38 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * @author Andreas
  *
  */
-class SimulationMenuBarManager extends SlogoDelegatedUIManager<SimulationMenuBarDelegate, Parent> {
+class SimulationMenuBarManager extends SlogoBaseUIManager<Parent> {
 
 	private HBox myMenuBar;
-	private Button Home,setTurtleImage;
-	private Text backgroundColor, penColor;
+	private Button Home, setTurtleImage;
+	private Text backgroundColorText, penColorText;
 	private ColorPicker setBackgroundColor, setPenColor;
-	
-	public SimulationMenuBarManager(SimulationMenuBarDelegate delegate){
-		setDelegate(delegate);
+
+	private ObjectProperty<Color> penColor;
+	private ObjectProperty<Color> backgroundColor;
+	private ObjectProperty<Image> turtleImage;
+	private BooleanProperty home;
+
+	public SimulationMenuBarManager() {
 		populateMenuBar();
 	}
-	
-	public SimulationMenuBarManager(SimulationMenuBarDelegate delegate, String language){
-		setDelegate(delegate);
-		populateMenuBar();
+
+	public ObjectProperty<Color> getPenColor() {
+		return penColor;
 	}
-	
+
+	public ObjectProperty<Color> getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public ObjectProperty<Image> getTurtleImage() {
+		return turtleImage;
+	}
+
+	public BooleanProperty getHome() {
+		return home;
+	}
+
 	/**
 	 * Gets the display object that this class is manipulating and setting up.
 	 * The Node returned by this method should be displayed to allow the user to
@@ -56,14 +75,19 @@ class SimulationMenuBarManager extends SlogoDelegatedUIManager<SimulationMenuBar
 	public Region getObject() {
 		return myMenuBar;
 	}
-	
+
 	private void populateMenuBar() {
+		penColor = new SimpleObjectProperty<Color>();
+		backgroundColor = new SimpleObjectProperty<Color>();
+		turtleImage = new SimpleObjectProperty<Image>();
+		home = new SimpleBooleanProperty(false);
+
 		makeMenuBar();
-		makeHome();		
-		makeBackgroundColor();		
+		makeHome();
+		makeBackgroundColor();
 		makePenColor();
 		makeTurtleImage();
-		
+
 		myMenuBar.prefHeightProperty().bind(Home.heightProperty());
 	}
 
@@ -74,30 +98,35 @@ class SimulationMenuBarManager extends SlogoDelegatedUIManager<SimulationMenuBar
 	}
 
 	private void makePenColor() {
-		penColor = new Text("Pen Color:");
-		backgroundColor.setId("text");
-		myMenuBar.getChildren().add(penColor);
-		
+		penColorText = new Text("Pen Color:");
+		backgroundColorText.setId("text");
+		myMenuBar.getChildren().add(penColorText);
+
 		setPenColor = new ColorPicker(Color.BLACK);
 		setPenColor.setStyle("-fx-color-label-visible: false ;");
-		setPenColor.setOnAction(event -> setPenColor(setPenColor.getValue()));
+		setPenColor.setOnAction(event -> penColor.setValue(setPenColor
+				.getValue()));
 		myMenuBar.getChildren().add(setPenColor);
 	}
 
 	private void makeBackgroundColor() {
-		backgroundColor = new Text("Background Color:");
-		backgroundColor.setId("text");
-		myMenuBar.getChildren().add(backgroundColor);
-		
+		backgroundColorText = new Text("Background Color:");
+		backgroundColorText.setId("text");
+		myMenuBar.getChildren().add(backgroundColorText);
+
 		setBackgroundColor = new ColorPicker();
 		setBackgroundColor.setStyle("-fx-color-label-visible: false ;");
-		setBackgroundColor.setOnAction(event -> setBackgroundColor(setBackgroundColor.getValue()));
+		setBackgroundColor.setOnAction(event -> backgroundColor
+				.setValue(setBackgroundColor.getValue()));
 		myMenuBar.getChildren().add(setBackgroundColor);
 	}
 
 	private void makeHome() {
 		Home = new Button("Home");
-		Home.setOnMousePressed(event -> Home());
+		Home.setOnMousePressed(event -> {
+			home.setValue(true);
+			home.setValue(false);
+		});
 		myMenuBar.getChildren().add(Home);
 	}
 
@@ -108,77 +137,16 @@ class SimulationMenuBarManager extends SlogoDelegatedUIManager<SimulationMenuBar
 		myMenuBar.getChildren().clear();
 	}
 
-	private void setPenColor(Color color) {
-		if (getDelegate() != null){
-			getDelegate().setPenColor(color);
-		}
-	}
-
 	private void setTurtleImage() {
 		FileChooser choose = new FileChooser();
 		choose.setInitialDirectory(new File(System.getProperty("user.dir")));
-		choose.getExtensionFilters().setAll(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+		choose.getExtensionFilters().setAll(
+				new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File file = choose.showOpenDialog(null);
-        if (file != null){
-        	Image image = new Image(file.toURI().toString());
-        	if (getDelegate() != null && image != null){
-    			getDelegate().setTurtleImage(image);
-    		}
-        }
-	}
-
-	private void setBackgroundColor(Color color) {
-		if (getDelegate() != null){
-			getDelegate().setBackgroundColor(color);
+		if (file != null) {
+			Image image = new Image(file.toURI().toString());
+			turtleImage.setValue(image);
 		}
-	}
-
-	private void Home() {
-		if (getDelegate() != null){
-			getDelegate().home();
-		}
-	}
-
-	/**
-	 * Changes the language that the menu bar uses to display its contents. The
-	 * menu bar will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @param language
-	 */
-	void setLanguage(String language){
-
-	}
-
-	/**
-	 * Gets the language that the menu bar uses to display its contents. The
-	 * menu bar will use a resource file with the words in that language to
-	 * populate its contents.
-	 * 
-	 * @return
-	 * 		String
-	 */
-	String getLanguage(){
-		return null;
-	}
-
-	@Override
-	public SimulationMenuBarDelegate createNonActiveDelegate() {
-		return new SimulationMenuBarDelegate() {
-
-			@Override
-			public void home() {}
-
-			@Override
-			public void setBackgroundColor(Color color) {}
-
-			@Override
-			public void setPenColor(Color color) {}
-
-			@Override
-			public void setTurtleImage(Image image) {}
-			
-		};
 	}
 
 }

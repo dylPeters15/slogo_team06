@@ -19,10 +19,30 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
+ * This class is the controller for the Slogo IDE. This is where much of the
+ * Slogo-specific code is placed, in order to allow all of the other classes to
+ * create a reusable API. The SlogoController sets up 1) the IDE that the user
+ * interacts with in order to control the turtle, 2) the visualization of the
+ * turtle, 3) the connections between the two (the model), and then displays the
+ * IDE and the turtle visualization.
+ * 
+ * The SlogoController creates tabbed panes for both the IDE and the simulation
+ * (turtle visualization), and it synchronizes these TabPanes so that when the
+ * user changes tabs on one pane, the other one automatically switches as well.
+ * It also synchronizes the language and stylesheets of each. This allows the
+ * user to arrange the workspace any way they want to in order to best use
+ * screen space, while preventing the code from becoming Spaghetti code; i.e.
+ * the editor does not have a reference to the simulation because it does not
+ * control the simulation (it controls the model), and vice versa.
+ * 
+ * The SlogoController implements WorkspaceDelegate in order to detect when a
+ * workspace changes language. When it does change language, the controller
+ * changes the title of that tab to be in that language.
+ * 
  * @author Dylan Peters
  *
  */
-public class SlogoController implements WorkspaceDelegate {
+public class SlogoController {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private static final String DEFAULT_LANGUAGE = "English";
@@ -41,10 +61,23 @@ public class SlogoController implements WorkspaceDelegate {
 
 	private ResourceBundle language;
 
+	/**
+	 * Creates a new instance of SlogoController. All values are set to
+	 * defaults.
+	 */
 	public SlogoController() {
 		this(new Stage());
 	}
 
+	/**
+	 * Creates a new instance of SlogoController. The stage that is passed as a
+	 * parameter is used as the stage for the editor, and the simulation is
+	 * placed in a new stage. This method allows the Application class to pass
+	 * its stage to the SlogoController.
+	 * 
+	 * @param stage
+	 *            Stage used to display the editor of the IDE.
+	 */
 	public SlogoController(Stage stage) {
 		language = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
 				+ DEFAULT_LANGUAGE);
@@ -55,6 +88,44 @@ public class SlogoController implements WorkspaceDelegate {
 		initializeWorkspaces();
 		editorStage.show();
 		simulationStage.show();
+	}
+
+	/**
+	 * Implementation of the didChangeLanguage method from the WorkspaceDelegate
+	 * interface. Called by the Workspace when it changes languages.
+	 * 
+	 * When the language of a workspace is changed, the SlogoController changes
+	 * the language of the title of the tab that holds the editor and the
+	 * simulation.
+	 * 
+	 * @param workspace
+	 *            The workspace that changed its language.
+	 * @param newLanguage
+	 *            The language that the workspace is now displayed in.
+	 */
+	public void didChangeLanguage(Workspace workspace,
+			ResourceBundle newLanguage) {
+		if (workspaceToTabs.containsKey(workspace)) {
+			int workspaceNum = Integer.parseInt(workspaceToTabs
+					.get(workspace)
+					.getKey()
+					.getText()
+					.substring(
+							workspaceToTabs.get(workspace).getKey().getText()
+									.lastIndexOf(" ") + 1));
+			workspaceToTabs
+					.get(workspace)
+					.getKey()
+					.setText(
+							newLanguage.getString("Workspace") + " "
+									+ workspaceNum);
+			workspaceToTabs
+					.get(workspace)
+					.getValue()
+					.setText(
+							newLanguage.getString("Workspace") + " "
+									+ workspaceNum);
+		}
 	}
 
 	private void initializeTabPanes() {
@@ -121,11 +192,11 @@ public class SlogoController implements WorkspaceDelegate {
 				workspace,
 				new Pair<Tab, Tab>(new Tab(language.getString("Workspace")
 						+ " " + numWorkspacesThatHaveExisted, workspace
-						.getEditorRegion()), new Tab(language
+						.getEditorParent()), new Tab(language
 						.getString("Workspace")
 						+ " "
 						+ numWorkspacesThatHaveExisted++, workspace
-						.getSimulationRegion())));
+						.getSimulationParent())));
 		workspaceToTabs.get(workspace).getKey()
 				.setOnClosed(event -> workspaces.remove(workspace));
 		editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
@@ -166,32 +237,6 @@ public class SlogoController implements WorkspaceDelegate {
 						simulationTabPane.getTabs().size() - 2));
 	}
 
-	@Override
-	public void didChangeLanguage(Workspace workspace,
-			ResourceBundle newLanguage) {
-		if (workspaceToTabs.containsKey(workspace)) {
-			int workspaceNum = Integer.parseInt(workspaceToTabs
-					.get(workspace)
-					.getKey()
-					.getText()
-					.substring(
-							workspaceToTabs.get(workspace).getKey().getText()
-									.lastIndexOf(" ") + 1));
-			workspaceToTabs
-					.get(workspace)
-					.getKey()
-					.setText(
-							newLanguage.getString("Workspace") + " "
-									+ workspaceNum);
-			workspaceToTabs
-					.get(workspace)
-					.getValue()
-					.setText(
-							newLanguage.getString("Workspace") + " "
-									+ workspaceNum);
-		}
-	}
-
 	private ChangeListener<Tab> createTabPaneListener(Tab addTab) {
 		return new ChangeListener<Tab>() {
 			@Override
@@ -214,12 +259,23 @@ public class SlogoController implements WorkspaceDelegate {
 	}
 
 	private void addWorkspace() {
-		workspaces.add(new Workspace(language,this));
+		Workspace workspace = new Workspace();
+		workspace.getLanguage().addListener(
+				new ChangeListener<ResourceBundle>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends ResourceBundle> observable,
+							ResourceBundle oldLanguage,
+							ResourceBundle newLanguage) {
+						didChangeLanguage(workspace, newLanguage);
+					}
+				});
+		workspaces.add(workspace);
 	}
 
 	private void requestAllClose() {
 		for (Workspace workspace : workspaces) {
-			workspace.close();
+			workspace.pepareToClose();
 		}
 		editorStage.close();
 		simulationStage.close();
