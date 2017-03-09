@@ -51,27 +51,6 @@ class TerminalDisplayManager extends
 	 *            the language with which to display the text in the terminal
 	 *            display
 	 */
-	// TerminalDisplayManager(ResourceBundle language) {
-	// this(null, language);
-	// }
-
-	/**
-	 * Creates a new instance of TerminalDisplayManager. Sets all values except
-	 * delegate and language to default.
-	 * 
-	 * @param delegate
-	 *            the object implementing the TerminalDisplayDelegate interface
-	 *            that this class will use to call delegated methods.
-	 * @param language
-	 *            the language with which to display the text in the terminal
-	 *            display
-	 */
-	// TerminalDisplayManager(TerminalDisplayDelegate delegate,
-	// ResourceBundle language) {
-	// super(delegate, language);
-	// initialize(language);
-	// }
-
 	public TerminalDisplayManager() {
 		initialize();
 	}

@@ -246,7 +246,6 @@ public class EditorPaneManager extends
 	protected void styleSheetDidChange() {
 		borderPane.getStylesheets().clear();
 		borderPane.getStylesheets().add(getStyleSheet());
-		System.out.println(getStyleSheet());
 		helpPaneManager.setStyleSheet(getStyleSheet());
 	}
 
@@ -344,7 +343,6 @@ public class EditorPaneManager extends
 	 */
 	@Override
 	public void didSelectStyleSheet(String stylesheet) {
-		System.out.println("asdf" + stylesheet);
 		setStyleSheet(stylesheet);
 
 		getDelegate().didChangeToStylesheet(getStyleSheet());

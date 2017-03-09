@@ -17,8 +17,8 @@ import javafx.scene.Parent;
  * @author Dylan Peters
  *
  */
-public abstract class SlogoBaseUIManager<D, T extends Parent>
-		extends SlogoBaseObjectManager<D, T> implements UsesStyleSheets {
+public abstract class SlogoBaseUIManager<D, T extends Parent> extends
+		SlogoBaseObjectManager<D, T> implements UsesStyleSheets {
 	private static final String STYLESHEET_RESOURCE_POINTER = "resources.styles/StylePointer";
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_KEY = "DefaultSyleSheet";
@@ -46,7 +46,8 @@ public abstract class SlogoBaseUIManager<D, T extends Parent>
 	}
 
 	public final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
-		return (UnmodifiableObservableMap<String, String>) FXCollections.unmodifiableObservableMap(styleSheetNamesAndFileNames);
+		return (UnmodifiableObservableMap<String, String>) FXCollections
+				.unmodifiableObservableMap(styleSheetNamesAndFileNames);
 	}
 
 	protected void styleSheetDidChange() {
@@ -54,13 +55,14 @@ public abstract class SlogoBaseUIManager<D, T extends Parent>
 	}
 
 	private String createDefaultStyleSheet() {
-		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(DEFAULT_KEY);
+		return ResourceBundle.getBundle(STYLESHEET_RESOURCE_POINTER).getString(
+				DEFAULT_KEY);
 	}
-	
-	private ObservableMap<String, String> createPossibleStyleSheets(){
-		Map<String, String> map = new HashMap<String,String>();
+
+	private ObservableMap<String, String> createPossibleStyleSheets() {
+		Map<String, String> map = new HashMap<String, String>();
 		ResourceBundle bundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
-		for (String key : bundle.keySet()){
+		for (String key : bundle.keySet()) {
 			map.put(key, bundle.getString(key));
 		}
 		return FXCollections.observableMap(map);

@@ -41,16 +41,6 @@ class ExampleCommandDisplayManager extends
 		scrollPane.setContent(vbox);
 	}
 
-	// ExampleCommandDisplayManager(ResourceBundle language) {
-	// exampleCommandsResource = ResourceBundle
-	// .getBundle(DEFAULT_RESOURCE_PACKAGE + DEFAULT_EXAMPLE_RESOURCE);
-	// vbox = new VBox();
-	// scrollPane = new ScrollPane();
-	// vbox.setPadding(new Insets(10));
-	// populateVBox(language);
-	// scrollPane.setContent(vbox);
-	// }
-
 	@Override
 	public void languageResourceBundleDidChange() {
 		populateVBox();

@@ -10,9 +10,9 @@ package frontend;
 public interface Delegated<D> {
 
 	void setDelegate(D delegate);
-	
+
 	D getDelegate();
-	
+
 	D createNonActiveDelegate();
-	
+
 }

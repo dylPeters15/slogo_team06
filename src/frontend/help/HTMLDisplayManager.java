@@ -44,16 +44,10 @@ class HTMLDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 		browser.prefHeightProperty().bind(myDisplay.heightProperty());
 		browser.prefWidthProperty().bind(myDisplay.widthProperty());
 	}
-	
-	@Override
-	public void styleSheetDidChange() {
-		myDisplay.getStylesheets().clear();
-		myDisplay.getStylesheets().add(getStyleSheet());
-	}
 
 	@Override
 	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate(){
+		return new EmptyDelegate() {
 		};
 	}
 }

@@ -45,26 +45,6 @@ class EditorMenuBarManager extends
 	 * @param language
 	 *            the language to use in the display of the menu bar.
 	 */
-	// EditorMenuBarManager(ResourceBundle language) {
-	// this(null, language);
-	// }
-	//
-	// /**
-	// * Creates a new instance of EditorMenuBarManager. Sets all values except
-	// * delegate and language to default.
-	// *
-	// * @param delegate
-	// * the object implementing the EditorMenuBarDelegate interface
-	// * that this class will use to call delegated methods.
-	// * @param language
-	// * the language to use in the display of the menu bar.
-	// */
-	// EditorMenuBarManager(EditorMenuBarDelegate delegate, ResourceBundle
-	// language) {
-	// super(delegate, language);
-	// populateMenuBar(language);
-	// }
-
 	public EditorMenuBarManager() {
 		myMenuBar = new HBox();
 		populateMenuBar();
@@ -154,7 +134,8 @@ class EditorMenuBarManager extends
 		styleMap = new HashMap<String, String>();
 		styleMap.put(language.getString("DefaultTheme"),
 				"resources/styles/default.css");
-		styleMap.put(language.getString("DarkTheme"), "resources/styles/darktheme.css");
+		styleMap.put(language.getString("DarkTheme"),
+				"resources/styles/darktheme.css");
 	}
 
 	@Override
