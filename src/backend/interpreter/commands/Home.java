@@ -22,9 +22,5 @@ public class Home extends SetPosition {
 		return super.runCommand(0,0);
 	}
 	
-	@Override
-	public double runCommand(double x, double y) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
 	
 }

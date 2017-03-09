@@ -16,28 +16,19 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class Left extends Command {
+public class Turtles extends Command {
 
-	public Left(StatesList<State> list) {
+	public Turtles(StatesList<State> list) {
 		super(list);
 	}
 
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
 	
-	private final int NUM_PARAMS = 1;
-	
+	private final int NUM_PARAMS = 0;
 	
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
-	}
-	
-	@Override
-	public double runCommand(double distance) throws SlogoException {
-		State newState = getNewState();
-		newState.getActors().rotate(distance);
-		addNewState(newState);
-		return distance;		
 	}
 
 	@Override
@@ -45,5 +36,9 @@ public class Left extends Command {
 		return NUM_PARAMS;
 	}
 
+	@Override
+	public double runCommand() throws SlogoException {
+		return getLastState().getNumTurtles();
+	}
 
 }

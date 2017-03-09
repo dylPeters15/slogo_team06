@@ -49,11 +49,4 @@ public class HideTurtle extends Command {
 		return 0;
 	}
 
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
-
-
-
 }

@@ -44,18 +44,18 @@ public abstract class Command {
 	}	
 
 	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters");
+		throw new SlogoException("IncorrectNumOfParameters: 0");
 	}
 	
 	public double runCommand(double a) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters");
+		throw new SlogoException("IncorrectNumOfParameters: 1");
 	}
 	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters");
+		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 	
 	public double runCommand(double a, double b, double c, double d) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters");
+		throw new SlogoException("IncorrectNumOfParameters: 4");
 	}
 
 	public double runCommand(List<String> words) throws SlogoException{

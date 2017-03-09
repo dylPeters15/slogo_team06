@@ -30,11 +30,6 @@ public class ShowTurtle extends Command {
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
-	
-	@Override
-	public double runCommand(double distance) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");	
-	}
 
 	@Override
 	public Integer numParamsNeeded() {
@@ -48,12 +43,5 @@ public class ShowTurtle extends Command {
 		addNewState(newState);
 		return 1;
 	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
-	}
-
-
 
 }

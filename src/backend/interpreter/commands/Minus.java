@@ -18,11 +18,6 @@ public class Minus extends Command {
 	}
 	
 	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
