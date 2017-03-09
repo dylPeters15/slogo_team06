@@ -1,5 +1,6 @@
 package backend.states;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class State {
 	private boolean penSizeChanged;
 	private Double penSize;
 	private boolean turtleShapeChanged;
-	private int turtleShape;
+	private ShapeList turtleShape;
 	
 	public State(State state){
 	    initFields();
@@ -78,7 +79,7 @@ public class State {
 		penSizeChanged = false;
 		penSize = 1.0;
 		turtleShapeChanged = false;
-		turtleShape = 0;
+		turtleShape = ShapeList.SHAPE1;
 		actors = new HashMap<Integer,ActorModel>();
 		activeList = new ArrayList<Integer>();
 		activeList.add(1);
@@ -212,11 +213,15 @@ public class State {
 		turtleShapeChanged = changed;
 	}
 	
-	public int getTurtleShape() {
+	public ShapeList getTurtleShape() {
 		return turtleShape;
 	}
 	
-	public void setTurtleShape(int shape) {
+	public Image getTurtleShapeImage() {
+		return turtleShape.getImage();
+	}
+	
+	public void setTurtleShape(ShapeList shape) {
 		turtleShape = shape;
 	}
 
