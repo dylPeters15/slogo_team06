@@ -81,7 +81,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 			}
 			
 		});
-
+		simulation.getStyleSheet().setValue(getStyleSheet().getValue());
 	}
 
 	/**

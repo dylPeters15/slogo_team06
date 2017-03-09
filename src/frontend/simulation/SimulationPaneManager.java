@@ -132,7 +132,7 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 		myActorsMap = new HashMap<Integer, ActorModel>();
 		myActiveList = new ArrayList<Integer>();
 		myTurtleViewMap = new HashMap<Integer, TurtleView>();
-		simulationMenuBarManager = new SimulationMenuBarManager(this);
+		simulationMenuBarManager = new SimulationMenuBarManager();
 		environmentDisplayManager = new EnvironmentDisplayManager(600, 600);
 
 		borderPane.setTop(simulationMenuBarManager.getObject());
