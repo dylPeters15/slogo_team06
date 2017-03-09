@@ -177,5 +177,9 @@ public class State {
 	public void setShape(int shape) {
 		turtleShape = shape;
 	}
+
+	public double getNumTurtles() {
+		return actors.keySet().size();
+	}
 }
 

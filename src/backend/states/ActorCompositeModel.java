@@ -79,5 +79,9 @@ public class ActorCompositeModel{
 		double newAngle = Math.toDegrees(Math.atan(actor.getPos().getY() / actor.getPos().getX()));
 		actor.setHeading(newAngle);
 	}
+
+	public double getId() {
+		return active.get(active.size()-1);
+	}
 	
 }

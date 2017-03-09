@@ -16,24 +16,19 @@ import backend.states.StatesList;
  * @author Tavo Loaiza
  *
  */
-public class HideTurtle extends Command {
+public class ID extends Command {
 
-	public HideTurtle(StatesList<State> list) {
+	public ID(StatesList<State> list) {
 		super(list);
 	}
 
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Constant"}));
+	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
 	
 	private final int NUM_PARAMS = 0;
 	
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
-	}
-	
-	@Override
-	public double runCommand(double distance) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 1");	
 	}
 
 	@Override
@@ -43,10 +38,7 @@ public class HideTurtle extends Command {
 
 	@Override
 	public double runCommand() throws SlogoException {
-		State newState = getNewState();
-		newState.getActors().setVisible(false);
-		addNewState(newState);
-		return 0;
+		return getLastState().getActors().getId();
 	}
 
 }
