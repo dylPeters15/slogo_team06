@@ -20,6 +20,7 @@ public class SetShape extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
+		// TODO excpetion values
 		newState.setShape((int)Math.round(a));
 		addNewState(newState);
 		return a;

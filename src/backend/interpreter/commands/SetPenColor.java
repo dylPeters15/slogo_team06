@@ -21,9 +21,16 @@ public class SetPenColor extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
-		newState.setPenColor(ColorList.fromInt((int)Math.round(a)));
-		addNewState(newState);
-		return a;
+		ColorList newColor = ColorList.fromInt((int)Math.round(a));
+		if (newColor != null) {
+			newState.setPenColor(newColor);
+			System.out.println(newState.getBGColor().toString());
+			addNewState(newState);
+			return a;
+		}
+		else {
+			throw new SlogoException("ParamOutOfRange");
+		}
 	}
 
 	@Override
