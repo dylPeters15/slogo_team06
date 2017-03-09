@@ -30,9 +30,7 @@ public class For extends Command {
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}
+		checkIfEmpty(words);
 		
 		if(firstRun){
 			firstRun = false;
@@ -41,16 +39,13 @@ public class For extends Command {
 			getVariables().put(var, Double.toString(index));
 			upperLimit = Double.parseDouble(words.get(3));
 			inc = Double.parseDouble(words.get(4));
-			if(words.get(6).contains("[") && words.get(words.size()-1).contains("]")){
+			if(checkBrackets(words,6)){
 				commandToRun =  new ArrayList<String>();
 				for(int i=7; i<words.size()-1; i++){
 					commandToRun.add(words.get(i));
 				}
 			}
-			else{
-				
-				throw new SlogoException("IncorrectNumOfBrackets");
-			}							
+						
 		}
 		else{
 			index+=inc;
@@ -60,7 +55,7 @@ public class For extends Command {
 
 		return 0;
 		
-	}	
+	}
 	
 	@Override
 	public boolean isNestedCommand(){

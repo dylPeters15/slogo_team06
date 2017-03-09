@@ -1,10 +1,18 @@
 package frontend.simulation;
 
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import backend.states.ActorModel;
 import backend.states.State;
 import backend.states.StatesList;
 import frontend.SlogoBaseUIManager;
@@ -27,6 +35,9 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region>
 	private SimulationMenuBarManager simulationMenuBarManager;
 	private EnvironmentDisplayManager environmentDisplayManager;
 	private StatesList<State> statesList;
+	private Map<Integer, ActorModel> myActorsMap;
+	private HashMap<Integer, TurtleView> myTurtleViewMap;
+	private List<Integer> myActiveList;
 	
 	public SimulationPaneManager(StatesList<State> s){
 		initialize();
@@ -114,6 +125,9 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region>
 		
 		borderPane = new BorderPane();
 		
+		myActorsMap = new HashMap<Integer, ActorModel>();
+		myActiveList = new ArrayList<Integer>();
+		myTurtleViewMap = new HashMap<Integer, TurtleView>();
 		simulationMenuBarManager = new SimulationMenuBarManager(this);
 		environmentDisplayManager = new EnvironmentDisplayManager(600, 600);
 		
@@ -148,11 +162,36 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region>
 			if (state.clearscreen()){
 				environmentDisplayManager.clearScreen();
 			} else {
-//				environmentDisplayManager.setPenColor(state.getPenColor());
-//				environmentDisplayManager.setPenWidth(state.getPenSize());
-//				environmentDisplayManager.setBackgroundColor(state.getBGColor());
-				environmentDisplayManager.getTurtle().update(state.getActor());
-				environmentDisplayManager.updateTurtle();
+				if (state.getPenColorChanged()){
+					environmentDisplayManager.setPenColor(state.getPenColor());
+				}
+				
+				if (state.getPenSizeChanged()){
+					environmentDisplayManager.setPenWidth(state.getPenSize());
+				}
+				
+				if (state.getBGColorChanged()){
+					environmentDisplayManager.setBackgroundColor(state.getBGColor());
+				}
+				
+				if (state.getTurtleShapeChanged()){
+					environmentDisplayManager.setTurtleImage(state.getTurtleShapeImage());
+				}
+				myActorsMap = state.getActorMap();
+				myActiveList = state.getActiveList();
+				updateTurtleViewMap();
+				environmentDisplayManager.updateTurtles(myActiveList, myActorsMap, myTurtleViewMap);
+			}
+		}
+	}
+
+	void updateTurtleViewMap() {
+		for (Integer i : myActorsMap.keySet()){
+			if (! myTurtleViewMap.containsKey(i)){
+				TurtleView t = new TurtleView();
+				t.setPosition(environmentDisplayManager.convertXCoordinate(t.getX()),
+						environmentDisplayManager.convertYCoordinate(t.getY()));
+				myTurtleViewMap.put(i, t);
 			}
 		}
 	}

@@ -20,6 +20,7 @@ public class SetPenSize extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		State newState = getNewState();
+		newState.setPenSizeChanged(true);
 		newState.setPenSize(a);
 		addNewState(newState);
 		return a;

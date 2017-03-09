@@ -38,9 +38,7 @@ public class PenDown extends Command {
 
 	@Override
 	public double runCommand() throws SlogoException {
-		State newState = getNewState();
-		newState.getActors().setPenUp(false);
-		addNewState(newState);
+		setPenUp(false);
 		return 1;
 	}
 
