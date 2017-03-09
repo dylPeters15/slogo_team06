@@ -20,9 +20,7 @@ public class MakeUserInstruction extends Command {
 	
 	@Override
 	public double runCommand(List<String> words) throws SlogoException {
-		if (words.isEmpty()) {
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}
+		checkIfEmpty(words);
 		// get the command name
 		String commandName = "";
 		String word = words.remove(0);

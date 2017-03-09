@@ -27,27 +27,13 @@ public class DoTimes extends Command {
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}
+		checkIfEmpty(words);
 		
-		if(index == 0){
-			
+		if(index == 0){	
 			var = words.get(0);			
 			upperLimit =  (int) Double.parseDouble(words.get(1));
-			
-			if(words.get(2).contains("[") && words.get(words.size()-1).contains("]")){
-				commandToRun =  new ArrayList<String>();
-				for(int i=3; i<words.size()-1; i++){
-					commandToRun.add(words.get(i));
-				}
-			}
-			else{
-				
-				throw new SlogoException("IncorrectNumOfBrackets");
-			}
-				
-			
+			commandToRun =  new ArrayList<String>();
+			addCommandToRun(commandToRun,words,2);	
 		}
 		
 		index++;
@@ -56,7 +42,7 @@ public class DoTimes extends Command {
 
 		return 0;
 		
-	}	
+	}
 	
 	@Override
 	public boolean isNestedCommand(){

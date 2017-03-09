@@ -148,6 +148,7 @@ public class Interpreter {
 	private double handleVarParam(Command com, LinkedList<String> words, String word) throws SlogoException{
 		com.setVarMap(variables);
 		if(com.isNestedCommand()){
+			System.out.println("hvp words:"+words);
 			return handleNestedCommand(words, word, com);
 		}
 		else{

@@ -11,7 +11,6 @@ import backend.states.StatesList;
 public class GetPenColor extends Command {
 
 	private final int NUM_PARAMS = 0;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
 	
 	public GetPenColor(StatesList<State> list) {
 		super(list);
@@ -25,11 +24,6 @@ public class GetPenColor extends Command {
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
-	}
-
-	@Override
-	public List<String> paramsNeeded() {
-		return paramsNeeded;
 	}
 
 }
