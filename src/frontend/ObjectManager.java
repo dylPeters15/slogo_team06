@@ -8,5 +8,7 @@ package frontend;
  *
  */
 public interface ObjectManager<T extends Object> {
+
 	T getObject();
+
 }

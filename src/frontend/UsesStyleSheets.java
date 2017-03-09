@@ -8,7 +8,9 @@ package frontend;
  *
  */
 public interface UsesStyleSheets {
+
 	void setStyleSheet(String stylesheet);
 
 	String getStyleSheet();
+
 }

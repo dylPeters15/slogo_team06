@@ -3,8 +3,6 @@
  */
 package frontend.editor;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -33,8 +31,6 @@ import frontend.SlogoBaseUIManager;
  */
 class EditorMenuBarManager extends
 		SlogoBaseUIManager<EditorMenuBarDelegate, Parent> {
-
-	private Map<String, String> styleMap;
 
 	private HBox myMenuBar;
 
@@ -92,9 +88,8 @@ class EditorMenuBarManager extends
 		help.setOnMousePressed(event -> help());
 		myMenuBar.getChildren().add(help);
 
-		populateStyleMap(getLanguageResourceBundle());
 		ObservableList<String> styles = FXCollections
-				.observableArrayList(styleMap.keySet());
+				.observableArrayList(getPossibleStyleSheetNamesAndFileNames().keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
@@ -107,7 +102,7 @@ class EditorMenuBarManager extends
 	}
 
 	private void setStyleSheetTo(String styleSheet) {
-		getDelegate().didSelectStyleSheet(styleMap.get(styleSheet));
+		getDelegate().didSelectStyleSheet(getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
 	}
 
 	private void seeUserDefinedCommands() {
@@ -128,14 +123,6 @@ class EditorMenuBarManager extends
 		if (getDelegate() != null) {
 			getDelegate().help();
 		}
-	}
-
-	private void populateStyleMap(ResourceBundle language) {
-		styleMap = new HashMap<String, String>();
-		styleMap.put(language.getString("DefaultTheme"),
-				"resources/styles/default.css");
-		styleMap.put(language.getString("DarkTheme"),
-				"resources/styles/darktheme.css");
 	}
 
 	@Override

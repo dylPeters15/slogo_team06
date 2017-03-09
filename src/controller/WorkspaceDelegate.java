@@ -10,5 +10,7 @@ import java.util.ResourceBundle;
  *
  */
 public interface WorkspaceDelegate {
+
 	void didChangeLanguage(Workspace workspace, ResourceBundle newLanguage);
+
 }

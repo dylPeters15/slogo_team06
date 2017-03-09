@@ -7,11 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
-
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.scene.Parent;
+
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 
 /**
  * @author Dylan Peters
@@ -23,12 +22,10 @@ public abstract class SlogoBaseUIManager<D, T extends Parent> extends
 	private static final String STYLE_RESOURCE_LIST = "resources.styles/StyleFileList";
 	private static final String DEFAULT_KEY = "DefaultSyleSheet";
 
-	private ObservableMap<String, String> styleSheetNamesAndFileNames;
 	private String styleSheet;
 
 	public SlogoBaseUIManager() {
 		styleSheet = createDefaultStyleSheet();
-		styleSheetNamesAndFileNames = createPossibleStyleSheets();
 	}
 
 	@Override
@@ -46,8 +43,15 @@ public abstract class SlogoBaseUIManager<D, T extends Parent> extends
 	}
 
 	public final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames() {
+		Map<String, String> map = new HashMap<String, String>();
+		ResourceBundle fileBundle = ResourceBundle
+				.getBundle(STYLE_RESOURCE_LIST);
+		for (String key : fileBundle.keySet()) {
+			map.put(getLanguageResourceBundle().getString(key),
+					fileBundle.getString(key));
+		}
 		return (UnmodifiableObservableMap<String, String>) FXCollections
-				.unmodifiableObservableMap(styleSheetNamesAndFileNames);
+				.unmodifiableObservableMap(FXCollections.observableMap(map));
 	}
 
 	protected void styleSheetDidChange() {
@@ -59,12 +63,4 @@ public abstract class SlogoBaseUIManager<D, T extends Parent> extends
 				DEFAULT_KEY);
 	}
 
-	private ObservableMap<String, String> createPossibleStyleSheets() {
-		Map<String, String> map = new HashMap<String, String>();
-		ResourceBundle bundle = ResourceBundle.getBundle(STYLE_RESOURCE_LIST);
-		for (String key : bundle.keySet()) {
-			map.put(key, bundle.getString(key));
-		}
-		return FXCollections.observableMap(map);
-	}
 }
