@@ -138,7 +138,7 @@ public class State {
 	}
 
 	
-	private ColorList getBGColorList() {
+	public ColorList getBGColorList() {
 		return bgColor;
 	}
 	
