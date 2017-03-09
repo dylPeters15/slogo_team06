@@ -17,11 +17,6 @@ public class ArcTangent extends Command {
 		super(list);
 	}
 
-	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
 	/**
 	 * @param a: tangent value of an angle
 	 * @return: an angle represented as degree
@@ -29,11 +24,6 @@ public class ArcTangent extends Command {
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		return Math.toDegrees(Math.atan(a));
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 	@Override

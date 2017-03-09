@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import frontend.UIChildDelegate;
+
 /**
  * This interface will be of default visibility, so it will only be visible to
  * other members of its package. Therefore, it will be part of the internal API
@@ -38,7 +40,7 @@ package frontend.editor;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarDelegate extends EditorPaneManagerChildDelegate {
+interface EditorMenuBarDelegate extends UIChildDelegate {
 
 	/**
 	 * This method is called when the user selects to change the language in
@@ -65,7 +67,5 @@ interface EditorMenuBarDelegate extends EditorPaneManagerChildDelegate {
 	void help();
 
 	void setStyleSheet(String stylesheet);
-	
-	void showStage();
 
 }

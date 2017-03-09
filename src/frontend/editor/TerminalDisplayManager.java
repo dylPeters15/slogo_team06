@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import frontend.UIChild;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -32,8 +33,7 @@ import javafx.scene.layout.VBox;
  * @author Dylan Peters
  *
  */
-class TerminalDisplayManager extends
-		EditorPaneManagerChild<TerminalDisplayDelegate> {
+class TerminalDisplayManager extends UIChild<TerminalDisplayDelegate> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;
@@ -80,7 +80,7 @@ class TerminalDisplayManager extends
 	 *            a string representing the language to be displayed
 	 */
 	@Override
-	void setLanguageResourceBundle(ResourceBundle language) {
+	public void setLanguageResourceBundle(ResourceBundle language) {
 		prompt = language.getString("Prompt");
 		if (run != null) {
 			run.setText(language.getString("Run"));
@@ -105,7 +105,7 @@ class TerminalDisplayManager extends
 	 *         interact with the program
 	 */
 	@Override
-	Region getRegion() {
+	public Region getRegion() {
 		return overallSplitPane;
 	}
 
@@ -235,6 +235,7 @@ class TerminalDisplayManager extends
 	}
 
 	private void clearAllPressed() {
+		textInputAreas.clear();
 		addTextArea(new TextInputArea("", prompt));
 	}
 

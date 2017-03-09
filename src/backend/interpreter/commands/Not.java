@@ -18,18 +18,8 @@ public class Not extends Command {
 	}
 
 	@Override
-	public double runCommand() throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 0");
-	}
-
-	@Override
 	public double runCommand(double a) throws SlogoException {
 		return (a == 0) ? 1 : 0;
-	}
-
-	@Override
-	public double runCommand(double a, double b) throws SlogoException {
-		throw new SlogoException("IncorrectNumOfParameters: 2");
 	}
 
 	@Override

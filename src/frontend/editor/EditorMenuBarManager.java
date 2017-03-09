@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import frontend.UIChild;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -30,11 +31,9 @@ import javafx.scene.layout.Region;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends
-		EditorPaneManagerChild<EditorMenuBarDelegate> {
-	private ObservableList<String> languages = FXCollections
-			.observableArrayList("Zhōngwén", "English", "Français", "Deutsche",
-					"Italiano", "Português", "Russkiy", "Español");
+class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
+	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+	private static final String LANGUAGE_LIST = "LanguageList";
 
 	private Map<String, String> styleMap;
 
@@ -75,12 +74,12 @@ class EditorMenuBarManager extends
 	 *         interact with the program's options
 	 */
 	@Override
-	Region getRegion() {
+	public Region getRegion() {
 		return myMenuBar;
 	}
 
 	@Override
-	void setLanguageResourceBundle(ResourceBundle language) {
+	public void setLanguageResourceBundle(ResourceBundle language) {
 		populateMenuBar(language);
 	}
 
@@ -96,7 +95,9 @@ class EditorMenuBarManager extends
 				.setOnMousePressed(event -> seeUserDefinedCommands());
 		myMenuBar.getChildren().add(seeUserDefinedCommands);
 
-		ComboBox<String> selectLanguage = new ComboBox<String>(languages);
+		ComboBox<String> selectLanguage = new ComboBox<String>(
+				FXCollections.observableArrayList(ResourceBundle.getBundle(
+						DEFAULT_RESOURCE_PACKAGE + LANGUAGE_LIST).keySet()).sorted());
 		selectLanguage.setValue(language.getString("Language"));
 
 		selectLanguage.setOnAction(event -> didSelectLanguage(selectLanguage
@@ -118,17 +119,7 @@ class EditorMenuBarManager extends
 				.setOnAction(event -> setStyleSheet(styleSheetSelector
 						.getValue()));
 		myMenuBar.getChildren().add(styleSheetSelector);
-		
-		Button showStage = new Button(language.getString("ShowStage"));
-		showStage.setOnMousePressed(event -> showStage());
-		myMenuBar.getChildren().add(showStage);
 
-	}
-	
-	private void showStage(){
-		if (getDelegate() != null){
-			getDelegate().showStage();
-		}
 	}
 
 	private void setStyleSheet(String styleSheet) {

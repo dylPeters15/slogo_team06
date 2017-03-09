@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
  *
  */
 public class SimulationPaneManager implements SimulationMenuBarDelegate, ListChangeListener<State> {
-	private static final double DEFAULT_WIDTH = 1000;
-	private static final double DEFAULT_HEIGHT = 1000;
+	private static final double DEFAULT_WIDTH = 600;
+	private static final double DEFAULT_HEIGHT = 600;
 	
 	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
 	

@@ -13,10 +13,12 @@ import javafx.collections.ObservableMap;
  *
  */
 public class Interpreter {
+	
 	private StatesList<State> statesList;
 	private final String DEF_LANG =  "resources/languages/English";
 	private final String SYNTAX =  "resources/languages/Syntax";
 	public final String WHITESPACE = "\\s+";
+	private final String classPrefix = "backend.interpreter.commands.";
 	private ProgramParser langParser;
 	private ProgramParser type;
 	ResourceBundle resources;
@@ -29,12 +31,15 @@ public class Interpreter {
 		type = new ProgramParser();
 		setLanguage(DEF_LANG);
 	}		
+
+	public void setLanguage(String lang) {
+		resources = ResourceBundle.getBundle(DEF_LANG);
+		setParserPatterns(lang);
+	}
 	
 	private void setParserPatterns(String lang) {
-
 		langParser.clearPatterns();
 		type.clearPatterns();
-
 		// these are more specific, so add them first to ensure they are checked first
 		langParser.addPatterns(lang);
 		// these are more general so add them at the end
@@ -69,6 +74,7 @@ public class Interpreter {
 		if(words.isEmpty()){
 			throw new SlogoException("IncorrectNumOfParameters");
 		}
+		// the first word in input, used to indicate input type
 		String word = words.pop();
 
 		if(isConstant(word)){
@@ -77,21 +83,20 @@ public class Interpreter {
 		else if(type.getSymbol(word).equals("Command")){
 			Command com = null;
 			try{
+				// generate a predefined command (not user-defined)
 				com = Command.getCommand(langParser.getSymbol(word), statesList);	
 			}
 			catch (SlogoException e){
 				if(!variables.containsKey(word)){
 					throw e;
 				}
-				else
-				{
-					interpret(variables.get(word));
-					return 0;
+				else{
+					// run the user-defined command
+					return parse(separateWords(variables.get(word).split(WHITESPACE)));
 				}
 			}
 			try{
-
-				if(com.needsVarParams()){
+				if(com.needsVarParams()){  // make variables
 					com.setVarMap(variables);
 					if(com.isNestedCommand()){
 						return handleNestedCommand(words, word, com);
@@ -101,17 +106,13 @@ public class Interpreter {
 						for(int i=0; i<com.numParamsNeeded(); i++){
 							getConstant(words, word, com, params, i);
 						}
-
 						return com.runCommand(params);
 					}
 				}
 				else if (com.needsPriorCheck()) { // if and if-else
 					double condition = recursiveParse(words);
 					if (condition != 0) {
-						if(com.numParamsNeeded() == 1){
-							return com.runCommand(condition);
-						}
-						else if(com.numParamsNeeded() == 2){ // if
+						if(com.numParamsNeeded() == 2){ // if
 							return com.runCommand(condition,recursiveParse(words));
 						}
 						else if (com.numParamsNeeded() == 3){ // else if
@@ -129,11 +130,12 @@ public class Interpreter {
 							return com.runCommand(condition, executedStatement);
 						}
 						else {
-							return com.runCommand();
+							throw new SlogoException("CommandDoesNotExist");
 						}
 					}
 					else {
 						if(com.numParamsNeeded() == 2){ // if
+							// remove the if statement
 							word = words.pop();
 							while (!type.getSymbol(word).equals("ListEnd")) {
 								word = words.pop();
@@ -141,6 +143,7 @@ public class Interpreter {
 							return 0;
 						}
 						else if (com.numParamsNeeded() == 3) { // else if
+							// remove the if statement
 							if (!words.isEmpty()) {
 								word = words.pop();
 								while (!type.getSymbol(word).equals("ListEnd")) {
@@ -153,46 +156,17 @@ public class Interpreter {
 							double executedStatement = recursiveParse(words);
 							return com.runCommand(condition, executedStatement);
 						}
+						else {
+							throw new SlogoException("CommandDoesNotExist");
+						}
 					}
 
 				}
 				else if (com.ifDefineNewCommands()) { // TO
 					com.setVarMap(variables);
-					String commandName = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						commandName = commandName + word + " ";
-						word = words.pop();
-					}
-					commandName = commandName.substring(0, commandName.length()-1); // remove the last blank
-					// make new variables and put into variable map
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListEnd")) {
-						String variable = "make ";
-						variable = variable + word + " " + words.pop();
-						interpret(variable);
-						word = words.pop();
-					}					
-					String commands = "";
-					word = words.pop();
-					while (!type.getSymbol(word).equals("ListStart")) {
-						word = words.pop();
-					}
-					int numOfFrontBracket = 1;
-					int numOfEndBracket = 0;
-					while (!type.getSymbol(word).equals("ListEnd") || numOfFrontBracket != numOfEndBracket) {
-						commands = commands + word + " ";
-						if (!words.isEmpty()){
-							word = words.pop();
-						}
-						else {
-							throw new SlogoException("ExceptedBracket");
-						}
-						if (type.getSymbol(word).equals("ListStart")) numOfFrontBracket ++;
-						if (type.getSymbol(word).equals("ListEnd")) numOfEndBracket ++;
-					}
-					commands = commands + "]";
-					return com.runCommand(commandName, commands);
+					double result = com.runCommand(words);
+					interpret(com.getVariablesString());
+					return result;
 				}
 				else{
 					if(com.numParamsNeeded() == 1){
@@ -223,7 +197,8 @@ public class Interpreter {
 				interpret(command);
 			}
 		}
-		else if (type.getSymbol(word).equals("ListStart")) {
+		else if (type.getSymbol(word).equals("ListStart")) { 
+			// remove the brackets, and parse all inside words
 			LinkedList<String> bracketWords = new LinkedList<>();
 			word = words.pop();			
 			int numOfFrontBracket = 1;
@@ -267,14 +242,9 @@ public class Interpreter {
 	}
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
 			throws SlogoException {
-		
-		System.out.println(params.toString());
-		
 		word = words.pop();		
 		if(com.paramsNeeded().get(i).equals("Commands") && com.paramsNeeded().get(i+1).equals("ListEnd")){
-			
-			while( (!type.getSymbol(word).equals("ListEnd") || countOf(params, "[") > (countOf(params, "]") + 1))
-					&& !words.isEmpty() ){
+			while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
 				params.add(word);
 				word = words.pop();
 			}
@@ -297,17 +267,6 @@ public class Interpreter {
 		}
 	}
 	
-	private int countOf(List<String> params, String search){
-	int count = 0;
-		for(String s:params){
-			if(s.contains(search)){
-				count++;
-			}
-				
-		}
-		return count;
-	}
-	
 	private boolean isConstant(String word) {
 		return langParser.getSymbol(word).equals("Constant");
 	}
@@ -319,11 +278,6 @@ public class Interpreter {
 		}
 		String toReplace = e.getText().substring(0,indexOfCustomMessage);
 		e.setText(e.getText().replaceAll(toReplace, resources.getString(toReplace)));
-	}
-
-	public void setLanguage(String lang) {
-		resources = ResourceBundle.getBundle(DEF_LANG);
-		setParserPatterns(lang);
 	}
 
 }
