@@ -27,6 +27,7 @@ public class SlogoController implements WorkspaceDelegate {
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private static final String DEFAULT_LANGUAGE = "English";
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+
 	private Stage editorStage;
 	private Stage simulationStage;
 
@@ -49,22 +50,42 @@ public class SlogoController implements WorkspaceDelegate {
 				+ DEFAULT_LANGUAGE);
 		numWorkspacesThatHaveExisted = 0;
 		workspaceToTabs = new HashMap<Workspace, Pair<Tab, Tab>>();
+		initializeTabPanes();
+		initializeStages(stage);
+		initializeWorkspaces();
+		editorStage.show();
+		simulationStage.show();
+	}
 
+	private void initializeTabPanes() {
+		editorTabPane = new TabPane();
+		simulationTabPane = new TabPane();
+		Tab addTab = new Tab("+");
+		addTab.setClosable(false);
+		editorTabPane.getTabs().add(addTab);
+		simulationTabPane.getTabs().add(addTab);
+
+		editorTabPane.getSelectionModel().selectedItemProperty()
+				.addListener(createTabPaneListener(addTab));
+		simulationTabPane.getSelectionModel().selectedItemProperty()
+				.addListener(createTabPaneListener(addTab));
+	}
+
+	private void initializeStages(Stage stage) {
 		editorStage = stage;
 		simulationStage = new Stage();
 
 		editorStage.setOnCloseRequest(event -> requestAllClose());
 		simulationStage.setOnCloseRequest(event -> requestAllClose());
 
-		editorTabPane = new TabPane();
-		simulationTabPane = new TabPane();
-
 		editorStage.setScene(new Scene(editorTabPane));
 		simulationStage.setScene(new Scene(simulationTabPane));
 
 		editorStage.setTitle(EDITOR_TITLE);
 		simulationStage.setTitle(SIMULATOR_TITLE);
+	}
 
+	private void initializeWorkspaces() {
 		workspaces = FXCollections.observableArrayList();
 		workspaces.addListener(new ListChangeListener<Workspace>() {
 			@Override
@@ -74,83 +95,14 @@ public class SlogoController implements WorkspaceDelegate {
 			}
 		});
 
-		Tab addTab = new Tab("+");
-		addTab.setClosable(false);
-		editorTabPane.getTabs().add(addTab);
-		simulationTabPane.getTabs().add(addTab);
-
-		editorTabPane.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<Tab>() {
-
-					@Override
-					public void changed(
-							ObservableValue<? extends Tab> observable,
-							Tab oldTab, Tab newTab) {
-						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
-							addWorkspace();
-						} else if (!newTab.equals(addTab)) {
-							simulationTabPane.getSelectionModel().select(
-									editorTabPane.getSelectionModel()
-											.getSelectedIndex());
-						}
-					}
-				});
-		simulationTabPane.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<Tab>() {
-
-					@Override
-					public void changed(
-							ObservableValue<? extends Tab> observable,
-							Tab oldTab, Tab newTab) {
-						if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
-							addWorkspace();
-						} else if (!newTab.equals(addTab)) {
-							editorTabPane.getSelectionModel().select(
-									simulationTabPane.getSelectionModel()
-											.getSelectedIndex());
-						}
-					}
-				});
-
 		addWorkspace();
-
-		editorStage.show();
-		simulationStage.show();
-	}
-
-	private void requestAllClose() {
-		for (Workspace workspace : workspaces) {
-			workspace.close();
-		}
-		editorStage.close();
-		simulationStage.close();
 	}
 
 	private void workspacesModified(
 			ListChangeListener.Change<? extends Workspace> change) {
 		if (change.next() && change.wasAdded()) {
 			for (Workspace workspace : change.getAddedSubList()) {
-				workspaceToTabs.put(
-						workspace,
-						new Pair<Tab, Tab>(new Tab(language
-								.getString("Workspace")
-								+ " "
-								+ numWorkspacesThatHaveExisted, workspace
-								.getEditorRegion()), new Tab(language
-								.getString("Workspace")
-								+ " "
-								+ numWorkspacesThatHaveExisted++, workspace
-								.getSimulationRegion())));
-				workspaceToTabs.get(workspace).getKey()
-						.setOnClosed(event -> workspaces.remove(workspace));
-				editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
-						workspaceToTabs.get(workspace).getKey());
-
-				workspaceToTabs.get(workspace).getValue()
-						.setOnClosed(event -> workspaces.remove(workspace));
-				simulationTabPane.getTabs().add(
-						simulationTabPane.getTabs().size() - 1,
-						workspaceToTabs.get(workspace).getValue());
+				createTabsForWorkspace(workspace);
 			}
 		} else if (change.wasRemoved()) {
 			for (Workspace workspace : change.getRemoved()) {
@@ -161,16 +113,28 @@ public class SlogoController implements WorkspaceDelegate {
 			}
 		}
 		setClosingPolicy();
-		editorTabPane
-				.selectionModelProperty()
-				.get()
-				.select(editorTabPane.getTabs().get(
-						editorTabPane.getTabs().size() - 2));
-		simulationTabPane
-				.selectionModelProperty()
-				.get()
-				.select(simulationTabPane.getTabs().get(
-						simulationTabPane.getTabs().size() - 2));
+		selectLastTab();
+	}
+
+	private void createTabsForWorkspace(Workspace workspace) {
+		workspaceToTabs.put(
+				workspace,
+				new Pair<Tab, Tab>(new Tab(language.getString("Workspace")
+						+ " " + numWorkspacesThatHaveExisted, workspace
+						.getEditorRegion()), new Tab(language
+						.getString("Workspace")
+						+ " "
+						+ numWorkspacesThatHaveExisted++, workspace
+						.getSimulationRegion())));
+		workspaceToTabs.get(workspace).getKey()
+				.setOnClosed(event -> workspaces.remove(workspace));
+		editorTabPane.getTabs().add(editorTabPane.getTabs().size() - 1,
+				workspaceToTabs.get(workspace).getKey());
+
+		workspaceToTabs.get(workspace).getValue()
+				.setOnClosed(event -> workspaces.remove(workspace));
+		simulationTabPane.getTabs().add(simulationTabPane.getTabs().size() - 1,
+				workspaceToTabs.get(workspace).getValue());
 	}
 
 	private void setClosingPolicy() {
@@ -189,14 +153,22 @@ public class SlogoController implements WorkspaceDelegate {
 		}
 	}
 
-	private void addWorkspace() {
-		workspaces.add(new Workspace(this));
+	private void selectLastTab() {
+		editorTabPane
+				.selectionModelProperty()
+				.get()
+				.select(editorTabPane.getTabs().get(
+						editorTabPane.getTabs().size() - 2));
+		simulationTabPane
+				.selectionModelProperty()
+				.get()
+				.select(simulationTabPane.getTabs().get(
+						simulationTabPane.getTabs().size() - 2));
 	}
 
 	@Override
 	public void didChangeLanguage(Workspace workspace,
 			ResourceBundle newLanguage) {
-		this.language = newLanguage;
 		if (workspaceToTabs.containsKey(workspace)) {
 			int workspaceNum = Integer.parseInt(workspaceToTabs
 					.get(workspace)
@@ -218,5 +190,38 @@ public class SlogoController implements WorkspaceDelegate {
 							newLanguage.getString("Workspace") + " "
 									+ workspaceNum);
 		}
+	}
+
+	private ChangeListener<Tab> createTabPaneListener(Tab addTab) {
+		return new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable,
+					Tab oldTab, Tab newTab) {
+				if (!oldTab.equals(addTab) && newTab.equals(addTab)) {
+					addWorkspace();
+				} else if (!newTab.equals(addTab)) {
+					TabPane pane1 = simulationTabPane;
+					TabPane pane2 = editorTabPane;
+					if (editorTabPane.getTabs().contains(newTab)) {
+						pane1 = editorTabPane;
+						pane2 = simulationTabPane;
+					}
+					pane2.getSelectionModel().select(
+							pane1.getSelectionModel().getSelectedIndex());
+				}
+			}
+		};
+	}
+
+	private void addWorkspace() {
+		workspaces.add(new Workspace(language,this));
+	}
+
+	private void requestAllClose() {
+		for (Workspace workspace : workspaces) {
+			workspace.close();
+		}
+		editorStage.close();
+		simulationStage.close();
 	}
 }

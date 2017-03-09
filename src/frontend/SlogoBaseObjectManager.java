@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
@@ -22,14 +21,12 @@ public abstract class SlogoBaseObjectManager<D, T extends Object> implements
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";
 	private static final String DEFAULT_KEY = "DefaultLanguageResource";
 
-	private ObservableMap<String, ResourceBundle> possibleLanguages;
 	private D delegate;
 	private ResourceBundle language;
 
 	public SlogoBaseObjectManager() {
 		delegate = createNonActiveDelegate();
 		language = createDefaultResourceBundle();
-		possibleLanguages = createPossibleLanguagesMap();
 	}
 
 	@Override
@@ -61,8 +58,14 @@ public abstract class SlogoBaseObjectManager<D, T extends Object> implements
 	}
 
 	public final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles() {
+		Map<String, ResourceBundle> map = new HashMap<String, ResourceBundle>();
+		ResourceBundle bundle = ResourceBundle
+				.getBundle(LANGUAGE_RESOURCE_LIST);
+		for (String key : bundle.keySet()) {
+			map.put(key, ResourceBundle.getBundle(bundle.getString(key)));
+		}
 		return (UnmodifiableObservableMap<String, ResourceBundle>) FXCollections
-				.unmodifiableObservableMap(possibleLanguages);
+				.unmodifiableObservableMap(FXCollections.observableMap(map));
 	}
 
 	protected void delegateDidChange() {
@@ -78,13 +81,4 @@ public abstract class SlogoBaseObjectManager<D, T extends Object> implements
 				LANGUAGE_RESOURCE_POINTER).getString(DEFAULT_KEY));
 	}
 
-	private ObservableMap<String, ResourceBundle> createPossibleLanguagesMap() {
-		Map<String, ResourceBundle> map = new HashMap<String, ResourceBundle>();
-		ResourceBundle bundle = ResourceBundle
-				.getBundle(LANGUAGE_RESOURCE_LIST);
-		for (String key : bundle.keySet()) {
-			map.put(key, ResourceBundle.getBundle(bundle.getString(key)));
-		}
-		return FXCollections.observableMap(map);
-	}
 }

@@ -17,36 +17,19 @@ import frontend.simulation.SimulationPaneManager;
  *
  */
 public class Workspace implements EditorPaneManagerDelegate {
-	private static final String DEFAULT_LANGUAGE = "English";
-	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
+	
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
 	private WorkspaceDelegate delegate;
-
-	public Workspace() {
-		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-				+ DEFAULT_LANGUAGE), null);
-	}
-
-	public Workspace(ResourceBundle language) {
-		this(language, null);
-	}
-
-	public Workspace(WorkspaceDelegate delegate) {
-		this(ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
-				+ DEFAULT_LANGUAGE), delegate);
-	}
 
 	public Workspace(ResourceBundle language, WorkspaceDelegate delegate) {
 		Model model = new Model();
 
 		simulation = new SimulationPaneManager(model.getStatesList());
-		simulation.setLanguageResourceBundle(language);
 		new Scene(simulation.getObject());
 
 		editor = new EditorPaneManager(model);
 		editor.setDelegate(this);
-		editor.setLanguageResourceBundle(language);
 		new Scene(editor.getObject());
 
 		setDelegate(delegate);
@@ -64,6 +47,7 @@ public class Workspace implements EditorPaneManagerDelegate {
 
 	private void setLanguage(ResourceBundle language) {
 		editor.setLanguageResourceBundle(language);
+		simulation.setLanguageResourceBundle(language);
 		didChangeToLanguage(language);
 	}
 
