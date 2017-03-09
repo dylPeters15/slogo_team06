@@ -34,7 +34,7 @@ public class Forward extends Command {
 	@Override
 	public double runCommand(double distance) {
 		State newState = getNewState();
-		newState.getActor().moveForward(distance);
+		newState.getActors().moveForward(distance);
 		addNewState(newState);
 		return distance;		
 	}
