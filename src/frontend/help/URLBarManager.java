@@ -4,10 +4,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.SlogoBaseUIManager;
 
-class URLBarManager extends UIChild<UIChildDelegate> {
+class URLBarManager extends SlogoBaseUIManager<Region> {
 
 	private HBox myMenuBar;
 	private TextField myURLDisplay;
@@ -25,7 +24,7 @@ class URLBarManager extends UIChild<UIChildDelegate> {
 	 *         interact with the program's options
 	 */
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return myMenuBar;
 	}
 

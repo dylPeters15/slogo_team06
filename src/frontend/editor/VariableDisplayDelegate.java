@@ -3,8 +3,6 @@
  */
 package frontend.editor;
 
-import frontend.UIChildDelegate;
-
 /**
  * 
  * This interface will be of default visibility, so it will only be visible to
@@ -38,7 +36,7 @@ import frontend.UIChildDelegate;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayDelegate extends UIChildDelegate {
+interface VariableDisplayDelegate {
 
 	/**
 	 * This method is called when the user changes the value of a variable in

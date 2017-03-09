@@ -3,17 +3,15 @@
  */
 package frontend.editor;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import frontend.UIChild;
+import frontend.SlogoDelegatedUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -31,11 +29,8 @@ import frontend.UIChild;
  * @author Dylan Peters
  *
  */
-class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
-	private static final String DEFAULT_RESOURCE_PACKAGE = "resources.languages/";
-	private static final String LANGUAGE_LIST = "LanguageList";
-
-	private Map<String, String> styleMap;
+class EditorMenuBarManager extends
+		SlogoDelegatedUIManager<EditorMenuBarDelegate, Parent> {
 
 	private HBox myMenuBar;
 
@@ -46,23 +41,9 @@ class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
 	 * @param language
 	 *            the language to use in the display of the menu bar.
 	 */
-	EditorMenuBarManager(ResourceBundle language) {
-		this(null, language);
-	}
-
-	/**
-	 * Creates a new instance of EditorMenuBarManager. Sets all values except
-	 * delegate and language to default.
-	 * 
-	 * @param delegate
-	 *            the object implementing the EditorMenuBarDelegate interface
-	 *            that this class will use to call delegated methods.
-	 * @param language
-	 *            the language to use in the display of the menu bar.
-	 */
-	EditorMenuBarManager(EditorMenuBarDelegate delegate, ResourceBundle language) {
-		super(delegate, language);
-		populateMenuBar(language);
+	public EditorMenuBarManager() {
+		myMenuBar = new HBox();
+		populateMenuBar();
 	}
 
 	/**
@@ -74,71 +55,57 @@ class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
 	 *         interact with the program's options
 	 */
 	@Override
-	public Region getRegion() {
+	public Parent getObject() {
 		return myMenuBar;
 	}
 
 	@Override
-	public void setLanguageResourceBundle(ResourceBundle language) {
-		populateMenuBar(language);
+	protected void languageResourceBundleDidChange() {
+		populateMenuBar();
 	}
 
-	private void populateMenuBar(ResourceBundle language) {
-		if (myMenuBar == null) {
-			myMenuBar = new HBox();
-		}
+	private void populateMenuBar() {
 		myMenuBar.getChildren().clear();
 
-		Button seeUserDefinedCommands = new Button(
-				language.getString("SeeUserCommands"));
-		seeUserDefinedCommands
-				.setOnMousePressed(event -> seeUserDefinedCommands());
-		myMenuBar.getChildren().add(seeUserDefinedCommands);
-
-		ComboBox<String> selectLanguage = new ComboBox<String>(
-				FXCollections.observableArrayList(ResourceBundle.getBundle(
-						DEFAULT_RESOURCE_PACKAGE + LANGUAGE_LIST).keySet()).sorted());
-		selectLanguage.setValue(language.getString("Language"));
+		ComboBox<String> selectLanguage = new ComboBox<String>(FXCollections
+				.observableArrayList(
+						getPossibleResourceBundleNamesAndResourceBundles()
+								.keySet()).sorted());
+		selectLanguage.setValue(getLanguageResourceBundle().getString(
+				"Language"));
 
 		selectLanguage.setOnAction(event -> didSelectLanguage(selectLanguage
 				.getValue()));
 		myMenuBar.getChildren().add(selectLanguage);
 
-		Button help = new Button(language.getString("Help"));
-		help.setOnMousePressed(event -> help());
-		myMenuBar.getChildren().add(help);
-
-		populateStyleMap(language);
 		ObservableList<String> styles = FXCollections
-				.observableArrayList(styleMap.keySet());
+				.observableArrayList(getPossibleStyleSheetNamesAndFileNames()
+						.keySet());
 		ComboBox<String> styleSheetSelector = new ComboBox<String>(styles);
 		if (styles.size() > 0) {
 			styleSheetSelector.setValue(styles.get(0));
 		}
 		styleSheetSelector
-				.setOnAction(event -> setStyleSheet(styleSheetSelector
+				.setOnAction(event -> setStyleSheetTo(styleSheetSelector
 						.getValue()));
 		myMenuBar.getChildren().add(styleSheetSelector);
 
+		Button help = new Button(getLanguageResourceBundle().getString("Help"));
+		help.setOnMousePressed(event -> help());
+		myMenuBar.getChildren().add(help);
+
 	}
 
-	private void setStyleSheet(String styleSheet) {
-		if (getDelegate() != null
-				&& getDelegate() instanceof EditorMenuBarDelegate) {
-			((EditorMenuBarDelegate) getDelegate()).setStyleSheet(styleMap
-					.get(styleSheet));
-		}
-	}
-
-	private void seeUserDefinedCommands() {
-		if (getDelegate() != null) {
-			getDelegate().seeUserDefinedCommands();
-		}
+	private void setStyleSheetTo(String styleSheet) {
+		getDelegate().didSelectStyleSheet(
+				getPossibleStyleSheetNamesAndFileNames().get(styleSheet));
 	}
 
 	private void didSelectLanguage(String language) {
 		if (getDelegate() != null) {
-			getDelegate().didSelectLanguage(language);
+			getDelegate().didSelectLanguage(
+					getPossibleResourceBundleNamesAndResourceBundles().get(
+							language));
 		}
 	}
 
@@ -148,11 +115,25 @@ class EditorMenuBarManager extends UIChild<EditorMenuBarDelegate> {
 		}
 	}
 
-	private void populateStyleMap(ResourceBundle language) {
-		styleMap = new HashMap<String, String>();
-		styleMap.put(language.getString("DefaultTheme"),
-				"resources/default.css");
-		styleMap.put(language.getString("DarkTheme"), "resources/darktheme.css");
+	@Override
+	public EditorMenuBarDelegate createNonActiveDelegate() {
+		return new EditorMenuBarDelegate() {
+
+			@Override
+			public void didSelectStyleSheet(String stylesheet) {
+
+			}
+
+			@Override
+			public void help() {
+
+			}
+
+			@Override
+			public void didSelectLanguage(ResourceBundle language) {
+
+			}
+		};
 	}
 
 }

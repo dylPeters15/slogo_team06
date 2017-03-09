@@ -1,12 +1,13 @@
 package frontend.simulation;
 
-import backend.states.State;
-import backend.states.StatesList;
 import javafx.collections.ListChangeListener;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import backend.states.State;
+import backend.states.StatesList;
+import frontend.SlogoBaseUIManager;
 
 /**
  * Manager for simulation window
@@ -18,11 +19,8 @@ import javafx.scene.paint.Color;
  * @author Andreas Santos
  *
  */
-public class SimulationPaneManager implements SimulationMenuBarDelegate, ListChangeListener<State> {
-	private static final double DEFAULT_WIDTH = 600;
-	private static final double DEFAULT_HEIGHT = 600;
-	
-	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
+public class SimulationPaneManager extends SlogoBaseUIManager<Region> 
+								implements SimulationMenuBarDelegate, ListChangeListener<State>  {
 	
 	private BorderPane borderPane;
 	
@@ -30,17 +28,12 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	private EnvironmentDisplayManager environmentDisplayManager;
 	private StatesList<State> statesList;
 	
-	// Constructors that will be present when this interface is turned into a
-	// class:
 	public SimulationPaneManager(StatesList<State> s){
 		initialize();
 		statesList = s;
 		statesList.addListener(this);
 	}
-	// public SimulationPaneManager(double width, double height);
-	
-	
-	
+
 	/**
 	 * Sets the width of the Parent object that holds all of the UI components.
 	 * @param width
@@ -55,7 +48,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 	 * 		double width
 	 */
     public double getWidth(){
-    	return 0;
+    	return 600;
     }
     
     /**
@@ -72,7 +65,7 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
      * 		double height
      */
     public double getHeight(){
-    	return 0;
+    	return 600;
     }
     
     /**
@@ -84,14 +77,10 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
      * @return 
      * 		Parent
      */
-    public Parent getParent(){
+    @Override
+    public Region getObject(){
     	return borderPane;
     }
-    
-	public void setStyleSheet(String styleSheet) {
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(styleSheet);
-	}
     
     /**
 	 * This method is called to reset the turtle at
@@ -128,17 +117,17 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 		simulationMenuBarManager = new SimulationMenuBarManager(this);
 		environmentDisplayManager = new EnvironmentDisplayManager(600, 600);
 		
-		borderPane.setTop(simulationMenuBarManager.getRegion());
-		borderPane.setBottom(environmentDisplayManager.getRegion());
+		borderPane.setTop(simulationMenuBarManager.getObject());
+		borderPane.setBottom(environmentDisplayManager.getObject());
 		
-		setStyleSheet(DEFAULT_STYLE_SHEET);
+		setStyleSheet(getStyleSheet());
 		
-		simulationMenuBarManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
-		environmentDisplayManager.getRegion().prefHeightProperty().bind(borderPane.heightProperty().subtract(simulationMenuBarManager.getRegion().heightProperty()));
-		environmentDisplayManager.getRegion().prefWidthProperty().bind(borderPane.widthProperty());
+		simulationMenuBarManager.getObject().prefWidthProperty().bind(borderPane.widthProperty());
+		environmentDisplayManager.getObject().prefHeightProperty().bind(borderPane.heightProperty().subtract(simulationMenuBarManager.getObject().heightProperty()));
+		environmentDisplayManager.getObject().prefWidthProperty().bind(borderPane.widthProperty());
 		
-		borderPane.setPrefWidth(DEFAULT_WIDTH);
-		borderPane.setPrefHeight(DEFAULT_HEIGHT);
+		borderPane.setPrefWidth(getWidth());
+		borderPane.setPrefHeight(getHeight());
 		
 	}
 
@@ -159,9 +148,24 @@ public class SimulationPaneManager implements SimulationMenuBarDelegate, ListCha
 			if (state.clearscreen()){
 				environmentDisplayManager.clearScreen();
 			} else {
+//				environmentDisplayManager.setPenColor(state.getPenColor());
+//				environmentDisplayManager.setPenWidth(state.getPenSize());
+//				environmentDisplayManager.setBackgroundColor(state.getBGColor());
 				environmentDisplayManager.getTurtle().update(state.getActor());
 				environmentDisplayManager.updateTurtle();
 			}
 		}
 	}
+
+//	@Override
+//	protected void styleSheetDidChange(){
+//		borderPane.getStylesheets().clear();
+//		borderPane.getStylesheets().add(getStyleSheet());
+//	}
+	
+	@Override
+	protected void languageResourceBundleDidChange() {
+		simulationMenuBarManager.setLanguageResourceBundle(getLanguageResourceBundle());
+	}
+
 }

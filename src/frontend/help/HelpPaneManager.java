@@ -1,19 +1,12 @@
 package frontend.help;
 
-import java.util.ResourceBundle;
-
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.SlogoBaseUIManager;
 
-public class HelpPaneManager extends UIChild<UIChildDelegate> {
-	private static final double DEFAULT_WIDTH = 600;
-	private static final double DEFAULT_HEIGHT = 600;
-
-	private static final String DEFAULT_STYLE_SHEET = "resources/default.css";
+public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 	private static final String HELP_PAGE = "http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands.php";
 
 	private SplitPane split;
@@ -24,12 +17,8 @@ public class HelpPaneManager extends UIChild<UIChildDelegate> {
 	private ExampleCommandDisplayManager exampleCommandDisplayManager;
 
 	public HelpPaneManager() {
-		this(null);
-	}
-
-	public HelpPaneManager(ResourceBundle language) {
 		initialize();
-		setLanguageResourceBundle(language);
+		setStyleSheet(getStyleSheet());
 	}
 
 	/**
@@ -42,20 +31,17 @@ public class HelpPaneManager extends UIChild<UIChildDelegate> {
 	 *         interact with the Editor portion of the program
 	 */
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return split;
 	}
 
-	public void setStyleSheet(String styleSheet) {
-		split.getStylesheets().clear();
-		split.getStylesheets().add(styleSheet);
-	}
-
 	@Override
-	public void setLanguageResourceBundle(ResourceBundle language) {
-		if (language != null && exampleCommandDisplayManager != null) {
-			exampleCommandDisplayManager.setLanguageResourceBundle(language);
-		}
+	public void languageResourceBundleDidChange() {
+		htmlDisplayManager
+				.setLanguageResourceBundle(getLanguageResourceBundle());
+		urlBarManager.setLanguageResourceBundle(getLanguageResourceBundle());
+		exampleCommandDisplayManager
+				.setLanguageResourceBundle(getLanguageResourceBundle());
 	}
 
 	private void initialize() {
@@ -68,27 +54,22 @@ public class HelpPaneManager extends UIChild<UIChildDelegate> {
 		urlBarManager = new URLBarManager(HELP_PAGE);
 		htmlDisplayManager = new HTMLDisplayManager(HELP_PAGE);
 
-		borderPane.setTop(urlBarManager.getRegion());
-		borderPane.setCenter(htmlDisplayManager.getRegion());
+		borderPane.setTop(urlBarManager.getObject());
+		borderPane.setCenter(htmlDisplayManager.getObject());
 
-		setStyleSheet(DEFAULT_STYLE_SHEET);
-
-		urlBarManager.getRegion().prefWidthProperty()
+		urlBarManager.getObject().prefWidthProperty()
 				.bind(borderPane.widthProperty());
 		htmlDisplayManager
-				.getRegion()
+				.getObject()
 				.prefHeightProperty()
 				.bind(borderPane.heightProperty().subtract(
-						urlBarManager.getRegion().heightProperty()));
-		htmlDisplayManager.getRegion().prefWidthProperty()
+						urlBarManager.getObject().heightProperty()));
+		htmlDisplayManager.getObject().prefWidthProperty()
 				.bind(borderPane.widthProperty());
-
-		borderPane.setPrefWidth(DEFAULT_WIDTH);
-		borderPane.setPrefHeight(DEFAULT_HEIGHT);
 
 		split.getItems().add(borderPane);
 		exampleCommandDisplayManager = new ExampleCommandDisplayManager();
-		split.getItems().add(exampleCommandDisplayManager.getRegion());
+		split.getItems().add(exampleCommandDisplayManager.getObject());
 	}
 
 }

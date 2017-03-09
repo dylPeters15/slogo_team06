@@ -5,10 +5,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import frontend.UIChild;
-import frontend.UIChildDelegate;
+import frontend.SlogoBaseUIManager;
 
-class HTMLDisplayManager extends UIChild<UIChildDelegate> {
+class HTMLDisplayManager extends SlogoBaseUIManager<Region> {
 
 	private VBox myDisplay;
 	private WebView browser;
@@ -27,7 +26,7 @@ class HTMLDisplayManager extends UIChild<UIChildDelegate> {
 	 *         interact with the program's options
 	 */
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return myDisplay;
 	}
 

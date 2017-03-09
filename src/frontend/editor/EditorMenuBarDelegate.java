@@ -3,7 +3,7 @@
  */
 package frontend.editor;
 
-import frontend.UIChildDelegate;
+import java.util.ResourceBundle;
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -40,7 +40,7 @@ import frontend.UIChildDelegate;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarDelegate extends UIChildDelegate {
+interface EditorMenuBarDelegate {
 
 	/**
 	 * This method is called when the user selects to change the language in
@@ -50,14 +50,7 @@ interface EditorMenuBarDelegate extends UIChildDelegate {
 	 * @param language
 	 *            the language to display the program in
 	 */
-	void didSelectLanguage(String language);
-
-	/**
-	 * This method is called when the user wants to see a list of the
-	 * user-defined commands. The class implementing this interface should
-	 * somehow display all the commands the user has defined.
-	 */
-	void seeUserDefinedCommands();
+	void didSelectLanguage(ResourceBundle language);
 
 	/**
 	 * This method is called when the user wants to see a help page. The class
@@ -66,6 +59,6 @@ interface EditorMenuBarDelegate extends UIChildDelegate {
 	 */
 	void help();
 
-	void setStyleSheet(String stylesheet);
+	void didSelectStyleSheet(String stylesheet);
 
 }

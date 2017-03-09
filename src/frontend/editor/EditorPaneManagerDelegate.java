@@ -5,13 +5,11 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
-import frontend.UIChildDelegate;
-
 /**
  * @author Dylan Peters
  *
  */
-public interface EditorPaneManagerDelegate extends UIChildDelegate {
+public interface EditorPaneManagerDelegate {
 	void didChangeToLanguage(ResourceBundle newLanguage);
 
 	void didChangeToStylesheet(String stylesheet);
