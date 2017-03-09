@@ -1,18 +1,23 @@
 package frontend.help;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import frontend.SlogoBaseUIManager;
 
 public class HelpPaneManager extends SlogoBaseUIManager<Region> {
-	private static final String HELP_PAGE = "http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands.php";
+	private static final List<String> URL_LIST = new ArrayList<String>(Arrays.asList(
+			"http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands.php",
+			"http://www.cs.duke.edu/courses/compsci308/spring17/assign/03_slogo/commands2_J2W.php"
+			));
 
 	private SplitPane split;
 
-	private HTMLDisplayManager htmlDisplayManager;
-	private URLBarManager urlBarManager;
+	private TabbedHTMLDisplayManager tabbedhtmlDisplayManager;
 
 	private ExampleCommandDisplayManager exampleCommandDisplayManager;
 
@@ -39,32 +44,20 @@ public class HelpPaneManager extends SlogoBaseUIManager<Region> {
 		split = new SplitPane();
 		split.setOrientation(Orientation.HORIZONTAL);
 
-		BorderPane borderPane = new BorderPane();
-
-		urlBarManager = new URLBarManager(HELP_PAGE);
-		htmlDisplayManager = new HTMLDisplayManager(HELP_PAGE);
-
-		borderPane.setTop(urlBarManager.getObject());
-		borderPane.setCenter(htmlDisplayManager.getObject());
-
-		urlBarManager.getObject().prefWidthProperty()
-				.bind(borderPane.widthProperty());
-		htmlDisplayManager
+		tabbedhtmlDisplayManager = new TabbedHTMLDisplayManager(URL_LIST);
+		
+		tabbedhtmlDisplayManager
 				.getObject()
 				.prefHeightProperty()
-				.bind(borderPane.heightProperty().subtract(
-						urlBarManager.getObject().heightProperty()));
-		htmlDisplayManager.getObject().prefWidthProperty()
-				.bind(borderPane.widthProperty());
+				.bind(split.heightProperty());
 
-		split.getItems().add(borderPane);
+		split.getItems().add(tabbedhtmlDisplayManager.getObject());
+		
 		exampleCommandDisplayManager = new ExampleCommandDisplayManager();
 		split.getItems().add(exampleCommandDisplayManager.getObject());
 		
-		urlBarManager.getLanguage().bind(getLanguage());
-		urlBarManager.getStyleSheet().bind(getStyleSheet());
-		htmlDisplayManager.getLanguage().bind(getLanguage());
-		htmlDisplayManager.getStyleSheet().bind(getStyleSheet());
+		tabbedhtmlDisplayManager.getLanguage().bind(getLanguage());
+		tabbedhtmlDisplayManager.getStyleSheet().bind(getStyleSheet());
 		exampleCommandDisplayManager.getLanguage().bind(getLanguage());
 		exampleCommandDisplayManager.getStyleSheet().bind(getStyleSheet());
 	}
