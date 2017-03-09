@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import java.util.ResourceBundle;
+
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -49,7 +51,7 @@ interface EditorMenuBarDelegate {
 	 * @param language
 	 *            the language to display the program in
 	 */
-	void didSelectLanguage(String language);
+	void didSelectLanguage(ResourceBundle language);
 
 	/**
 	 * This method is called when the user wants to see a list of the

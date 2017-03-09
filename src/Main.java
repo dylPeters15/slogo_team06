@@ -1,7 +1,8 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import frontend.help.HelpPaneManager;
+import backend.Model;
+import frontend.editor.EditorPaneManager;
 
 /**
  * 
@@ -17,7 +18,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		//new SlogoController(stage);
-		stage.setScene(new Scene(new HelpPaneManager().getObject()));
+		stage.setScene(new Scene(new EditorPaneManager(new Model()).getObject()));
 		stage.show();
 	}
 

@@ -9,12 +9,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import frontend.PlaceHolder;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -33,7 +33,8 @@ import frontend.PlaceHolder;
  * @author Dylan Peters
  *
  */
-class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
+class TerminalDisplayManager extends
+		SlogoBaseUIManager<TerminalDisplayDelegate, Parent> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;
@@ -50,9 +51,9 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	 *            the language with which to display the text in the terminal
 	 *            display
 	 */
-	TerminalDisplayManager(ResourceBundle language) {
-		this(null, language);
-	}
+	// TerminalDisplayManager(ResourceBundle language) {
+	// this(null, language);
+	// }
 
 	/**
 	 * Creates a new instance of TerminalDisplayManager. Sets all values except
@@ -65,10 +66,14 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	 *            the language with which to display the text in the terminal
 	 *            display
 	 */
-	TerminalDisplayManager(TerminalDisplayDelegate delegate,
-			ResourceBundle language) {
-		super(delegate, language);
-		initialize(language);
+	// TerminalDisplayManager(TerminalDisplayDelegate delegate,
+	// ResourceBundle language) {
+	// super(delegate, language);
+	// initialize(language);
+	// }
+
+	public TerminalDisplayManager() {
+		initialize();
 	}
 
 	/**
@@ -80,20 +85,15 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	 *            a string representing the language to be displayed
 	 */
 	@Override
-	public void setLanguageResourceBundle(ResourceBundle language) {
-		prompt = language.getString("Prompt");
-		if (run != null) {
-			run.setText(language.getString("Run"));
+	public void languageResourceBundleDidChange() {
+		prompt = getLanguageResourceBundle().getString("Prompt");
+		run.setText(getLanguageResourceBundle().getString("Run"));
+		clear.setText(getLanguageResourceBundle().getString("Clear"));
+		clearAll.setText(getLanguageResourceBundle().getString("ClearAll"));
+		if (textInputAreas.size() == 0) {
+			addTextArea(new TextInputArea());
 		}
-		if (clear != null) {
-			clear.setText(language.getString("Clear"));
-		}
-		if (clearAll != null) {
-			clearAll.setText(language.getString("ClearAll"));
-		}
-		if (textInputAreas != null && textInputAreas.size() > 0) {
-			textInputAreas.get(0).setPrompt(prompt);
-		}
+		textInputAreas.get(0).setPrompt(prompt);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	 *         interact with the program
 	 */
 	@Override
-	public Region getRegion() {
+	public Parent getObject() {
 		return overallSplitPane;
 	}
 
@@ -152,20 +152,20 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 	private void textInputAreasDidChange() {
 		vbox.getChildren().clear();
 		for (TextInputArea textInputArea : textInputAreas) {
-			vbox.getChildren().add(textInputArea.getRegion());
-			textInputArea.getRegion().setOnMouseClicked(
+			vbox.getChildren().add(textInputArea.getObject());
+			textInputArea.getObject().setOnMouseClicked(
 					event -> textInputAreas.get(0).setText(
 							textInputAreas.get(0).getText()
 									+ textInputArea.getText()));
-			textInputArea.getRegion().prefWidthProperty()
+			textInputArea.getObject().prefWidthProperty()
 					.bind(scrollPane.widthProperty());
-			textInputArea.getRegion().prefHeightProperty()
+			textInputArea.getObject().prefHeightProperty()
 					.bind(overallSplitPane.heightProperty().multiply(0.25));
 			textInputArea.greyOut(true);
 		}
 		if (textInputAreas.size() > 0) {
 			textInputAreas.get(0).greyOut(false);
-			textInputAreas.get(0).getRegion().setOnMouseClicked(event -> {
+			textInputAreas.get(0).getObject().setOnMouseClicked(event -> {
 			});
 		}
 		scrollPane.layout();
@@ -176,7 +176,7 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 		textInputAreas.add(0, textInputArea);
 	}
 
-	private void initialize(ResourceBundle language) {
+	private void initialize() {
 		overallSplitPane = new SplitPane();
 		overallSplitPane.setOrientation(Orientation.HORIZONTAL);
 		overallSplitPane.setPrefSize(800, 600);
@@ -189,7 +189,7 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 		overallSplitPane.getItems().add(buttonSplitPane);
 
 		initializeScrollPane(scrollPane);
-		initializeButtonPane(buttonSplitPane, language);
+		initializeButtonPane(buttonSplitPane, getLanguageResourceBundle());
 	}
 
 	private void initializeScrollPane(ScrollPane scrollPane) {
@@ -252,5 +252,16 @@ class TerminalDisplayManager extends PlaceHolder<TerminalDisplayDelegate> {
 				addTextArea(new TextInputArea("", prompt));
 			}
 		}
+	}
+
+	@Override
+	public TerminalDisplayDelegate createNonActiveDelegate() {
+		return new TerminalDisplayDelegate() {
+
+			@Override
+			public void processCommand(String command) {
+
+			}
+		};
 	}
 }
