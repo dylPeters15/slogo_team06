@@ -2,6 +2,9 @@ package frontend.simulation;
 
 import java.io.File;
 
+import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
@@ -25,7 +28,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * @author Andreas
  *
  */
-class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenuBarDelegate> {
+class SimulationMenuBarManager extends SlogoBaseUIManager<SimulationMenuBarDelegate, Parent> {
 
 	private HBox myMenuBar;
 	private Button Home,setTurtleImage;
@@ -33,12 +36,12 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	private ColorPicker setBackgroundColor, setPenColor;
 	
 	public SimulationMenuBarManager(SimulationMenuBarDelegate delegate){
-		super(delegate);
+		setDelegate(delegate);
 		populateMenuBar();
 	}
 	
 	public SimulationMenuBarManager(SimulationMenuBarDelegate delegate, String language){
-		super(delegate);
+		setDelegate(delegate);
 		populateMenuBar();
 	}
 	
@@ -50,7 +53,8 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	Region getRegion() {
+	@Override
+	public Region getObject() {
 		return myMenuBar;
 	}
 	
@@ -158,4 +162,24 @@ class SimulationMenuBarManager extends SimulationPaneManagerChild<SimulationMenu
 	String getLanguage(){
 		return null;
 	}
+
+	@Override
+	public SimulationMenuBarDelegate createNonActiveDelegate() {
+		return new SimulationMenuBarDelegate() {
+
+			@Override
+			public void home() {}
+
+			@Override
+			public void setBackgroundColor(Color color) {}
+
+			@Override
+			public void setPenColor(Color color) {}
+
+			@Override
+			public void setTurtleImage(Image image) {}
+			
+		};
+	}
+
 }
