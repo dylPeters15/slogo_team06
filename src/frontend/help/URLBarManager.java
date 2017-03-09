@@ -4,10 +4,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import frontend.PlaceHolder;
 import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
 
-class URLBarManager extends PlaceHolder<EmptyDelegate> {
+class URLBarManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 
 	private HBox myMenuBar;
 	private TextField myURLDisplay;
@@ -25,7 +25,7 @@ class URLBarManager extends PlaceHolder<EmptyDelegate> {
 	 *         interact with the program's options
 	 */
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return myMenuBar;
 	}
 
@@ -42,6 +42,18 @@ class URLBarManager extends PlaceHolder<EmptyDelegate> {
 		myMenuBar.prefHeightProperty().bind(myURLDisplay.heightProperty());
 
 		myURLDisplay.prefWidthProperty().bind(myMenuBar.widthProperty());
+	}
+
+	@Override
+	public void styleSheetDidChange() {
+		myMenuBar.getStylesheets().clear();
+		myMenuBar.getStylesheets().add(getStyleSheet());
+	}
+
+	@Override
+	public EmptyDelegate createNonActiveDelegate() {
+		return new EmptyDelegate() {
+		};
 	}
 
 }

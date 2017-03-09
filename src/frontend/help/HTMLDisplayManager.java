@@ -5,10 +5,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import frontend.PlaceHolder;
 import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
 
-class HTMLDisplayManager extends PlaceHolder<EmptyDelegate> {
+class HTMLDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 
 	private VBox myDisplay;
 	private WebView browser;
@@ -27,7 +27,7 @@ class HTMLDisplayManager extends PlaceHolder<EmptyDelegate> {
 	 *         interact with the program's options
 	 */
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return myDisplay;
 	}
 
@@ -43,5 +43,17 @@ class HTMLDisplayManager extends PlaceHolder<EmptyDelegate> {
 
 		browser.prefHeightProperty().bind(myDisplay.heightProperty());
 		browser.prefWidthProperty().bind(myDisplay.widthProperty());
+	}
+	
+	@Override
+	public void styleSheetDidChange() {
+		myDisplay.getStylesheets().clear();
+		myDisplay.getStylesheets().add(getStyleSheet());
+	}
+
+	@Override
+	public EmptyDelegate createNonActiveDelegate() {
+		return new EmptyDelegate(){
+		};
 	}
 }

@@ -16,7 +16,7 @@ import com.sun.javafx.collections.UnmodifiableObservableMap;
  * @author Dylan Peters
  *
  */
-public abstract class SlogoBaseObjectManager<D extends EmptyDelegate, T extends Object>
+public abstract class SlogoBaseObjectManager<D, T extends Object>
 		implements Delegated<D>, ObjectManager<T>, LanguageResource {
 	private static final String LANGUAGE_RESOURCE_POINTER = "resources.languages/LanguagePointer";
 	private static final String LANGUAGE_RESOURCE_LIST = "resources.languages/LanguageFileList";

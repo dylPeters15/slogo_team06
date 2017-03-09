@@ -3,7 +3,6 @@
  */
 package frontend.editor;
 
-import frontend.EmptyDelegate;
 
 /**
  * 
@@ -38,7 +37,7 @@ import frontend.EmptyDelegate;
  * @author Dylan Peters
  *
  */
-interface VariableDisplayDelegate extends EmptyDelegate {
+interface VariableDisplayDelegate {
 
 	/**
 	 * This method is called when the user changes the value of a variable in

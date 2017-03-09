@@ -12,16 +12,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import frontend.PlaceHolder;
 import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
 
 /**
  * @author Dylan Peters
  *
  */
-class ExampleCommandDisplayManager extends PlaceHolder<EmptyDelegate> {
-	private static final String DEFAULT_LANGUAGE_RESOURCE_PACKAGE = "resources.languages/";
-	private static final String DEFAULT_LANGUAGE = "English";
+class ExampleCommandDisplayManager extends
+		SlogoBaseUIManager<EmptyDelegate, Region> {
 	private static final String DEFAULT_RESOURCE_PACKAGE = "resources/";
 	private static final String DEFAULT_EXAMPLE_RESOURCE = "ExampleCommands";
 	private static final String COMMENT_DELIMITER = "#";
@@ -33,35 +32,42 @@ class ExampleCommandDisplayManager extends PlaceHolder<EmptyDelegate> {
 	private ResourceBundle exampleCommandsResource;
 
 	ExampleCommandDisplayManager() {
-		this(ResourceBundle.getBundle(DEFAULT_LANGUAGE_RESOURCE_PACKAGE
-				+ DEFAULT_LANGUAGE));
-	}
-
-	ExampleCommandDisplayManager(ResourceBundle language) {
 		exampleCommandsResource = ResourceBundle
 				.getBundle(DEFAULT_RESOURCE_PACKAGE + DEFAULT_EXAMPLE_RESOURCE);
 		vbox = new VBox();
 		scrollPane = new ScrollPane();
 		vbox.setPadding(new Insets(10));
-		populateVBox(language);
+		populateVBox();
 		scrollPane.setContent(vbox);
 	}
 
+	// ExampleCommandDisplayManager(ResourceBundle language) {
+	// exampleCommandsResource = ResourceBundle
+	// .getBundle(DEFAULT_RESOURCE_PACKAGE + DEFAULT_EXAMPLE_RESOURCE);
+	// vbox = new VBox();
+	// scrollPane = new ScrollPane();
+	// vbox.setPadding(new Insets(10));
+	// populateVBox(language);
+	// scrollPane.setContent(vbox);
+	// }
+
 	@Override
-	public void setLanguageResourceBundle(ResourceBundle language) {
-		populateVBox(language);
+	public void languageResourceBundleDidChange() {
+		populateVBox();
 	}
 
 	@Override
-	public Region getRegion() {
+	public Region getObject() {
 		return scrollPane;
 	}
 
-	private void populateVBox(ResourceBundle language) {
+	private void populateVBox() {
 		vbox.getChildren().clear();
-		Label title = new Label(language.getString("ExampleCommands"));
+		Label title = new Label(getLanguageResourceBundle().getString(
+				"ExampleCommands"));
 		vbox.getChildren().add(title);
-		initCommands(language);
+		initCommands(getLanguageResourceBundle());
+		setStyleSheet(null);
 	}
 
 	private void initCommands(ResourceBundle language) {
@@ -89,6 +95,12 @@ class ExampleCommandDisplayManager extends PlaceHolder<EmptyDelegate> {
 		}
 		textArea.setText(sb.toString().trim());
 		textArea.setWrapText(true);
+	}
+
+	@Override
+	public EmptyDelegate createNonActiveDelegate() {
+		return new EmptyDelegate() {
+		};
 	}
 
 }

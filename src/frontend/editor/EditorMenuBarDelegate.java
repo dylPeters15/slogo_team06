@@ -3,7 +3,6 @@
  */
 package frontend.editor;
 
-import frontend.EmptyDelegate;
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -40,7 +39,7 @@ import frontend.EmptyDelegate;
  * @author Dylan Peters
  *
  */
-interface EditorMenuBarDelegate extends EmptyDelegate {
+interface EditorMenuBarDelegate {
 
 	/**
 	 * This method is called when the user selects to change the language in

@@ -3,7 +3,6 @@
  */
 package frontend.editor;
 
-import frontend.EmptyDelegate;
 
 /**
  * This interface will be of default visibility, so it will only be visible to
@@ -38,7 +37,7 @@ import frontend.EmptyDelegate;
  * @author Dylan Peters
  *
  */
-interface TerminalDisplayDelegate extends EmptyDelegate {
+interface TerminalDisplayDelegate {
 
 	/**
 	 * This method is called by the TerminalDisplayManager to indicate to the
