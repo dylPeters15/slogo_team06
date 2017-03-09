@@ -1,6 +1,9 @@
 package frontend.simulation;
 
+import frontend.EmptyDelegate;
+import frontend.SlogoBaseUIManager;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
@@ -22,7 +25,7 @@ import javafx.scene.shape.Line;
  * @author Andreas
  *
  */
-class EnvironmentDisplayManager {
+class EnvironmentDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Parent> {
 
 	private ScrollPane myScrollPane;
 	private Pane myPane;
@@ -51,7 +54,7 @@ class EnvironmentDisplayManager {
 	 * @return Node containing all the Control components that allow the user to
 	 *         interact with the program's options
 	 */
-	Region getRegion() {
+	public Region getObject() {
 		return myScrollPane;
 	}
 
@@ -198,10 +201,14 @@ class EnvironmentDisplayManager {
 	}
 
 	void clearScreen() {
-		// myTurtle.setPosition(convertXCoordinate(0), convertYCoordinate(0));
 		myPane.getChildren().clear();
 		myPane.getChildren().add(myTurtle.getImageView());
 		home();
+	}
+
+	@Override
+	public EmptyDelegate createNonActiveDelegate() {
+		return new EmptyDelegate() {};
 	}
 
 }
