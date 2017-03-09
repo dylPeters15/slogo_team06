@@ -2,8 +2,7 @@ package frontend.simulation;
 
 import java.io.File;
 
-import frontend.EmptyDelegate;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -28,7 +27,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * @author Andreas
  *
  */
-class SimulationMenuBarManager extends SlogoBaseUIManager<SimulationMenuBarDelegate, Parent> {
+class SimulationMenuBarManager extends SlogoDelegatedUIManager<SimulationMenuBarDelegate, Parent> {
 
 	private HBox myMenuBar;
 	private Button Home,setTurtleImage;

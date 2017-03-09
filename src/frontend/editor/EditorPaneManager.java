@@ -19,7 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 import frontend.help.HelpPaneManager;
 
 /**
@@ -51,7 +51,7 @@ import frontend.help.HelpPaneManager;
  *
  */
 public class EditorPaneManager extends
-		SlogoBaseUIManager<EditorPaneManagerDelegate, Parent> implements
+		SlogoDelegatedUIManager<EditorPaneManagerDelegate, Parent> implements
 		EditorMenuBarDelegate, VariableDisplayDelegate, TerminalDisplayDelegate {
 
 	private BorderPane borderPane;
@@ -196,6 +196,7 @@ public class EditorPaneManager extends
 	 */
 	public void help() {
 		if (helpPaneStage != null) {
+			System.out.println(helpPaneManager.getStyleSheet());
 			helpPaneStage.show();
 			helpPaneStage.toFront();
 		}
@@ -244,8 +245,6 @@ public class EditorPaneManager extends
 
 	@Override
 	protected void styleSheetDidChange() {
-		borderPane.getStylesheets().clear();
-		borderPane.getStylesheets().add(getStyleSheet());
 		helpPaneManager.setStyleSheet(getStyleSheet());
 	}
 
@@ -311,11 +310,9 @@ public class EditorPaneManager extends
 		helpPaneStage = new Stage();
 		helpPaneManager = new HelpPaneManager();
 		helpPaneManager.setLanguageResourceBundle(getLanguageResourceBundle());
-		helpPaneManager.setStyleSheet(getStyleSheet());
 		helpPaneStage.setScene(new Scene(helpPaneManager.getObject()));
 
 		setLanguageResourceBundle(getLanguageResourceBundle());
-
 		setStyleSheet(getStyleSheet());
 	}
 
@@ -344,7 +341,6 @@ public class EditorPaneManager extends
 	@Override
 	public void didSelectStyleSheet(String stylesheet) {
 		setStyleSheet(stylesheet);
-
 		getDelegate().didChangeToStylesheet(getStyleSheet());
 	}
 

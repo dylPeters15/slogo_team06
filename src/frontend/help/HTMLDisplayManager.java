@@ -5,10 +5,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import frontend.EmptyDelegate;
 import frontend.SlogoBaseUIManager;
 
-class HTMLDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
+class HTMLDisplayManager extends SlogoBaseUIManager<Region> {
 
 	private VBox myDisplay;
 	private WebView browser;
@@ -43,11 +42,5 @@ class HTMLDisplayManager extends SlogoBaseUIManager<EmptyDelegate, Region> {
 
 		browser.prefHeightProperty().bind(myDisplay.heightProperty());
 		browser.prefWidthProperty().bind(myDisplay.widthProperty());
-	}
-
-	@Override
-	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate() {
-		};
 	}
 }

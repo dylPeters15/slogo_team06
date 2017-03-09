@@ -13,14 +13,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import frontend.EmptyDelegate;
 import frontend.SlogoBaseUIManager;
 
 /**
  * @author Dylan Peters
  *
  */
-class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Region> {
+class TextInputArea extends SlogoBaseUIManager<Region> {
 
 	StackPane stackPane;
 	TextArea textArea;
@@ -118,12 +117,6 @@ class TextInputArea extends SlogoBaseUIManager<EmptyDelegate, Region> {
 				.setBackground(new Background(new BackgroundFill((Paint) Color
 						.color(0.5, 0.5, 0.5, 0.4), new CornerRadii(0),
 						new Insets(0)))));
-	}
-
-	@Override
-	public EmptyDelegate createNonActiveDelegate() {
-		return new EmptyDelegate() {
-		};
 	}
 
 }

@@ -14,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
-import frontend.SlogoBaseUIManager;
+import frontend.SlogoDelegatedUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -34,7 +34,7 @@ import frontend.SlogoBaseUIManager;
  *
  */
 class TerminalDisplayManager extends
-		SlogoBaseUIManager<TerminalDisplayDelegate, Parent> {
+		SlogoDelegatedUIManager<TerminalDisplayDelegate, Parent> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;
