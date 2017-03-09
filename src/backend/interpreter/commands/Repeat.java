@@ -26,35 +26,17 @@ public class Repeat extends Command {
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		System.out.println(words);
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}
-		
+		checkIfEmpty(words);	
 		if(index == 0){
-			upperLimit =  (int) Double.parseDouble(words.get(0));
-			
-			if(words.get(1).contains("[") && words.get(words.size()-1).contains("]")){
-				commandToRun =  new ArrayList<String>();
-				for(int i=2; i<words.size()-1; i++){
-					commandToRun.add(words.get(i));
-				}
-				System.out.println("CommandToRun: "+commandToRun);
-			}
-			else{
-				
-				throw new SlogoException("IncorrectNumOfBrackets");
-			}
-				
-			
-		}
-		
+			upperLimit =  (int) Double.parseDouble(words.get(0));		
+			commandToRun =  new ArrayList<String>();
+			addCommandToRun(commandToRun,words,1);	
+		}		
 		index++;
 		getVariables().put("repcount", Integer.toString(index) );
 		nested = index<upperLimit;
 
 		return 0;
-		
 	}	
 	
 	@Override

@@ -21,9 +21,8 @@ public class Tell extends Command {
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}			
+		checkIfEmpty(words);
+		
 		if(words.get(0).contains("[") && words.get(words.size()-1).contains("]")){
 			int id = 1;
 			List<Integer> active = new ArrayList<Integer>();

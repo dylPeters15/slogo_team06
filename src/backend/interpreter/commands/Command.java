@@ -2,6 +2,8 @@ package backend.interpreter.commands;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -83,7 +85,9 @@ public abstract class Command {
 	}	
 
 	public abstract Integer numParamsNeeded();
-	public abstract List<String> paramsNeeded();
+	public List<String> paramsNeeded(){
+		return new ArrayList<String>(Arrays.asList(new String []{}));
+	}
 	
 	public boolean needsVarParams(){
 		return DEF_NEEDS_VAR_PARAM;
@@ -122,6 +126,34 @@ public abstract class Command {
 
 	public String getVariablesString() {
 		return null;
+	}
+	
+	protected void setPenUp(boolean up) {
+		State newState = getNewState();
+		newState.getActors().setPenUp(up);
+		addNewState(newState);
+	}
+	
+	protected void addCommandToRun(List<String> commandToRun,List<String> words, int start) throws SlogoException {
+		if(checkBrackets(words,start)){
+			for(int i=start+1; i<words.size()-1; i++){
+				commandToRun.add(words.get(i));
+			}
+		}
+	}	
+
+	protected void checkIfEmpty(List<String> words) throws SlogoException {
+		if(words.isEmpty()){
+			throw new SlogoException("IncorrectNumOfParameters: 0");
+		}
+	}	
+	
+	protected boolean checkBrackets(List<String> words, int i) throws SlogoException {
+		boolean hasBrackets = words.get(i).contains("[") && words.get(words.size()-1).contains("]");
+		if(!hasBrackets){
+			throw new SlogoException("IncorrectNumOfBrackets");
+		}
+		return hasBrackets;
 	}
 
 }
