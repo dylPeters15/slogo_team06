@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+
 import Exceptions.SlogoException;
 import backend.states.*;
 import javafx.collections.ObservableMap;
@@ -50,6 +51,10 @@ public abstract class Command {
 		throw new SlogoException("IncorrectNumOfParameters");
 	}
 	public double runCommand(double a, double b) throws SlogoException {
+		throw new SlogoException("IncorrectNumOfParameters");
+	}
+	
+	public double runCommand(double a, double b, double c, double d) throws SlogoException {
 		throw new SlogoException("IncorrectNumOfParameters");
 	}
 

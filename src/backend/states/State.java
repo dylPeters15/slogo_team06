@@ -1,5 +1,6 @@
 package backend.states;
 
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,17 @@ public class State {
 	private ActorCompositeModel multiActor;
 	
 	private boolean clear;
+	private ColorList bgColor;
+	private ColorList penColor;
+	private Double penSize;
+	private int turtleShape;
 	
 	public State(State state){
-		initFields();
+	    initFields();
+		actor = new TurtleModel(state.getActor());
+		bgColor = state.getBGColorList();
+		penColor = state.getPenColorList();
+		penSize = state.getPenSize();
 		setActiveList(state.getActiveList());
 		multiActor.set(actors, activeList);
 		maxId = state.getMaxId();
@@ -59,6 +68,9 @@ public class State {
 	private void initFields() {
 		maxId = 0;
 		clear = false;
+		bgColor = ColorList.WHITE;
+		penColor = ColorList.BLACK;
+		penSize = 1.0;
 		actors = new HashMap<Integer,ActorModel>();
 		activeList = new ArrayList<Integer>();
 		activeList.add(1);
@@ -109,6 +121,7 @@ public class State {
 	public ActorCompositeModel getActors() {
 		return multiActor;
 	}
+	
 	public void setActor(ActorModel actorModel) {
 		actors.put(DEF_ID, actorModel);
 	}
@@ -128,5 +141,44 @@ public class State {
 	}
 
 	
+	private ColorList getBGColorList() {
+		return bgColor;
+	}
 	
+	public Color getBGColor() {
+		return bgColor.getColor();
+	}
+	
+	public void setBGColor(ColorList color) {
+		bgColor = color;
+	}
+	
+	private ColorList getPenColorList() {
+		return penColor;
+	}
+	
+	public Color getPenColor() {
+		return penColor.getColor();
+	}
+	
+	public void setPenColor(ColorList color) {
+		penColor = color;
+	}
+	
+	public Double getPenSize() {
+		return penSize;
+	}
+	
+	public void setPenSize(double size) {
+		penSize = size;
+	}
+	
+	public int getShape() {
+		return turtleShape;
+	}
+	
+	public void setShape(int shape) {
+		turtleShape = shape;
+	}
 }
+
