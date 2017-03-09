@@ -22,7 +22,7 @@ public class Heading extends Command {
 	 */
 	@Override
 	public double runCommand() throws SlogoException {
-		return this.getLastState().getActor().getHeading();
+		return this.getLastState().getActors().getHeading();
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class Left extends Command {
 	@Override
 	public double runCommand(double distance) throws SlogoException {
 		State newState = getNewState();
-		newState.getActor().setHeading(newState.getActor().getHeading()+distance);
+		newState.getActors().rotate(distance);
 		addNewState(newState);
 		return distance;		
 	}

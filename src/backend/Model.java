@@ -28,7 +28,13 @@ public class Model {
 	}
 	
 	public void interpret(String text) throws SlogoException{
-		interpreter.interpret(text);
+		interpreter.interpret(text);	
+		System.out.println("All turtles: "+statesList.getLast().getActorMap().keySet());
+		System.out.println("Active turtles: "+statesList.getLast().getActiveList());
+		for(int id:statesList.getLast().getActiveList()){
+			ActorModel a = statesList.getLast().getActorMap().get(id);
+			System.out.println("	Id= "+id+" pos= "+a.getPos().toString()+ " heading = " + a.getHeading());
+		}
 	}
 	
 	public void setResourceBundle(String bundleName){

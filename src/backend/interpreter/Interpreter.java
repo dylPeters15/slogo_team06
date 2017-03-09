@@ -216,7 +216,6 @@ public class Interpreter {
 			}
 			return parse(bracketWords);
 		}
-
 		throw new SlogoException("IncorrectNumOfParameters");
 
 	}
@@ -243,12 +242,8 @@ public class Interpreter {
 	private void getConstant(LinkedList<String> words, String word, Command com, List<String> params, int i)
 			throws SlogoException {
 		word = words.pop();		
-		if(com.paramsNeeded().get(i).equals("Commands") && com.paramsNeeded().get(i+1).equals("ListEnd")){
-			while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
-				params.add(word);
-				word = words.pop();
-			}
-			words.addFirst(word);
+		if(checkAndGetList(com, i, words, word, params)){
+			
 		}
 		else if(com.paramsNeeded().get(i).equals(type.getSymbol(word))){
 			if(type.getSymbol(word).equals("Variable")){
@@ -265,6 +260,24 @@ public class Interpreter {
 		else if( com.paramsNeeded().get(i).equals("ListStart") ||  com.paramsNeeded().get(i).equals("ListEnd")){
 			throw new SlogoException("ExceptedBracket");
 		}
+	}
+
+	private boolean checkAndGetList(Command com, int i, LinkedList<String> words, String word, List<String> params) {
+		boolean isList =  ( com.paramsNeeded().get(i).equals("Commands") 
+						|| com.paramsNeeded().get(i).equals("Constants"))
+						&& com.paramsNeeded().get(i+1).equals("ListEnd");
+		if(isList){
+			getTillListEnd(words, word, params);
+		}
+		return isList;
+	}
+
+	private void getTillListEnd(LinkedList<String> words, String word, List<String> params) {
+		while(!type.getSymbol(word).equals("ListEnd") && !words.isEmpty() ){
+			params.add(word);
+			word = words.pop();
+		}
+		words.addFirst(word);
 	}
 	
 	private boolean isConstant(String word) {

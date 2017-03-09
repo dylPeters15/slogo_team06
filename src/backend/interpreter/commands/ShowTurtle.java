@@ -44,7 +44,7 @@ public class ShowTurtle extends Command {
 	@Override
 	public double runCommand() throws SlogoException {
 		State newState = getNewState();
-		newState.getActor().setVisible(true);
+		newState.getActors().setVisible(true);
 		addNewState(newState);
 		return 1;
 	}
