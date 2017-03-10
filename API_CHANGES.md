@@ -25,7 +25,9 @@ This design worked at the beginning, but as the code got more complex, the numbe
 
 - Created abstract class `SlogoBaseUIManager`. This class was created to unify the front end classes and improve code consistency. It is designed to implement the behavior that is common to all of the classes in the front end of the Slogo API. Specifically, it implements 3 important behaviors:
 
-1. It implements the ability to change the language. It does this 
+1. behavior 1
+2. behavior 2
+3. behavior 3
 
 ###Minor Changes:
 
