@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A Composite class to update a list of ActorModels while behaving as a single ActorModel
  * @author Tavo Loaiza
- *Composite class to update a list of ActorModels while behaving as a single ActorModel
+ *
  */
 public class ActorCompositeModel{
 	
