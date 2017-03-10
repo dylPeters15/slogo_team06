@@ -3,11 +3,10 @@
  */
 package frontend.editor;
 
-import java.util.ResourceBundle;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
@@ -16,11 +15,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
 import Exceptions.SlogoException;
 import backend.Model;
-import frontend.SlogoDelegatedUIManager;
-import frontend.help.HelpPaneManager;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of public visibility, so it will be visible to any class
@@ -50,9 +47,7 @@ import frontend.help.HelpPaneManager;
  * @author Dylan Peters
  *
  */
-public class EditorPaneManager extends
-		SlogoDelegatedUIManager<EditorPaneManagerDelegate, Parent> implements
-		EditorMenuBarDelegate, VariableDisplayDelegate, TerminalDisplayDelegate {
+public class EditorPaneManager extends SlogoBaseUIManager<Parent> {
 
 	private BorderPane borderPane;
 	private TerminalDisplayManager terminalDisplayManager;
@@ -61,18 +56,38 @@ public class EditorPaneManager extends
 
 	private Model model;
 
-	private Stage helpPaneStage;
-	private HelpPaneManager helpPaneManager;
-
+	/**
+	 * Creates a new instance of EditorPaneManager and sets all values to
+	 * default.
+	 * 
+	 * @param model
+	 *            the model that the editorPaneManager should update when the
+	 *            user types a command
+	 */
 	public EditorPaneManager(Model model) {
 		setModel(model);
 		initialize();
 	}
 
+	/**
+	 * Sets the model that the editorPaneManager should update when the user
+	 * types a command
+	 * 
+	 * @param model
+	 *            the model that the editorPaneManager should update when the
+	 *            user types a command
+	 */
 	public void setModel(Model model) {
 		this.model = model;
 	}
 
+	/**
+	 * Gets the model that the editorPaneManager updates when the user types a
+	 * command
+	 * 
+	 * @return the model that the editorPaneManager updates when the user types
+	 *         a command
+	 */
 	public Model getModel() {
 		return model;
 	}
@@ -118,28 +133,6 @@ public class EditorPaneManager extends
 	}
 
 	/**
-	 * Sets the language that this class uses to display its contents. It will
-	 * use a resource file with the words in that language to populate its
-	 * contents.
-	 * 
-	 * @param language
-	 *            a string representing the language to be displayed
-	 */
-	@Override
-	protected void languageResourceBundleDidChange() {
-		terminalDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
-		editorMenuBarManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
-		variableDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
-		helpPaneManager.setLanguageResourceBundle(getLanguageResourceBundle());
-
-		model.setResourceBundle(getLanguageResourceBundle().getBaseBundleName());
-		getDelegate().didChangeToLanguage(getLanguageResourceBundle());
-	}
-
-	/**
 	 * Gets the display object that this class is manipulating and setting up.
 	 * The Parent returned by this method should be displayed to allow the user
 	 * to interact with the editor. It can be used as the root of a Scene or
@@ -153,70 +146,12 @@ public class EditorPaneManager extends
 		return borderPane;
 	}
 
-	public void close() {
-		helpPaneStage.close();
-	}
-
-	// EditorMenuBarDelegate methods:
-
 	/**
-	 * This is the implementation of the method in the EditorMenuBarDelegate
-	 * interface.
-	 * 
-	 * This method is called when the user selects to change the language in
-	 * which the program is displayed. It changes the language for every UI item
-	 * being displayed on the screen.
-	 * 
-	 * @param language
-	 *            the language to display the program in
+	 * Closes all the windows created by this EditorPaneManager
 	 */
-	public void didSelectLanguage(ResourceBundle resourceBundle) {
-		setLanguageResourceBundle(resourceBundle);
+	public void closeAllChildWindows() {
+		editorMenuBarManager.close();
 	}
-
-	/**
-	 * This is the implementation of the method in the EditorMenuBarDelegate
-	 * interface.
-	 * 
-	 * This method is called when the user wants to see a list of the
-	 * user-defined commands. This method displays all the commands the user has
-	 * defined by printing them in the terminal portion of the display.
-	 */
-	public void seeUserDefinedCommands() {
-
-	}
-
-	/**
-	 * This is the implementation of the method in the EditorMenuBarDelegate
-	 * interface.
-	 * 
-	 * This method is called when the user wants to see a help page. It displays
-	 * a list of all possible commands, as well as basic protocol about how to
-	 * use the program by printing it to the terminal portion of the display.
-	 */
-	public void help() {
-		if (helpPaneStage != null) {
-			System.out.println(helpPaneManager.getStyleSheet());
-			helpPaneStage.show();
-			helpPaneStage.toFront();
-		}
-	}
-
-	// VariableDisplayDelegate methods:
-
-	/**
-	 * This is the implementation of the method in the VariableDisplayDelegate
-	 * interface.
-	 * 
-	 * This method is called when the user changes a variable via the
-	 * VariableDisplayManager. It changes the value of the variable in the
-	 * model, then updates the VariableDisplayManager to reflect the change.
-	 */
-	public void didChangeVariable(String variable, Object value) {
-
-	}
-
-	// TerminalDisplayDelegate methods:
 
 	/**
 	 * This is the implementation of the method in the TerminalDisplayDelegate
@@ -241,11 +176,6 @@ public class EditorPaneManager extends
 				displayErrorDialog(e);
 			}
 		}
-	}
-
-	@Override
-	protected void styleSheetDidChange() {
-		helpPaneManager.setStyleSheet(getStyleSheet());
 	}
 
 	private void printError(SlogoException e) {
@@ -283,20 +213,16 @@ public class EditorPaneManager extends
 	private void initialize() {
 
 		borderPane = new BorderPane();
+
 		terminalDisplayManager = new TerminalDisplayManager();
-		terminalDisplayManager.setDelegate(this);
-		terminalDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
+		terminalDisplayManager.getLanguage().setValue(getLanguage().getValue());
+
 		editorMenuBarManager = new EditorMenuBarManager();
-		editorMenuBarManager.setDelegate(this);
-		editorMenuBarManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
+		editorMenuBarManager.getLanguage().setValue(getLanguage().getValue());
 
 		variableDisplayManager = new VariableDisplayManager(
 				model.getVariables());
-		variableDisplayManager.setDelegate(this);
-		variableDisplayManager
-				.setLanguageResourceBundle(getLanguageResourceBundle());
+		variableDisplayManager.getLanguage().setValue(getLanguage().getValue());
 
 		SplitPane terminalAndVarTable = new SplitPane();
 		terminalAndVarTable.setOrientation(Orientation.HORIZONTAL);
@@ -307,41 +233,24 @@ public class EditorPaneManager extends
 		borderPane.setCenter(terminalAndVarTable);
 		borderPane.setTop(editorMenuBarManager.getObject());
 
-		helpPaneStage = new Stage();
-		helpPaneManager = new HelpPaneManager();
-		helpPaneManager.setLanguageResourceBundle(getLanguageResourceBundle());
-		helpPaneStage.setScene(new Scene(helpPaneManager.getObject()));
+		getLanguage().bind(editorMenuBarManager.getLanguage());
+		getStyleSheet().bind(editorMenuBarManager.getStyleSheet());
 
-		setLanguageResourceBundle(getLanguageResourceBundle());
-		setStyleSheet(getStyleSheet());
-	}
+		terminalDisplayManager.getStyleSheet().bind(getStyleSheet());
+		terminalDisplayManager.getLanguage().bind(getLanguage());
+		variableDisplayManager.getStyleSheet().bind(getStyleSheet());
+		variableDisplayManager.getLanguage().bind(getLanguage());
 
-	@Override
-	public EditorPaneManagerDelegate createNonActiveDelegate() {
-		return new EditorPaneManagerDelegate() {
-
+		editorMenuBarManager.getStyleSheet()
+				.setValue(createDefaultStyleSheet());
+		
+		terminalDisplayManager.getCommandToRun().addListener(new ChangeListener<String>() {
 			@Override
-			public void didChangeToStylesheet(String stylesheet) {
-
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				processCommand(newValue);
 			}
-
-			@Override
-			public void didChangeToLanguage(ResourceBundle newLanguage) {
-
-			}
-		};
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * frontend.editor.EditorMenuBarDelegate#setStyleSheetTo(java.lang.String)
-	 */
-	@Override
-	public void didSelectStyleSheet(String stylesheet) {
-		setStyleSheet(stylesheet);
-		getDelegate().didChangeToStylesheet(getStyleSheet());
+		});
 	}
 
 }

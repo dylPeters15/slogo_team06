@@ -14,10 +14,16 @@ public class MakeUserInstruction extends Command {
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"Variable", "Variable", "Command"}));
 	private String variables = "";
 	
+	/**
+	 * @param list
+	 */
 	public MakeUserInstruction(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(java.util.List)
+	 */
 	@Override
 	public double runCommand(List<String> words) throws SlogoException {
 		if (words.isEmpty()) {
@@ -67,21 +73,33 @@ public class MakeUserInstruction extends Command {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#getVariablesString()
+	 */
 	@Override
 	public String getVariablesString() {
 		return variables;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#ifDefineNewCommands()
+	 */
 	@Override
 	public boolean ifDefineNewCommands(){
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;

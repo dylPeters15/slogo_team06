@@ -16,6 +16,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		new SlogoController(stage);
+//		stage.setScene(new Scene(new EditorPaneManager(new Model()).getObject()));
+//		stage.show();
 	}
 
 	public static void main(String[] args) {

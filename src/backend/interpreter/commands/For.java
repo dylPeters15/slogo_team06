@@ -23,16 +23,20 @@ public class For extends Command {
 	private String var;
 	
 	
+	/**
+	 * @param list
+	 */
 	public For(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(java.util.List)
+	 */
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}
+		checkIfEmpty(words);
 		
 		if(firstRun){
 			firstRun = false;
@@ -41,16 +45,13 @@ public class For extends Command {
 			getVariables().put(var, Double.toString(index));
 			upperLimit = Double.parseDouble(words.get(3));
 			inc = Double.parseDouble(words.get(4));
-			if(words.get(6).contains("[") && words.get(words.size()-1).contains("]")){
+			if(checkBrackets(words,6)){
 				commandToRun =  new ArrayList<String>();
 				for(int i=7; i<words.size()-1; i++){
 					commandToRun.add(words.get(i));
 				}
 			}
-			else{
-				
-				throw new SlogoException("IncorrectNumOfBrackets");
-			}							
+						
 		}
 		else{
 			index+=inc;
@@ -60,28 +61,43 @@ public class For extends Command {
 
 		return 0;
 		
-	}	
+	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#isNestedCommand()
+	 */
 	@Override
 	public boolean isNestedCommand(){
 		return nested;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#nestedCommand()
+	 */
 	@Override
 	public List<String> nestedCommand(){
 		return commandToRun;
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#needsVarParams()
+	 */
 	@Override
 	public boolean needsVarParams(){
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;

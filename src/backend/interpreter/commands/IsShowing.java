@@ -1,18 +1,20 @@
 package backend.interpreter.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import Exceptions.SlogoException;
 import backend.states.State;
 import backend.states.StatesList;
 
+/**
+ * @author User
+ *
+ */
 public class IsShowing extends Command {
 	
 	private final int NUM_PARAMS = 0;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
 
+	/**
+	 * @param list
+	 */
 	public IsShowing(StatesList<State> list) {
 		super(list);
 	}
@@ -25,14 +27,13 @@ public class IsShowing extends Command {
 		return (this.getLastState().getActors().getVisible()) ? 1 : 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
-	@Override
-	public List<String> paramsNeeded() {
-		return paramsNeeded;
-	}
 
 }

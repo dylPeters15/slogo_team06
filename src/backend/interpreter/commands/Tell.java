@@ -14,16 +14,21 @@ public class Tell extends Command {
 	private final int NUM_PARAMS = 3;
 	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{"ListStart", "Constants", "ListEnd"}));
 	
+	/**
+	 * @param list
+	 */
 	public Tell(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand(java.util.List)
+	 */
 	@Override
 	public double runCommand(List<String> words) throws SlogoException{
 	
-		if(words.isEmpty()){
-			throw new SlogoException("IncorrectNumOfParameters: 0");
-		}			
+		checkIfEmpty(words);
+		
 		if(words.get(0).contains("[") && words.get(words.size()-1).contains("]")){
 			int id = 1;
 			List<Integer> active = new ArrayList<Integer>();
@@ -40,16 +45,25 @@ public class Tell extends Command {
 		throw new SlogoException("IncorrectNumOfBrackets");
 	}	
 		
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#needsVarParams()
+	 */
 	@Override
 	public boolean needsVarParams(){
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;

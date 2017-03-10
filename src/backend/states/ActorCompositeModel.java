@@ -15,6 +15,10 @@ public class ActorCompositeModel{
 		set(actorMap, activeList);	
 	}
 
+	/**
+	 * @param actorMap
+	 * @param activeList
+	 */
 	public void set(Map<Integer, ActorModel> actorMap, List<Integer> activeList) {
 		this.actorMap = actorMap;
 		active = activeList;
@@ -31,46 +35,83 @@ public class ActorCompositeModel{
 		return actorMap.get(active.get(active.size()-1));
 	}
 	
+	/**
+	 * @param distance
+	 */
 	public void moveForward(double distance){
 		actors().forEach((actor)-> actor.moveForward(distance));
 	}
 	
+	/**
+	 * @param distance
+	 */
 	public void moveBackward(double distance){
 		actors().forEach((actor)->actor.moveForward(-distance));
 	}
 	
+	/**
+	 * @param v
+	 */
 	public void setVisible(boolean v) {
 		actors().forEach((actor)->actor.setVisible(v));
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean getPenUp() {	
 		return lastActor().getPenUp();
 	}
 	
+	/**
+	 * @return
+	 */
 	public Point2D.Double getPos() {	
 		return lastActor().getPos();
 	}
+	/**
+	 * @param pos
+	 */
 	public void setPos(Point2D.Double pos) {
 		actors().forEach((actor)->actor.setPos(pos));
 	}
+	/**
+	 * @return
+	 */
 	public double getHeading() {
 		return lastActor().getHeading();
 	}
+	/**
+	 * @param heading
+	 */
 	public void setHeading(Double heading) {
 		actors().forEach((actor)->actor.setHeading(heading));
 	}
+	/**
+	 * @param penUp
+	 */
 	public void setPenUp(boolean penUp) {
 		actors().forEach((actor)->actor.setPenUp(penUp));
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean getVisible() {
 		return lastActor().getVisible();
 	}
 
+	/**
+	 * @param distance
+	 */
 	public void rotate(double distance) {
 		actors().forEach((actor)->actor.setHeading(actor.getHeading()+distance));
 	}
 	
+	/**
+	 * @param a
+	 * @param b
+	 */
 	public void setTowards(double a, double b) {
 		actors().forEach((actor)->setToward(actor,a,b));
 	}
@@ -80,6 +121,9 @@ public class ActorCompositeModel{
 		actor.setHeading(newAngle);
 	}
 
+	/**
+	 * @return
+	 */
 	public double getId() {
 		return active.get(active.size()-1);
 	}

@@ -5,6 +5,10 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,7 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.VBox;
-import frontend.SlogoDelegatedUIManager;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -33,8 +37,7 @@ import frontend.SlogoDelegatedUIManager;
  * @author Dylan Peters
  *
  */
-class TerminalDisplayManager extends
-		SlogoDelegatedUIManager<TerminalDisplayDelegate, Parent> {
+class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 	private String prompt;
 
 	private SplitPane overallSplitPane;
@@ -42,6 +45,7 @@ class TerminalDisplayManager extends
 	private VBox vbox;
 	private ObservableList<TextInputArea> textInputAreas;
 	private Button run, clear, clearAll;
+	private StringProperty commandToRun;
 
 	/**
 	 * Creates a new instance of TerminalDisplayManager. Sets all values except
@@ -52,7 +56,19 @@ class TerminalDisplayManager extends
 	 *            display
 	 */
 	public TerminalDisplayManager() {
+		commandToRun = new SimpleStringProperty("");
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(ObservableValue<? extends ResourceBundle> arg0,
+					ResourceBundle arg1, ResourceBundle arg2) {
+				languageResourceBundleDidChange();
+			}
+		});
 		initialize();
+	}
+
+	public StringProperty getCommandToRun() {
+		return commandToRun;
 	}
 
 	/**
@@ -63,12 +79,11 @@ class TerminalDisplayManager extends
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	@Override
 	public void languageResourceBundleDidChange() {
-		prompt = getLanguageResourceBundle().getString("Prompt");
-		run.setText(getLanguageResourceBundle().getString("Run"));
-		clear.setText(getLanguageResourceBundle().getString("Clear"));
-		clearAll.setText(getLanguageResourceBundle().getString("ClearAll"));
+		prompt = getLanguage().getValue().getString("Prompt");
+		run.setText(getLanguage().getValue().getString("Run"));
+		clear.setText(getLanguage().getValue().getString("Clear"));
+		clearAll.setText(getLanguage().getValue().getString("ClearAll"));
 		if (textInputAreas.size() == 0) {
 			addTextArea(new TextInputArea());
 		}
@@ -109,9 +124,8 @@ class TerminalDisplayManager extends
 	 *            commands to print and execute
 	 */
 	void runCommands(String commands) {
-		if (getDelegate() != null) {
-			getDelegate().processCommand(commands);
-		}
+		commandToRun.setValue(commands);
+		commandToRun.setValue("");
 	}
 
 	/**
@@ -168,7 +182,7 @@ class TerminalDisplayManager extends
 		overallSplitPane.getItems().add(buttonSplitPane);
 
 		initializeScrollPane(scrollPane);
-		initializeButtonPane(buttonSplitPane, getLanguageResourceBundle());
+		initializeButtonPane(buttonSplitPane, getLanguage().getValue());
 	}
 
 	private void initializeScrollPane(ScrollPane scrollPane) {
@@ -231,16 +245,5 @@ class TerminalDisplayManager extends
 				addTextArea(new TextInputArea("", prompt));
 			}
 		}
-	}
-
-	@Override
-	public TerminalDisplayDelegate createNonActiveDelegate() {
-		return new TerminalDisplayDelegate() {
-
-			@Override
-			public void processCommand(String command) {
-
-			}
-		};
 	}
 }

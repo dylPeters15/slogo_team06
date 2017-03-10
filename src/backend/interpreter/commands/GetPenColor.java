@@ -11,25 +11,28 @@ import backend.states.StatesList;
 public class GetPenColor extends Command {
 
 	private final int NUM_PARAMS = 0;
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
 	
+	/**
+	 * @param list
+	 */
 	public GetPenColor(StatesList<State> list) {
 		super(list);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand()
+	 */
 	@Override
 	public double runCommand() throws SlogoException {
 		return this.getLastState().getPenColorList().getIndex();
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
-	}
-
-	@Override
-	public List<String> paramsNeeded() {
-		return paramsNeeded;
 	}
 
 }

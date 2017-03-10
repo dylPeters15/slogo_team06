@@ -18,24 +18,26 @@ import backend.states.StatesList;
  */
 public class ID extends Command {
 
+	/**
+	 * @param list
+	 */
 	public ID(StatesList<State> list) {
 		super(list);
 	}
 
-	private List<String> paramsNeeded = new ArrayList<String>(Arrays.asList(new String []{}));
-	
 	private final int NUM_PARAMS = 0;
 	
-	@Override
-	public List<String> paramsNeeded() {
-		return paramsNeeded;
-	}
-
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand()
+	 */
 	@Override
 	public double runCommand() throws SlogoException {
 		return getLastState().getActors().getId();

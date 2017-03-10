@@ -18,6 +18,9 @@ import backend.states.StatesList;
  */
 public class ShowTurtle extends Command {
 
+	/**
+	 * @param list
+	 */
 	public ShowTurtle(StatesList<State> list) {
 		super(list);
 	}
@@ -26,16 +29,25 @@ public class ShowTurtle extends Command {
 	
 	private final int NUM_PARAMS = 0;
 	
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#paramsNeeded()
+	 */
 	@Override
 	public List<String> paramsNeeded() {
 		return paramsNeeded;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#numParamsNeeded()
+	 */
 	@Override
 	public Integer numParamsNeeded() {
 		return NUM_PARAMS;
 	}
 
+	/* (non-Javadoc)
+	 * @see backend.interpreter.commands.Command#runCommand()
+	 */
 	@Override
 	public double runCommand() throws SlogoException {
 		State newState = getNewState();

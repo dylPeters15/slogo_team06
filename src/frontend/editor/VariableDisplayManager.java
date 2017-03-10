@@ -3,6 +3,10 @@
  */
 package frontend.editor;
 
+import java.util.ResourceBundle;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -16,7 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.TextAlignment;
-import frontend.SlogoDelegatedUIManager;
+import frontend.SlogoBaseUIManager;
 
 /**
  * This class will be of default visibility, so it will only be visible to other
@@ -34,8 +38,7 @@ import frontend.SlogoDelegatedUIManager;
  * @author Dylan Peters
  *
  */
-class VariableDisplayManager extends
-		SlogoDelegatedUIManager<VariableDisplayDelegate, Parent> {
+class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
@@ -65,6 +68,14 @@ class VariableDisplayManager extends
 				update();
 			}
 		});
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(
+					ObservableValue<? extends ResourceBundle> observable,
+					ResourceBundle oldValue, ResourceBundle newValue) {
+				languageResourceBundleDidChange();
+			}
+		});
 	}
 
 	/**
@@ -75,11 +86,10 @@ class VariableDisplayManager extends
 	 * @param language
 	 *            a string representing the language to be displayed
 	 */
-	@Override
 	public void languageResourceBundleDidChange() {
-		names.setText(getLanguageResourceBundle().getString("Name"));
-		values.setText(getLanguageResourceBundle().getString("Value"));
-		Label placeHolder = new Label(getLanguageResourceBundle().getString(
+		names.setText(getLanguage().getValue().getString("Name"));
+		values.setText(getLanguage().getValue().getString("Value"));
+		Label placeHolder = new Label(getLanguage().getValue().getString(
 				"TablePlaceholder"));
 		placeHolder.setWrapText(true);
 		placeHolder.setTextAlignment(TextAlignment.CENTER);
@@ -191,17 +201,6 @@ class VariableDisplayManager extends
 		table.setEditable(true);
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-	}
-
-	@Override
-	public VariableDisplayDelegate createNonActiveDelegate() {
-		return new VariableDisplayDelegate() {
-
-			@Override
-			public void didChangeVariable(String name, Object value) {
-
-			}
-		};
 	}
 
 	private void setVar(Variable varChanged, String newValue) {

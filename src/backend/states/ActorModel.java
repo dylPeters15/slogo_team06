@@ -100,11 +100,15 @@ public abstract class ActorModel {
 	/**
 	 * The method to set the heading of the ActorModel.
 	 * @param heading: heading in angle
+	 * @param heading
 	 */
 	public void setHeading(Double heading) {
 		this.heading = heading%360;
 	}
-	
+
+	/**
+	 * @param penUp
+	 */
 	public void setPenUp(boolean penUp) {
 		this.penUp = penUp;
 	}
