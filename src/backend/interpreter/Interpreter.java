@@ -65,6 +65,11 @@ public class Interpreter {
 	 * @throws SlogoException
 	 */
 	public void interpret(String text) throws SlogoException{
+		text = removeLinesWithComments(text);
+		if(text.trim().isEmpty()){
+			return;
+		}
+			
 		try{
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
 			parse(words);
@@ -145,6 +150,7 @@ public class Interpreter {
 		}
 		catch (SlogoException e){
 			if(!variables.containsKey(word)){
+				e.setText(e.getText()+word);
 				throw e;
 			}
 			// run the user-defined command
@@ -179,7 +185,6 @@ public class Interpreter {
 	private double handleVarParam(Command com, LinkedList<String> words, String word) throws SlogoException{
 		com.setVarMap(variables);
 		if(com.isNestedCommand()){
-			System.out.println("hvp words:"+words);
 			return handleNestedCommand(words, word, com);
 		}
 		else{
@@ -356,13 +361,38 @@ public class Interpreter {
 		words.addFirst(word);
 	}
 
-	public void translateError(SlogoException e){
-		int indexOfCustomMessage = e.getText().indexOf(';');
+	private void translateError(SlogoException e) throws SlogoException{
+		int indexOfCustomMessage = e.getText().indexOf(':');
 		if(indexOfCustomMessage==-1){
 			indexOfCustomMessage = e.getText().length();
 		}
 		String toReplace = e.getText().substring(0,indexOfCustomMessage);
-		e.setText(e.getText().replaceAll(toReplace, resources.getString(toReplace)));
+		try{
+			e.setText(e.getText().replaceAll(toReplace, resources.getString(toReplace)));
+		}
+		catch(Exception event){
+			throw e;
+		}
+	}
+	
+	private String removeLinesWithComments(String text){
+		if(!text.contains("#")){
+			return text;
+		}
+		StringBuilder cleanText = new StringBuilder();
+		boolean comment = false;
+		for(int i=0; i<text.length(); i++){
+			if(text.charAt(i)=='#'){
+				comment = true;
+			}
+			if(!comment){
+				cleanText.append(text.charAt(i));
+			}
+			if(text.charAt(i)=='\n'){
+				comment = false;
+			}
+;		}
+		return cleanText.toString();
 	}
 
 }

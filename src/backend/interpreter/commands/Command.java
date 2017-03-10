@@ -49,7 +49,8 @@ public abstract class Command {
 		} 
 		catch (ClassNotFoundException | IllegalArgumentException | SecurityException | NoSuchMethodException
 				| InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			throw new SlogoException("CommandDoesNotExist:commandName");
+			System.out.println(cn);
+			throw new SlogoException("CommandDoesNotExist: ");
 		}
 		return comm;
 	}	
