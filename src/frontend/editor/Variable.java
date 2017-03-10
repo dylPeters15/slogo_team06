@@ -29,7 +29,7 @@ import javafx.beans.property.StringProperty;
  * @author Dylan Peters
  *
  */
-class Variable implements Comparable<Variable> {
+public class Variable implements Comparable<Variable> {
 
 	private ReadOnlyStringProperty nameProperty;
 	private StringProperty valueProperty;
@@ -54,11 +54,11 @@ class Variable implements Comparable<Variable> {
 		this.isNumber = isNumber;
 	}
 
-	ReadOnlyStringProperty nameProperty() {
+	public ReadOnlyStringProperty nameProperty() {
 		return nameProperty;
 	}
 
-	StringProperty valueProperty() {
+	public StringProperty valueProperty() {
 		return valueProperty;
 	}
 

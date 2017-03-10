@@ -62,6 +62,7 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 				languageResourceBundleDidChange();
 			}
 		});
+		languageResourceBundleDidChange();
 	}
 
 	/**
