@@ -24,9 +24,6 @@ public class ArcTangent extends Command {
 	 * @param a: tangent value of an angle
 	 * @return: an angle represented as degree
 	 */
-	/* (non-Javadoc)
-	 * @see backend.interpreter.commands.Command#runCommand(double)
-	 */
 	@Override
 	public double runCommand(double a) throws SlogoException {
 		return Math.toDegrees(Math.atan(a));

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package controller;
+package frontend;
 
 import java.util.ResourceBundle;
 
@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import backend.Model;
-import frontend.SlogoBaseUIManager;
 import frontend.editor.EditorPaneManager;
 import frontend.simulation.SimulationPaneManager;
 
@@ -50,7 +49,7 @@ class Workspace extends SlogoBaseUIManager<Parent> {
 	/**
 	 * Creates a new instance of Workspace. Sets all values to default.
 	 */
-	public Workspace() {
+	Workspace() {
 		Model model = new Model();
 
 		simulation = new SimulationPaneManager(model.getStatesList());
@@ -62,26 +61,12 @@ class Workspace extends SlogoBaseUIManager<Parent> {
 		split = new SplitPane();
 		split.getItems().add(editor.getObject());
 		split.getItems().add(simulation.getObject());
-		
+
 		getLanguage().bind(editor.getLanguage());
 		getStyleSheet().bind(editor.getStyleSheet());
-		
-		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
-			@Override
-			public void changed(ObservableValue<? extends ResourceBundle> observable,
-					ResourceBundle oldValue, ResourceBundle newValue) {
-				simulation.getLanguage().setValue(newValue);
-			}
-		});
-		getStyleSheet().addListener(new ChangeListener<String>(){
-			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				simulation.getStyleSheet().setValue(newValue);
-			}
-			
-		});
-		simulation.getStyleSheet().setValue(getStyleSheet().getValue());
+
+		simulation.getLanguage().bind(getLanguage());
+		simulation.getStyleSheet().bind(getStyleSheet());
 	}
 
 	/**

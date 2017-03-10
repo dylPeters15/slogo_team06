@@ -1,7 +1,7 @@
 /**
  * 
  */
-package controller;
+package frontend;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,14 +19,14 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
- * This class is the controller for the Slogo IDE. This is where much of the
- * Slogo-specific code is placed, in order to allow all of the other classes to
- * create a reusable API. The SlogoController sets up 1) the IDE that the user
- * interacts with in order to control the turtle, 2) the visualization of the
- * turtle, 3) the connections between the two (the model), and then displays the
- * IDE and the turtle visualization.
+ * This class sets up everything necessary for the Slogo IDE. This is where much
+ * of the Slogo-specific code is placed, in order to allow all of the other
+ * classes to create a reusable API. The TabbedSlogoView sets up 1) the IDE that
+ * the user interacts with in order to control the turtle, 2) the visualization
+ * of the turtle, 3) the connections between the two (the model), and then
+ * displays the IDE and the turtle visualization.
  * 
- * The SlogoController creates tabbed panes for both the IDE and the simulation
+ * The TabbedSlogoView creates tabbed panes for both the IDE and the simulation
  * (turtle visualization), and it synchronizes these TabPanes so that when the
  * user changes tabs on one pane, the other one automatically switches as well.
  * It also synchronizes the language and stylesheets of each. This allows the
@@ -38,7 +38,7 @@ import javafx.util.Pair;
  * @author Dylan Peters
  *
  */
-public class SlogoController {
+public class TabbedSlogoView {
 	private static final String EDITOR_TITLE = "Slogo!";
 	private static final String SIMULATOR_TITLE = "Slogo!";
 	private static final String DEFAULT_LANGUAGE = "English";
@@ -58,23 +58,23 @@ public class SlogoController {
 	private ResourceBundle language;
 
 	/**
-	 * Creates a new instance of SlogoController. All values are set to
+	 * Creates a new instance of TabbedSlogoView. All values are set to
 	 * defaults.
 	 */
-	public SlogoController() {
+	public TabbedSlogoView() {
 		this(new Stage());
 	}
 
 	/**
-	 * Creates a new instance of SlogoController. The stage that is passed as a
+	 * Creates a new instance of TabbedSlogoView. The stage that is passed as a
 	 * parameter is used as the stage for the editor, and the simulation is
 	 * placed in a new stage. This method allows the Application class to pass
-	 * its stage to the SlogoController.
+	 * its stage to the TabbedSlogoView.
 	 * 
 	 * @param stage
 	 *            Stage used to display the editor of the IDE.
 	 */
-	public SlogoController(Stage stage) {
+	public TabbedSlogoView(Stage stage) {
 		language = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE
 				+ DEFAULT_LANGUAGE);
 		numWorkspacesThatHaveExisted = 0;
@@ -87,7 +87,7 @@ public class SlogoController {
 	}
 
 	/**
-	 * When the language of a workspace is changed, the SlogoController changes
+	 * When the language of a workspace is changed, the TabbedSlogoView changes
 	 * the language of the title of the tab that holds the editor and the
 	 * simulation. This method is called by a listener that detects when a
 	 * listener changes its language.
