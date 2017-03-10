@@ -8,7 +8,10 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-
+/**
+ * The class to maintain SLogo command syntax in resource bundles.
+ * 
+ */
 public class ProgramParser {
     // "types" and the regular expression patterns that recognize those types
     // note, it is a list because order matters (some patterns may be more generic)
@@ -16,14 +19,14 @@ public class ProgramParser {
 
 
     /**
-     * 
+     * Constructor of the ProgramParser class.
      */
     public ProgramParser () {
     	clearPatterns();
     }
 
-    // adds the given resource file to this language's recognized types
     /**
+     * adds the given resource file to this language's recognized types
      * @param syntax
      */
     public void addPatterns (String syntax) {
@@ -41,8 +44,9 @@ public class ProgramParser {
                             Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
          }
     }
-    // returns the language's type associated with the given text if one exists 
+    
     /**
+     * returns the language's type associated with the given text if one exists 
      * @param text
      * @return
      */
@@ -55,16 +59,21 @@ public class ProgramParser {
         }
         return ERROR;
     }
-
-    // returns true if the given text matches the given regular expression pattern
+ 
+    /**
+     * returns true if the given text matches the given regular expression pattern
+     * @param text
+     * @param regex
+     * @return
+     */
     private boolean match (String text, Pattern regex) {
         // THIS IS THE KEY LINE
         return regex.matcher(text).matches();
     }
 
-	/**
-	 * 
-	 */
+    /**
+     * Clears current stored patterns in the list.
+     */
 	public void clearPatterns() {
 		 mySymbols = new ArrayList<>();	
 	}

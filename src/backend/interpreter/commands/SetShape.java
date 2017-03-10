@@ -35,6 +35,7 @@ public class SetShape extends Command {
 			return a;
 		}
 		else {
+			System.out.println("null new shape");
 			throw new SlogoException("ParamOutOfRange");
 		}
 	}
