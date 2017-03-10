@@ -45,7 +45,7 @@ public class Interpreter {
 	 * @param lang
 	 */
 	public void setLanguage(String lang) {
-		resources = ResourceBundle.getBundle(DEF_LANG);
+		resources = ResourceBundle.getBundle(lang);
 		setParserPatterns(lang);
 	}
 

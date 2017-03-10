@@ -42,9 +42,6 @@ public class Model {
 	public void interpret(String text) throws SlogoException{
 		interpreter.interpret(text);	
 		pastCommands.add(text);
-		for(int id:statesList.getLast().getActiveList()){
-			ActorModel a = statesList.getLast().getActorMap().get(id);
-		}
 	}
 	
 	/**
