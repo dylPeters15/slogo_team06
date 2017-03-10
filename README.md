@@ -22,7 +22,7 @@
 
 - Dylan Peters: Refactored structure of front end classes by creating interface `ObjectManager` and abstract class `SlogoBaseUIManager` in the `frontend` package. Created `SlogoController` and `Workspace` in the `controller` package. Implemented all classes in the `frontend.editor` package and helped refactor and add features to the `frontend.help` package.
 
-- Andreas Santos
+- Andreas Santos: Implemented all classes in `frontend.help` and in `frontend.simulation` to implement the simulation features of the GUI. Helped with refactoring/debugging of all `frontend` package classes.
 
 - Tavo Loaiza: implement `Interpreter`, `ProgramParser`, `Model`, `StatesList`, `State`, `ActorModel`, `ActorCompositeModel`, `TurtleModel`, part of `Command` sub classes, refactor code, and debug.
 
