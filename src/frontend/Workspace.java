@@ -1,7 +1,7 @@
 /**
  * 
  */
-package controller;
+package frontend;
 
 import java.util.ResourceBundle;
 
@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import backend.Model;
-import frontend.SlogoBaseUIManager;
 import frontend.editor.EditorPaneManager;
 import frontend.simulation.SimulationPaneManager;
 
