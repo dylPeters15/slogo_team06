@@ -6,13 +6,13 @@ import java.util.Queue;
 import javafx.collections.ObservableListBase;
 
 /**
+ * The class to represent a list of states.
+ * Extends ObservableListBase to be heard by the front end.
  * @author Tavo Loaiza
  *
  */
 public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
 
-	// TODO change ObservableList to Observable
-	
     private final Queue<E> queue ;
     private E placeHolder;
 
