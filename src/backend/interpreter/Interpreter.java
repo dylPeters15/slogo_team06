@@ -74,9 +74,15 @@ public class Interpreter {
 			LinkedList<String> words = separateWords(text.split(WHITESPACE));
 			parse(words);
 		}
-		catch (SlogoException e){
-			translateError(e);
-			throw e;
+		catch (Exception e){
+			if(e instanceof SlogoException){
+				translateError((SlogoException)e);
+				throw e;
+			}
+			
+			SlogoException ex = new SlogoException("ErrorInInterper");
+			translateError(ex);
+			throw ex; 
 		}
 	}
 
