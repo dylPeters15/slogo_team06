@@ -17,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import frontend.Workspace;
 
 /**
  * This class is the controller for the Slogo IDE. This is where much of the

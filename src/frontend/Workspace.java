@@ -1,7 +1,7 @@
 /**
  * 
  */
-package controller;
+package frontend;
 
 import java.util.ResourceBundle;
 
@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import backend.Model;
-import frontend.SlogoBaseUIManager;
 import frontend.editor.EditorPaneManager;
 import frontend.simulation.SimulationPaneManager;
 
@@ -41,7 +40,7 @@ import frontend.simulation.SimulationPaneManager;
  * @author Dylan Peters
  *
  */
-class Workspace extends SlogoBaseUIManager<Parent> {
+public class Workspace extends SlogoBaseUIManager<Parent> {
 
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
@@ -103,7 +102,7 @@ class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the SimulationPaneManager that is created within
 	 *         the workspace.
 	 */
-	Parent getEditorParent() {
+	public Parent getEditorParent() {
 		return editor.getObject();
 	}
 
@@ -114,7 +113,7 @@ class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the EditorPaneManager that is created within the
 	 *         workspace.
 	 */
-	Parent getSimulationParent() {
+	public Parent getSimulationParent() {
 		return simulation.getObject();
 	}
 
@@ -123,7 +122,7 @@ class Workspace extends SlogoBaseUIManager<Parent> {
 	 * ensures that all windows created by the workspace are closed when the
 	 * workspace closes.
 	 */
-	void pepareToClose() {
+	public void pepareToClose() {
 		editor.closeAllChildWindows();
 	}
 
