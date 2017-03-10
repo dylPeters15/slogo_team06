@@ -51,24 +51,6 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 	}
 
 	/**
-	 * Gets the width of the Parent object that holds all of the UI components.
-	 * 
-	 * @return double width
-	 */
-	public double getWidth() {
-		return WIDTH;
-	}
-
-	/**
-	 * Gets the height of the Parent object that holds all of the UI components.
-	 * 
-	 * @return double height
-	 */
-	public double getHeight() {
-		return HEIGHT;
-	}
-
-	/**
 	 * Gets the display object that this class is manipulating and setting up.
 	 * The Parent returned by this method should be displayed to allow the user
 	 * to interact with the editor. It can be used as the root of a Scene or
@@ -182,8 +164,8 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 		borderPane = new BorderPane();
 		borderPane.setTop(simulationMenuBarManager.getObject());
 		borderPane.setBottom(environmentDisplayManager.getObject());
-		borderPane.setPrefWidth(getWidth());
-		borderPane.setPrefHeight(getHeight());
+		borderPane.setPrefWidth(WIDTH);
+		borderPane.setPrefHeight(HEIGHT);
 	}
 
 	private void makeManagers() {
@@ -203,7 +185,7 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 	 * 
 	 * @param color
 	 */
-	public void setPenColor(Color color) {
+	private void setPenColor(Color color) {
 		environmentDisplayManager.setPenColor(color);
 	}
 

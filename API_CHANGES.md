@@ -43,7 +43,11 @@ We believe that the SlogoBaseUIManager offers many benefits including increased 
 >
 >public void close()
 
+- Created `public class Workspace`. Before creating this class, we had assumed that our program would execute with one editor pane, one simulation pane, and one model to run the simulation. In this case, we knew that everything worked together because there was only one of each. Once we thought that there would be a chance that the program would implement multiple simulations (e.g. more than one simulation view, editor, and model), it became important to find a way to make sure that each editor, simulation view, and model were linked in order to ensure they were only communicating with each other and not with other 'threads'. We did this by implementing the workspace class to link all three components of a working Slogo.
+
 ###Minor Changes:
+
+- In `SimulationPaneManager` we added the public method `OnChanged`. This method had to added because originally we didn't know how the backend was going to implement the statesList. When they decided to make it an Observable list, the simulation pane manager had to implement a listener, which requires the OnChanged method.
 
 ##Frontend Internal API Changes
 
@@ -57,6 +61,12 @@ We believe that the SlogoBaseUIManager offers many benefits including increased 
 4. The `EditorPaneManager` implements the `EditorMenuBarDelegate` interface, and is set as the EditorMenuBarManager's delegate. Therefore, when the menu bar calls the delegate method, the pane manager executes the code necessary to change language.
 
 This design worked at the beginning, but as the code got more complex, the number of delegates increased, and the code became harder to read. Furthermore, we noticed that this design limits each class to having just a single delegate that it can notify when something changes. This limitation is arbitrary and unnecessary. To fix this limitation, we deprecated all of the delegate interfaces (in our repository we have deleted all of these files for the sake of making the repository organized and easy for the graders to inspect, but if this were a production API, we would simply mark those interfaces as depreicated), and we created the `SlogoBaseUIManager` abstract class, which uses properties that other classes can view in order to listen for changes.
+
+- We created a new interface called the `ObjectManager` Interface. The purpose of this creation was that we noticed that all of our 'Manager' classes had some sort of method that returned some an object (e.g. Parent, Region, Group, etc) that was the visualization of what the class was managing. In order to ensure that all such manager classes implemented this 'getObject' method, we had to create the interface `ObjectManager` which is implemented by `SlogoBaseUIManager`, which in turn is extended by all of our front-end manager classes.
+
+> interface ObjectManager<T extends Object> {
+	T getObject();
+	}
 
 ###Minor Changes:
 - After creating the SlogoBaseUIManager class, we restructured the classes of the internal API slightly. We made all of the internal classes extend SlogoBaseUIManager, whereas before all of the UI classes had no superclasses. The only thing that this changes, in terms of the API, is that for all the UI classes that used to have methods titled some variation of setLanguage, setTheme, or getRegion, these methods are all now standardized based on the SlogoBaseUIManager. They are now all getLanguage() and getStyleSheet(), which return ObjectProperties that can be modified, and the getRegion methods are now all standardized to getObject(), which returns any class that extends Parent. Of course, if this were a production API, we would deprecate all of the old, nonstandardized methods and connect their implementations to the new methods. (For example, the EditorPaneManager originally had a method called getParent(). To deprecate this, we would remove the implementation code of getParent() and replace it with:
@@ -92,6 +102,17 @@ Within `TerminalDisplayManager`: `Node getTerminalDisplay -> Parent getObject()`
 Within `SimulationMenuBarManager`: `Node getMenuBar() -> Parent getObject()`
 
 We conclude that these changes have helped increase code consistency and uniformity by implementing an inheritence hierarchy within the front end. Furthermore, we conclude that these are minor changes because they are simply renaming of methods. The old methods can be left there and deprecated.
+
+Other unrelated minor Changes:
+
+- For `SimulationMenuBarManager`: added `getPenColor getBackgroundColor getTurtleImage getHome` omitted `setLanguage getLanguage`. The methods that were added were added because when we planned the UI, we didn't know that these buttons were going to necessarily be on the SimulationMenuBar. They are all just getter methods that may need to be used by other internal classes. The two omitted methods were omitted because after we bounded the language properties either directly or indirectly to the editor menu bar manager (because it made sense that if the language was changed in the editor, that change should be reflected in all panes), we didn't need to be able to set or get language from the simulation menu bar manager.
+
+- For `EnvironmentDisplayManager`: added `setTurtle getObject updateTurtles setBackground setTurtleImage home setPenColor setPenWidth clearScreen`
+
+- For `ActorDisplay`, we changed the name of the class to `ActorView` (also note this is a super class that didn't end up being necessary in the project (we left it there for reasons that will be explained in the Analysis) and that all the changed methods are implemented in the subclass `TurtleView`), this was just by accident, nothing about it changed. All the methods are new. I originally left the interface blank during our plan because I honestly wasn't sure what method's we'd need to implement to model the Turtle's behavior. All the added methods just served to implement turtle behavior such as movement.
+
+- For `EnvironmentDisplayManager`, for the same reasons mentioned in `ActorView`/`TurtleView`, all the methods were added after turning in the original API, and all the methods serve to draw the View of the moving turtles in the Simulation.
+
 
 
 
