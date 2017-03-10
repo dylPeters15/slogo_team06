@@ -41,7 +41,7 @@ import frontend.simulation.SimulationPaneManager;
  * @author Dylan Peters
  *
  */
-public class Workspace extends SlogoBaseUIManager<Parent> {
+class Workspace extends SlogoBaseUIManager<Parent> {
 
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
@@ -103,7 +103,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the SimulationPaneManager that is created within
 	 *         the workspace.
 	 */
-	public Parent getEditorParent() {
+	Parent getEditorParent() {
 		return editor.getObject();
 	}
 
@@ -114,7 +114,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the EditorPaneManager that is created within the
 	 *         workspace.
 	 */
-	public Parent getSimulationParent() {
+	Parent getSimulationParent() {
 		return simulation.getObject();
 	}
 
@@ -123,7 +123,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * ensures that all windows created by the workspace are closed when the
 	 * workspace closes.
 	 */
-	public void pepareToClose() {
+	void pepareToClose() {
 		editor.closeAllChildWindows();
 	}
 

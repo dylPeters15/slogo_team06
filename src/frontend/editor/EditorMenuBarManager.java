@@ -19,17 +19,15 @@ import frontend.SlogoBaseUIManager;
 import frontend.help.HelpPaneManager;
 
 /**
- * This class will be of default visibility, so it will only be visible to other
- * members of its package. Therefore, it will be part of the internal API of the
- * front end.
- * 
  * This class sets up and manages a menu bar to be used in the
  * EditorPaneManager. The goal of this class is to hide the details of
  * implementation required to display buttons and other Control objects required
- * for the user to interact with in the editor. This class can hold an object
- * that implements the EditorMenuBarDelegate interface. It will call the methods
- * of that interface when Control components are changed by the user, to alert
- * the rest of the program about the changes.
+ * for the user to interact with in the editor. It uses the styleSheet and
+ * languageProperties that it inherits from the SlogoBaseUIManager to
+ * communicate with other classes in the following way:
+ * 
+ * 1) Other classes set up listeners that listen to the language and stylesheet
+ * properties of this class.
  * 
  * @author Dylan Peters
  *
@@ -42,11 +40,8 @@ class EditorMenuBarManager extends SlogoBaseUIManager<Parent> {
 	private HelpPaneManager helpPaneManager;
 
 	/**
-	 * Creates a new instance of EditorMenuBarManager. Sets all values except
-	 * language to default.
-	 * 
-	 * @param language
-	 *            the language to use in the display of the menu bar.
+	 * Creates a new instance of EditorMenuBarManager. Sets all values to
+	 * default.
 	 */
 	public EditorMenuBarManager() {
 		myMenuBar = new HBox();
@@ -63,23 +58,23 @@ class EditorMenuBarManager extends SlogoBaseUIManager<Parent> {
 
 	/**
 	 * Gets the display object that this class is manipulating and setting up.
-	 * The Node returned by this method should be displayed to allow the user to
-	 * interact with the editor and access all its options.
+	 * The Parent returned by this method should be displayed to allow the user
+	 * to interact with the editor and access all its options.
 	 * 
-	 * @return Node containing all the Control components that allow the user to
-	 *         interact with the program's options
+	 * @return Parent containing all the Control components that allow the user
+	 *         to interact with the program's options
 	 */
 	@Override
 	public Parent getObject() {
 		return myMenuBar;
 	}
 
-	private void help() {
-		helpPaneStage.show();
-		helpPaneStage.toFront();
-	}
-
-	public void close() {
+	/**
+	 * Should be called when the stage containing the menu bar is closing. This
+	 * method notifies the menu bar that it should close any extra windows that
+	 * it has opened to display extra information to the user.
+	 */
+	public void closeAllChildWindows() {
 		helpPaneStage.close();
 	}
 
@@ -118,6 +113,11 @@ class EditorMenuBarManager extends SlogoBaseUIManager<Parent> {
 		helpPaneStage.setScene(new Scene(helpPaneManager.getObject()));
 		helpPaneManager.getStyleSheet().bind(getStyleSheet());
 		helpPaneManager.getLanguage().bind(getLanguage());
+	}
+
+	private void help() {
+		helpPaneStage.show();
+		helpPaneStage.toFront();
 	}
 
 }

@@ -20,29 +20,16 @@ import backend.Model;
 import frontend.SlogoBaseUIManager;
 
 /**
- * This class will be of public visibility, so it will be visible to any class
- * or interface in the program. Therefore, it will be part of the External API
- * of the front end.
- * 
  * This class is designed to encapsulate the set up of the display of the
  * editor/terminal functionality of the front end of the program. It creates a
  * Parent object and populates it with a menu bar, a terminal-style text entry
  * field, and a table with the values of the variables. That Parent object can
- * then be accessed via the getParent() method, to be used as the root of a
+ * then be accessed via the getObject() method, to be used as the root of a
  * scene or to be added as a component in a larger display.
- * 
- * This class implements the EditorMenuBarDelegate and VariableDisplayDelegate
- * interfaces to allow the EditorMenuBarManager and VariableDisplayManager to
- * communicate with it when an event occurs.
  * 
  * This class can be extended in order to add more functionality, such as the
  * ability to write a script and run it rather than simply use the
  * Read-Eval-Print Loop, or to allow the user to undo or redo a command.
- * 
- * When this becomes a class it will implement EditorMenuBarDelegate,
- * VariableDisplayDelegate, and TerminalDisplayDelegate, but to make the
- * interface-representation of the class compile, it must "extend" the other
- * interfaces.
  * 
  * @author Dylan Peters
  *
@@ -147,22 +134,18 @@ public class EditorPaneManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	/**
-	 * Closes all the windows created by this EditorPaneManager
+	 * Closes all the windows created by this EditorPaneManager.
 	 */
 	public void closeAllChildWindows() {
-		editorMenuBarManager.close();
+		editorMenuBarManager.closeAllChildWindows();
 	}
 
 	/**
-	 * This is the implementation of the method in the TerminalDisplayDelegate
-	 * interface.
-	 * 
-	 * This method is called by the TerminalDisplayManager to indicate to the
-	 * object implementing the interface that the user has entered a command
-	 * into the terminal and hit enter, thus telling the program to execute the
-	 * command. It implements the consequences of the command: parse the
-	 * command, update the model's state based on the command, and then update
-	 * the view so the user can see the command's effects.
+	 * Executes a command that the user has entered into the terminal and chosen
+	 * to run. It tells the model to parse the command and update the model's
+	 * state based on the command. The visualization of the model
+	 * (SimulationPaneManager) can then update the view so the user can see the
+	 * command's effects.
 	 * 
 	 * @param command
 	 *            the command the user has entered to be executed.
@@ -243,14 +226,16 @@ public class EditorPaneManager extends SlogoBaseUIManager<Parent> {
 
 		editorMenuBarManager.getStyleSheet()
 				.setValue(createDefaultStyleSheet());
-		
-		terminalDisplayManager.getCommandToRun().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				processCommand(newValue);
-			}
-		});
+
+		terminalDisplayManager.getCommandToRun().addListener(
+				new ChangeListener<String>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends String> observable,
+							String oldValue, String newValue) {
+						processCommand(newValue);
+					}
+				});
 	}
 
 }
