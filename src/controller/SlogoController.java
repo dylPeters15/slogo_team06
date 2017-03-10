@@ -17,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import frontend.Workspace;
 
 /**
  * This class is the controller for the Slogo IDE. This is where much of the
@@ -34,10 +35,6 @@ import javafx.util.Pair;
  * screen space, while preventing the code from becoming Spaghetti code; i.e.
  * the editor does not have a reference to the simulation because it does not
  * control the simulation (it controls the model), and vice versa.
- * 
- * The SlogoController implements WorkspaceDelegate in order to detect when a
- * workspace changes language. When it does change language, the controller
- * changes the title of that tab to be in that language.
  * 
  * @author Dylan Peters
  *
@@ -91,19 +88,17 @@ public class SlogoController {
 	}
 
 	/**
-	 * Implementation of the didChangeLanguage method from the WorkspaceDelegate
-	 * interface. Called by the Workspace when it changes languages.
-	 * 
 	 * When the language of a workspace is changed, the SlogoController changes
 	 * the language of the title of the tab that holds the editor and the
-	 * simulation.
+	 * simulation. This method is called by a listener that detects when a
+	 * listener changes its language.
 	 * 
 	 * @param workspace
 	 *            The workspace that changed its language.
 	 * @param newLanguage
 	 *            The language that the workspace is now displayed in.
 	 */
-	public void didChangeLanguage(Workspace workspace,
+	private void didChangeLanguage(Workspace workspace,
 			ResourceBundle newLanguage) {
 		if (workspaceToTabs.containsKey(workspace)) {
 			int workspaceNum = Integer.parseInt(workspaceToTabs

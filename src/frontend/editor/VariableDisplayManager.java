@@ -23,17 +23,10 @@ import javafx.scene.text.TextAlignment;
 import frontend.SlogoBaseUIManager;
 
 /**
- * This class will be of default visibility, so it will only be visible to other
- * members of its package. Therefore, it will be part of the internal API of the
- * front end.
- * 
  * This class sets up and manages a table to be used in the EditorPaneManager.
  * The goal of this class is to hide the details of implementation required to
  * display the names and values of all the variables currently in use in the
- * simulation. This class can hold an object that implements the
- * VariableDisplayManager interface. It will call the methods of that interface
- * when a variable is changed by the user, to alert the rest of the program
- * about the changes.
+ * simulation.
  * 
  * @author Dylan Peters
  *
@@ -43,20 +36,13 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 	private TableColumn<Variable, String> names;
 	private TableColumn<Variable, String> values;
 	private TableView<Variable> table;
-	private ObservableList<Variable> variables;
+	private ObservableList<Variable> variableList;
 
 	private ObservableMap<String, String> varMap;
 
 	/**
-	 * Creates a new instance of VariableDisplayManager. Sets all values except
-	 * delegate and language to default.
-	 * 
-	 * @param delegate
-	 *            the object implementing the VariableDisplayDelegate interface
-	 *            that this class will use to call delegated methods.
-	 * @param language
-	 *            the language with which to display the text in the variable
-	 *            display.
+	 * Creates a new instance of VariableDisplayManager. Sets all values for
+	 * stylesheet and language to default values.
 	 */
 	VariableDisplayManager(ObservableMap<String, String> variableMap) {
 		initializeTable();
@@ -76,25 +62,7 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 				languageResourceBundleDidChange();
 			}
 		});
-	}
-
-	/**
-	 * Sets the language that this class uses to display its contents. It will
-	 * use a resource file with the words in that language to populate its
-	 * contents.
-	 * 
-	 * @param language
-	 *            a string representing the language to be displayed
-	 */
-	public void languageResourceBundleDidChange() {
-		names.setText(getLanguage().getValue().getString("Name"));
-		values.setText(getLanguage().getValue().getString("Value"));
-		Label placeHolder = new Label(getLanguage().getValue().getString(
-				"TablePlaceholder"));
-		placeHolder.setWrapText(true);
-		placeHolder.setTextAlignment(TextAlignment.CENTER);
-		table.setPlaceholder(placeHolder);
-
+		languageResourceBundleDidChange();
 	}
 
 	/**
@@ -102,7 +70,7 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 	 * The Node returned by this method should be displayed to allow the user to
 	 * interact with the editor.
 	 * 
-	 * @return Node containing all the UI components that allow the user to
+	 * @return Parent containing all the UI components that allow the user to
 	 *         interact with the program
 	 */
 	@Override
@@ -112,27 +80,23 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	/**
 	 * Updates the variable display based on the variable map passed to it.
-	 * 
-	 * @param vars
-	 *            a map whose keyset is the names of all the variables, and
-	 *            whose values are the values of the variables.
 	 */
-	void update() {
+	private void update() {
 		for (String varName : varMap.keySet()) {
 			if (varListHasVarWithName(varName)) {
-				variables.get(indexOfVarWithName(varName)).valueProperty()
+				variableList.get(indexOfVarWithName(varName)).valueProperty()
 						.set(varMap.get(varName));
 			} else {
-				variables.add(new Variable(varName, varMap.get(varName),
+				variableList.add(new Variable(varName, varMap.get(varName),
 						isNumber(varMap.get(varName))));
 			}
 		}
-		for (Variable var : variables) {
+		for (Variable var : variableList) {
 			if (!varMapContainsVarWithName(var.nameProperty().get())) {
-				variables.remove(var);
+				variableList.remove(var);
 			}
 		}
-		variables.sort(null);
+		variableList.sort(null);
 	}
 
 	private boolean isNumber(String var) {
@@ -150,7 +114,7 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	private int indexOfVarWithName(String varName) {
 		int index = 0;
-		for (Variable var : variables) {
+		for (Variable var : variableList) {
 			if (var.nameProperty().get().equals(varName)) {
 				return index;
 			}
@@ -164,8 +128,8 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	private void initializeTable() {
-		variables = FXCollections.observableArrayList();
-		table = new TableView<Variable>(variables);
+		variableList = FXCollections.observableArrayList();
+		table = new TableView<Variable>(variableList);
 		names = new TableColumn<Variable, String>();
 		names.setCellValueFactory(new PropertyValueFactory<Variable, String>(
 				"name"));
@@ -178,7 +142,7 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 		values.setOnEditCommit(new EventHandler<CellEditEvent<Variable, String>>() {
 			@Override
 			public void handle(CellEditEvent<Variable, String> event) {
-				Variable varChanged = variables.get(event.getTablePosition()
+				Variable varChanged = variableList.get(event.getTablePosition()
 						.getRow());
 				if (varChanged.isNumber()) {
 					if (isNumber(event.getNewValue())) {
@@ -209,9 +173,20 @@ class VariableDisplayManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	private void resetVar(Variable varChanged) {
-		variables.remove(varChanged);
-		variables.add(varChanged);
-		variables.sort(null);
+		variableList.remove(varChanged);
+		variableList.add(varChanged);
+		variableList.sort(null);
+	}
+
+	private void languageResourceBundleDidChange() {
+		names.setText(getLanguage().getValue().getString("Name"));
+		values.setText(getLanguage().getValue().getString("Value"));
+		Label placeHolder = new Label(getLanguage().getValue().getString(
+				"TablePlaceholder"));
+		placeHolder.setWrapText(true);
+		placeHolder.setTextAlignment(TextAlignment.CENTER);
+		table.setPlaceholder(placeHolder);
+
 	}
 
 }
