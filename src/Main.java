@@ -1,6 +1,6 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
-import controller.SlogoController;
+import frontend.TabbedSlogoView;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class Main extends Application {
 	 */
 	@Override
 	public void start(Stage stage) throws Exception {
-		new SlogoController(stage);
+		new TabbedSlogoView(stage);
 	}
 
 	/**
