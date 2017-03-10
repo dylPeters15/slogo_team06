@@ -15,9 +15,33 @@
 3. Every UI class in the Slogo application is also able to use ResourceBundles to dispay text to the user in multiple languages. We abstracted this functionality into the SlogoBaseUIManager as well, resulting in reduced duplicated code, better code consistency, and easier changes to code, similar to the benefits described above for the stylesheets.
 4. The stylesheet and language variables were put into ObjectProperties (StringProperty in the case of the stylesheet). A getter was provided for the properties so that other classes can get the stylesheet and language and can make changes or listen for changes. This allows classes to bind stylesheets and ensure that they all display in the same style, and similarly for languages. Furthermore, classes can extend the getStylesheet or getLanguage methods and make them return a readonly property to allow other classes to view the variables but not change them.
 
-We believe that the SlogoBaseUIManager offers many benefits including increased code consistency, decreased duplicated code, and an inheritence hierarchy to unify the front end. Furthermore, it solves the problem we had with the delegate interfaces; for example, for a menu bar item to communicate with another class that the user has changed the language, it need only change its own language variable, and any class that is interested in that change can listen for changes to it. This has the added benefit of being able to have an arbitrary number of listeners, rather than the limit of one that was enforced using the delegate interfaces. This is an external change because the SlogoBaseUIManager is a public class in order to allow other code to interact with any public Slogo UI classes through the methods provided in the abstract class.
+We believe that the SlogoBaseUIManager offers many benefits including increased code consistency, decreased duplicated code, and an inheritence hierarchy to unify the front end. Furthermore, it solves the problem we had with the delegate interfaces; for example, for a menu bar item to communicate with another class that the user has changed the language, it need only change its own language variable, and any class that is interested in that change can listen for changes to it. This has the added benefit of being able to have an arbitrary number of listeners, rather than the limit of one that was enforced using the delegate interfaces. This is an external change because the SlogoBaseUIManager is a public class in order to allow other code to interact with any public Slogo UI classes through the methods provided in the abstract class. The methods that have been created within SlogoBaseUIManager are:
 
-- Created `public class TabbedSlogoView`. This class creates a way for other classes to easily run the Slogo IDE. This way, client code does not have to set up or understand how the Workspace class or the EditorPaneManager or the SimulationPaneManager works. Instead, the TabbedSlogoView is a single class that creates multiple workspaces and allows the user to interact with them. It uses the `show()`, `hide()`, and `close()` methods that are used with the Stage class, so it is straightforward for client classes to use. The only public methods are the constructors, and the `show()`, `hide()`, and `close()` methods. Therefore, it does not allow significant customization of the IDE, but instead is designed to create a very simple way to instantiate the IDE. If more flexibility is desired, client code can use the Workspace class to set up more customized views.
+>public SlogoBaseUIManager()
+>
+>public ObjectProperty<ResourceBundle> getLanguage()
+>
+>public ObjectProperty<String> getStyleSheet()
+>
+>protected final UnmodifiableObservableMap<String, ResourceBundle> getPossibleResourceBundleNamesAndResourceBundles()
+>
+>protected final UnmodifiableObservableMap<String, String> getPossibleStyleSheetNamesAndFileNames()
+>
+>protected ResourceBundle createDefaultResourceBundle()
+>
+>protected String createDefaultStyleSheet(
+
+- Created `public class TabbedSlogoView`. This class creates a way for other classes to easily run the Slogo IDE. This way, client code does not have to set up or understand how the Workspace class or the EditorPaneManager or the SimulationPaneManager works. Instead, the TabbedSlogoView is a single class that creates multiple workspaces and allows the user to interact with them. It uses the `show()`, `hide()`, and `close()` methods that are used with the Stage class, so it is straightforward for client classes to use. The only public methods are the constructors, and the `show()`, `hide()`, and `close()` methods. Therefore, it does not allow significant customization of the IDE, but instead is designed to create a very simple way to instantiate the IDE. If more flexibility is desired, client code can use the Workspace class to set up more customized views. The methods that have been created within TabbedSlogoView are:
+
+>public TabbedSlogoView()
+>
+>public TabbedSlogoView(Stage stage)
+>
+>public void show()
+>
+>public void hide()
+>
+>public void close()
 
 ###Minor Changes:
 
@@ -34,9 +58,42 @@ We believe that the SlogoBaseUIManager offers many benefits including increased 
 
 This design worked at the beginning, but as the code got more complex, the number of delegates increased, and the code became harder to read. Furthermore, we noticed that this design limits each class to having just a single delegate that it can notify when something changes. This limitation is arbitrary and unnecessary. To fix this limitation, we deprecated all of the delegate interfaces (in our repository we have deleted all of these files for the sake of making the repository organized and easy for the graders to inspect, but if this were a production API, we would simply mark those interfaces as depreicated), and we created the `SlogoBaseUIManager` abstract class, which uses properties that other classes can view in order to listen for changes.
 
-
-
 ###Minor Changes:
+- After creating the SlogoBaseUIManager class, we restructured the classes of the internal API slightly. We made all of the internal classes extend SlogoBaseUIManager, whereas before all of the UI classes had no superclasses. The only thing that this changes, in terms of the API, is that for all the UI classes that used to have methods titled some variation of setLanguage, setTheme, or getRegion, these methods are all now standardized based on the SlogoBaseUIManager. They are now all getLanguage() and getStyleSheet(), which return ObjectProperties that can be modified, and the getRegion methods are now all standardized to getObject(), which returns any class that extends Parent. Of course, if this were a production API, we would deprecate all of the old, nonstandardized methods and connect their implementations to the new methods. (For example, the EditorPaneManager originally had a method called getParent(). To deprecate this, we would remove the implementation code of getParent() and replace it with:
+
+>public Parent getParent(){
+>
+>return getObject();
+>
+>}
+
+However, in order to clean up the code for the graders to look at, we have simply deleted those methods. Below is a list of the methods that were changed:
+
+In `EditorPaneManager`, `EditorMenuBarManager`, `TerminalDisplayManager`, `VariableDisplayManager`, `SimulationMenuBarManager`, and `SimulationPaneManager`:
+
+>setLanguage(String language) -> setLanguage(ResourceBundle language)
+>
+>String getLanguage() -> ResourceBundle getLanguage()
+>
+>didSelectLanguage(String language) -> deprecated
+>
+>didChangeVariable(String variable, Object value) -> deprecated
+>
+>getDelegate() -> deprecated
+
+Other methods that have been changed:
+
+Within `EditorPaneManager`: `Parent getParent() -> Parent getObject()`
+
+Within `EditorMenuBarManager`: `Node getMenuBar() -> Parent getObject()`
+
+Within `TerminalDisplayManager`: `Node getTerminalDisplay -> Parent getObject()`
+
+Within `SimulationMenuBarManager`: `Node getMenuBar() -> Parent getObject()`
+
+We conclude that these changes have helped increase code consistency and uniformity by implementing an inheritence hierarchy within the front end. Furthermore, we conclude that these are minor changes because they are simply renaming of methods. The old methods can be left there and deprecated.
+
+
 
 ##Backend External API Changes
 

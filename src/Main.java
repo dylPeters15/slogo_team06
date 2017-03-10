@@ -21,7 +21,7 @@ public class Main extends Application {
 	 * point at which the program sets the Application to be a Slogo
 	 * Application.
 	 * 
-	 * @param Stage
+	 * @param stage
 	 *            stage the Stage to use as the base window for the Slogo
 	 *            Application.
 	 */
