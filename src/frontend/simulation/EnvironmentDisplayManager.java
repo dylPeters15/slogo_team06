@@ -88,7 +88,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	}
 
-	void updateTurtle(TurtleView myTurtle) {
+	private void updateTurtle(TurtleView myTurtle) {
 		if (myTurtle.penDown()) {
 			drawLine(myTurtle, myTurtle.getPreviousX(), myTurtle.getPreviousY(),
 					convertXCoordinate(myTurtle.getX()),
@@ -131,7 +131,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 		return myPane.getPrefHeight() / 2 - y;
 	}
 
-	void didScroll() {
+	private void didScroll() {
 		if (myScrollPane.getHvalue() == 1.0 || myScrollPane.getHvalue() == 0.0) {
 			double val = myScrollPane.getHvalue();
 			double oldWidth = myPane.getPrefWidth();

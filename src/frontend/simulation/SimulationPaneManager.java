@@ -229,7 +229,7 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 		}
 	}
 
-	void updateTurtleViewMap() {
+	private void updateTurtleViewMap() {
 		for (Integer i : myActorsMap.keySet()){
 			if (! myTurtleViewMap.containsKey(i)){
 				TurtleView t = new TurtleView();
