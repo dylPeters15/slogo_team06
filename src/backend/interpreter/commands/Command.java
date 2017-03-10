@@ -56,7 +56,7 @@ public abstract class Command {
 	}	
 
 	/**
-	 * @return
+	 * @return return value of the command
 	 * @throws SlogoException
 	 */
 	public double runCommand() throws SlogoException {
@@ -65,7 +65,7 @@ public abstract class Command {
 	
 	/**
 	 * @param a
-	 * @return
+	 * @return return value of the command
 	 * @throws SlogoException
 	 */
 	public double runCommand(double a) throws SlogoException {
@@ -74,7 +74,7 @@ public abstract class Command {
 	/**
 	 * @param a
 	 * @param b
-	 * @return
+	 * @return return value of the command
 	 * @throws SlogoException
 	 */
 	public double runCommand(double a, double b) throws SlogoException {
@@ -86,7 +86,7 @@ public abstract class Command {
 	 * @param b
 	 * @param c
 	 * @param d
-	 * @return
+	 * @return return value of the command
 	 * @throws SlogoException
 	 */
 	public double runCommand(double a, double b, double c, double d) throws SlogoException {
@@ -95,7 +95,7 @@ public abstract class Command {
 
 	/**
 	 * @param words
-	 * @return
+	 * @return return value of the command
 	 * @throws SlogoException
 	 */
 	public double runCommand(List<String> words) throws SlogoException{
@@ -109,10 +109,7 @@ public abstract class Command {
 		this.statesList = statesList;
 	}
 	
-	/**
-	 * @return
-	 */
-	public StatesList<State> getStatesList() {
+	protected StatesList<State> getStatesList() {
 		return statesList;
 	}
 	
@@ -129,59 +126,60 @@ public abstract class Command {
 	}	
 
 	/**
-	 * @return
+	 * @return The number of parameters needed
 	 */
 	public abstract Integer numParamsNeeded();
 	/**
-	 * @return
+	 * @return a list with the type of parameters needed
 	 */
 	public List<String> paramsNeeded(){
 		return new ArrayList<String>(Arrays.asList(new String []{}));
 	}
 	
 	/**
-	 * @return
+	 * @return true if it requires looking up a variable parameter, false otherwise
 	 */
 	public boolean needsVarParams(){
 		return DEF_NEEDS_VAR_PARAM;
 	}
 	
 	/**
-	 * @return
+	 * @return true if the command needs a list of parameters, false otherwise
 	 */
 	public boolean needsCommandParams() {
 		return DEF_NEEDS_COMMANDS_PARAM;
 	}
 	
 	/**
-	 * @return
+	 * @return true if the command is a conditional, false otherwise
 	 */
 	public boolean needsPriorCheck() {
 		return DEF_NEEDS_PRIOR_CHECK;
     }
 	
 	/**
-	 * @return
+	 * @return true if there is a nested command that must be run
 	 */
 	public boolean isNestedCommand(){
 		return DEF_REPEAT;
 	}
 	
 	/**
-	 * @return
+	 * @return the nested command to be run
 	 */
 	public List<String> nestedCommand(){
 		return null;
 	}
 	
 	/**
-	 * @return
+	 * @return if this command defines a user command
 	 */
 	public boolean ifDefineNewCommands(){
 		return DEF_MAKE_NEW_COMMAND;
 	}
 	
 	/**
+	 * Sets the variable map of this command
 	 * @param variables
 	 */
 	public void setVarMap(ObservableMap<String, String> variables){
@@ -189,14 +187,14 @@ public abstract class Command {
 	}
 	
 	/**
-	 * @return the variables
+	 * @return the variable map from this command
 	 */
 	protected ObservableMap<String,String> getVariables() {
 		return variables;
 	}
 
 	/**
-	 * @return
+	 * @return Variables as a string (for defining a new command)
 	 */
 	public String getVariablesString() {
 		return null;
