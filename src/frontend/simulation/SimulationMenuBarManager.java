@@ -102,13 +102,13 @@ class SimulationMenuBarManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	private void makeTurtleImage() {
-		setTurtleImage = new Button("Set Turtle Image");
+		setTurtleImage = new Button(getLanguage().getValue().getString("SetTurtleImage"));
 		setTurtleImage.setOnMousePressed(event -> setTurtleImage());
 		myMenuBar.getChildren().add(setTurtleImage);
 	}
 
 	private void makePenColor() {
-		penColorText = new Text("Pen Color:");
+		penColorText = new Text(getLanguage().getValue().getString("PenColor"));
 		backgroundColorText.setId("text");
 		myMenuBar.getChildren().add(penColorText);
 
@@ -120,7 +120,7 @@ class SimulationMenuBarManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	private void makeBackgroundColor() {
-		backgroundColorText = new Text("Background Color:");
+		backgroundColorText = new Text(getLanguage().getValue().getString("BackgroundColor"));
 		backgroundColorText.setId("text");
 		myMenuBar.getChildren().add(backgroundColorText);
 
@@ -132,7 +132,7 @@ class SimulationMenuBarManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	private void makeHome() {
-		Home = new Button("Home");
+		Home = new Button(getLanguage().getValue().getString("HomeButton"));
 		Home.setOnMousePressed(event -> {
 			home.setValue(true);
 			home.setValue(false);

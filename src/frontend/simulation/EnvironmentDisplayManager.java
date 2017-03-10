@@ -1,7 +1,5 @@
 package frontend.simulation;
 
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -12,8 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,21 +29,21 @@ import frontend.SlogoBaseUIManager;
  *
  */
 class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
-
+	
+	private static final double PANE_WIDTH = 1000;
+	private static final double PANE_HEIGHT = 1000;
+	private static final double SCROLL_PANE_WIDTH = 400;
+	private static final double SCROLL_PANE_HEIGHT = 400;
+	private static final Color DEFAULT_PEN_COLOR = Color.BLACK;
+	private static final Double DEFAULT_PEN_WIDTH = 1.;
+	
 	private ScrollPane myScrollPane;
 	private Pane myPane;
-	// private int width;
-	// private int height;
-	// private ImageView imageView;
-	// private static final String TURTLE_IMAGE = "turtleicon.png";
-	//private TurtleView myTurtle;
 	private Color penColor;
 	private Double penWidth;
 	private Map<Integer, TurtleView> myTurtleViewMap;
 
-	EnvironmentDisplayManager(int width, int height) {
-		// this.width = width;
-		// this.height = height;
+	EnvironmentDisplayManager() {
 		initialize();
 	}
 
@@ -70,25 +66,25 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 	private void initialize() {
 		myScrollPane = new ScrollPane();
 		myPane = new Pane();
-		myPane.prefWidthProperty().set(1000);
-		myPane.prefHeightProperty().set(1000);
+		myPane.prefWidthProperty().set(PANE_WIDTH);
+		myPane.prefHeightProperty().set(PANE_HEIGHT);
 		myScrollPane.setContent(myPane);
 
 		myScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
 		myScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		myScrollPane.setOnScroll(event -> didScroll());
-		myScrollPane.setPrefSize(400, 400);
+		myScrollPane.setPrefSize(SCROLL_PANE_WIDTH, SCROLL_PANE_HEIGHT);
 		myScrollPane.layout();
 		myScrollPane.setHvalue(0.5);
 		myScrollPane.layout();
 		myScrollPane.setVvalue(0.5);
 
-		penColor = Color.BLACK;
-		penWidth = 1.;
+		penColor = DEFAULT_PEN_COLOR;
+		penWidth = DEFAULT_PEN_WIDTH;
 
 	}
 
-	void updateTurtle(TurtleView myTurtle) {
+	private void updateTurtle(TurtleView myTurtle) {
 		if (myTurtle.penDown()) {
 			drawLine(myTurtle, myTurtle.getPreviousX(), myTurtle.getPreviousY(),
 					convertXCoordinate(myTurtle.getX()),
@@ -131,7 +127,7 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 		return myPane.getPrefHeight() / 2 - y;
 	}
 
-	void didScroll() {
+	private void didScroll() {
 		if (myScrollPane.getHvalue() == 1.0 || myScrollPane.getHvalue() == 0.0) {
 			double val = myScrollPane.getHvalue();
 			double oldWidth = myPane.getPrefWidth();
@@ -177,9 +173,6 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 						+ (childLine.getEndY() - oldCenterY));
 			}
 		}
-//		if (!myPane.getChildren().contains(myTurtle.getImageView())) {
-//			myPane.getChildren().add(myTurtle.getImageView());
-//		}
 	}
 
 	void setBackgroundColor(Color color) {
@@ -229,7 +222,6 @@ class EnvironmentDisplayManager extends SlogoBaseUIManager<Parent> {
 
 	void clearScreen() {
 		myPane.getChildren().clear();
-		//myPane.getChildren().add(myTurtle.getImageView());
 		home();
 	}
 

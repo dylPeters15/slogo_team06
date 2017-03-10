@@ -3,7 +3,6 @@ package frontend.simulation;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -35,6 +34,8 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 		ListChangeListener<State> {
 
 	private BorderPane borderPane;
+	private static final double WIDTH = 600;
+	private static final double HEIGHT = 600;
 
 	private SimulationMenuBarManager simulationMenuBarManager;
 	private EnvironmentDisplayManager environmentDisplayManager;
@@ -50,30 +51,12 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 	}
 
 	/**
-	 * Sets the width of the Parent object that holds all of the UI components.
-	 * 
-	 * @param width
-	 */
-	public void setWidth(double width) {
-
-	}
-
-	/**
 	 * Gets the width of the Parent object that holds all of the UI components.
 	 * 
 	 * @return double width
 	 */
 	public double getWidth() {
-		return 600;
-	}
-
-	/**
-	 * Sets the height of the Parent object that holds all of the UI components.
-	 * 
-	 * @param height
-	 */
-	public void setHeight(double height) {
-
+		return WIDTH;
 	}
 
 	/**
@@ -82,7 +65,7 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 	 * @return double height
 	 */
 	public double getHeight() {
-		return 600;
+		return HEIGHT;
 	}
 
 	/**
@@ -126,36 +109,48 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 	}
 
 	private void initialize() {
-
-		borderPane = new BorderPane();
+		initDataStructures();
+		makeManagers();
+		initPane();
+		bindManagers();
 		
-		myActorsMap = new HashMap<Integer, ActorModel>();
-		myActiveList = new ArrayList<Integer>();
-		myTurtleViewMap = new HashMap<Integer, TurtleView>();
-		simulationMenuBarManager = new SimulationMenuBarManager();
-		environmentDisplayManager = new EnvironmentDisplayManager(600, 600);
+		addHomeListener();
+		addPenColorListener();
+		addBackgroundColorListener();
+		addTurtleImageListener();
+	}
 
-		borderPane.setTop(simulationMenuBarManager.getObject());
-		borderPane.setBottom(environmentDisplayManager.getObject());
+	private void addTurtleImageListener() {
+		simulationMenuBarManager.getTurtleImage().addListener(new ChangeListener<Image>() {
+			@Override
+			public void changed(ObservableValue<? extends Image> observable,
+					Image oldVal, Image newVal) {
+				setTurtleImage(newVal);
+			}
+		});
+	}
 
-		simulationMenuBarManager.getObject().prefWidthProperty()
-				.bind(borderPane.widthProperty());
-		environmentDisplayManager
-				.getObject()
-				.prefHeightProperty()
-				.bind(borderPane.heightProperty().subtract(
-						simulationMenuBarManager.getObject().heightProperty()));
-		environmentDisplayManager.getObject().prefWidthProperty()
-				.bind(borderPane.widthProperty());
+	private void addBackgroundColorListener() {
+		simulationMenuBarManager.getBackgroundColor().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable,
+					Color oldVal, Color newVal) {
+				setBackgroundColor(newVal);
+			}
+		});
+	}
 
-		borderPane.setPrefWidth(getWidth());
-		borderPane.setPrefHeight(getHeight());
-		
-		simulationMenuBarManager.getLanguage().bind(getLanguage());
-		simulationMenuBarManager.getStyleSheet().bind(getStyleSheet());
-		environmentDisplayManager.getLanguage().bind(getLanguage());
-		environmentDisplayManager.getStyleSheet().bind(getStyleSheet());
-		
+	private void addPenColorListener() {
+		simulationMenuBarManager.getPenColor().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable,
+					Color oldVal, Color newVal) {
+				setPenColor(newVal);
+			}
+		});
+	}
+
+	private void addHomeListener() {
 		simulationMenuBarManager.getHome().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable,
@@ -165,28 +160,41 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 				}
 			}
 		});
-		simulationMenuBarManager.getPenColor().addListener(new ChangeListener<Color>() {
-			@Override
-			public void changed(ObservableValue<? extends Color> observable,
-					Color oldVal, Color newVal) {
-				setPenColor(newVal);
-			}
-		});
-		simulationMenuBarManager.getBackgroundColor().addListener(new ChangeListener<Color>() {
-			@Override
-			public void changed(ObservableValue<? extends Color> observable,
-					Color oldVal, Color newVal) {
-				setBackgroundColor(newVal);
-			}
-		});
-		simulationMenuBarManager.getTurtleImage().addListener(new ChangeListener<Image>() {
-			@Override
-			public void changed(ObservableValue<? extends Image> observable,
-					Image oldVal, Image newVal) {
-				setTurtleImage(newVal);
-			}
-		});
+	}
 
+	private void bindManagers() {
+		simulationMenuBarManager.getObject().prefWidthProperty()
+				.bind(borderPane.widthProperty());
+		environmentDisplayManager
+				.getObject()
+				.prefHeightProperty()
+				.bind(borderPane.heightProperty().subtract(
+						simulationMenuBarManager.getObject().heightProperty()));
+		environmentDisplayManager.getObject().prefWidthProperty()
+				.bind(borderPane.widthProperty());
+		simulationMenuBarManager.getLanguage().bind(getLanguage());
+		simulationMenuBarManager.getStyleSheet().bind(getStyleSheet());
+		environmentDisplayManager.getLanguage().bind(getLanguage());
+		environmentDisplayManager.getStyleSheet().bind(getStyleSheet());
+	}
+
+	private void initPane() {
+		borderPane = new BorderPane();
+		borderPane.setTop(simulationMenuBarManager.getObject());
+		borderPane.setBottom(environmentDisplayManager.getObject());
+		borderPane.setPrefWidth(getWidth());
+		borderPane.setPrefHeight(getHeight());
+	}
+
+	private void makeManagers() {
+		simulationMenuBarManager = new SimulationMenuBarManager();
+		environmentDisplayManager = new EnvironmentDisplayManager();
+	}
+
+	private void initDataStructures() {
+		myActorsMap = new HashMap<Integer, ActorModel>();
+		myActiveList = new ArrayList<Integer>();
+		myTurtleViewMap = new HashMap<Integer, TurtleView>();
 	}
 
 	/**
@@ -206,30 +214,47 @@ public class SimulationPaneManager extends SlogoBaseUIManager<Region> implements
 			if (state.clearscreen()){
 				environmentDisplayManager.clearScreen();
 			} else {
-				if (state.getPenColorChanged()){
-					environmentDisplayManager.setPenColor(state.getPenColor());
-				}
-				
-				if (state.getPenSizeChanged()){
-					environmentDisplayManager.setPenWidth(state.getPenSize());
-				}
-				
-				if (state.getBGColorChanged()){
-					environmentDisplayManager.setBackgroundColor(state.getBGColor());
-				}
-				
-				if (state.getTurtleShapeChanged()){
-					environmentDisplayManager.setTurtleImage(state.getTurtleShapeImage());
-				}
-				myActorsMap = state.getActorMap();
-				myActiveList = state.getActiveList();
-				updateTurtleViewMap();
+				changePenColor(state);
+				changePenSize(state);
+				changeBackgroundColor(state);
+				changeTurtleShape(state);
+				updateDataStructures(state);
 				environmentDisplayManager.updateTurtles(myActiveList, myActorsMap, myTurtleViewMap);
 			}
 		}
 	}
 
-	void updateTurtleViewMap() {
+	private void updateDataStructures(State state) {
+		myActorsMap = state.getActorMap();
+		myActiveList = state.getActiveList();
+		updateTurtleViewMap();
+	}
+
+	private void changeTurtleShape(State state) {
+		if (state.getTurtleShapeChanged()){
+			environmentDisplayManager.setTurtleImage(state.getTurtleShapeImage());
+		}
+	}
+
+	private void changeBackgroundColor(State state) {
+		if (state.getBGColorChanged()){
+			environmentDisplayManager.setBackgroundColor(state.getBGColor());
+		}
+	}
+
+	private void changePenSize(State state) {
+		if (state.getPenSizeChanged()){
+			environmentDisplayManager.setPenWidth(state.getPenSize());
+		}
+	}
+
+	private void changePenColor(State state) {
+		if (state.getPenColorChanged()){
+			environmentDisplayManager.setPenColor(state.getPenColor());
+		}
+	}
+
+	private void updateTurtleViewMap() {
 		for (Integer i : myActorsMap.keySet()){
 			if (! myTurtleViewMap.containsKey(i)){
 				TurtleView t = new TurtleView();
