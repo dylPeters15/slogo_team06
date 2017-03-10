@@ -5,6 +5,7 @@ package frontend.editor;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,18 +22,18 @@ import javafx.scene.layout.VBox;
 import frontend.SlogoBaseUIManager;
 
 /**
- * This class will be of default visibility, so it will only be visible to other
- * members of its package. Therefore, it will be part of the internal API of the
- * front end.
- * 
- * This class sets up and manages a Node object that has all of the UI
+ * This class sets up and manages a Parent object that has all of the UI
  * components necessary to allow the user to interact with the Terminal display.
  * The Terminal follows the Read-Eval-Print Loop that allows the user to type a
- * command, and upon hitting enter, executes that command. If the command is a
- * conditional or a loop, the user can enter the first portion of the loop, open
- * a bracket, and hit enter, and the user can then input commands until a
- * closing bracket is typed. For added functionality, the user can click on
- * previous commands to execute them again.
+ * command, and upon hitting enter, executes that command. For added
+ * functionality, the user can click on previous commands to execute them again.
+ * 
+ * In order for other classes to detect the commands that are to be run, the
+ * TerminalDisplayManager holds the command that the user wants to execute in a
+ * property called commandToRun. Other classes can view this property via the
+ * getCommandToRun method, but they cannot modify the command to run. They can
+ * add listeners and be notified when it changes (which occurs when the user
+ * hits the "run" button).
  * 
  * @author Dylan Peters
  *
@@ -48,8 +49,8 @@ class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 	private StringProperty commandToRun;
 
 	/**
-	 * Creates a new instance of TerminalDisplayManager. Sets all values except
-	 * language to default.
+	 * Creates a new instance of TerminalDisplayManager. Sets all values to
+	 * default.
 	 * 
 	 * @param language
 	 *            the language with which to display the text in the terminal
@@ -67,35 +68,29 @@ class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 		initialize();
 	}
 
-	public StringProperty getCommandToRun() {
+	/**
+	 * Gets the StringProperty that contains the command the user currently
+	 * wants to run. If no command has been selected to run, the String will be
+	 * empty. The Property returned in this method is ReadOnly in order to
+	 * prevent other classes from modifying it.
+	 * 
+	 * Client classes can add listeners to the commandToRun property to be
+	 * notified when it changes, which occurs when the user clicks "run" on a
+	 * new command.
+	 * 
+	 * @return a ReadOnlyStringProperty containing the command the user wants to
+	 *         run.
+	 */
+	public ReadOnlyStringProperty getCommandToRun() {
 		return commandToRun;
 	}
 
 	/**
-	 * Changes the language that the Terminal Display uses to display its
-	 * contents. The display will use a resource file with the words in that
-	 * language to populate its contents.
-	 * 
-	 * @param language
-	 *            a string representing the language to be displayed
-	 */
-	public void languageResourceBundleDidChange() {
-		prompt = getLanguage().getValue().getString("Prompt");
-		run.setText(getLanguage().getValue().getString("Run"));
-		clear.setText(getLanguage().getValue().getString("Clear"));
-		clearAll.setText(getLanguage().getValue().getString("ClearAll"));
-		if (textInputAreas.size() == 0) {
-			addTextArea(new TextInputArea());
-		}
-		textInputAreas.get(0).setPrompt(prompt);
-	}
-
-	/**
 	 * Gets the display object that this class is manipulating and setting up.
-	 * The Node returned by this method should be displayed to allow the user to
-	 * interact with the editor.
+	 * The Parent returned by this method should be displayed to allow the user
+	 * to interact with the editor.
 	 * 
-	 * @return Node containing all the UI components that allow the user to
+	 * @return Parent containing all the UI components that allow the user to
 	 *         interact with the program
 	 */
 	@Override
@@ -104,10 +99,7 @@ class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 	}
 
 	/**
-	 * This method allows other classes to print text to the terminal display.
-	 * The text is printed and treated differently than commands - the user
-	 * cannot click on the text to execute it the way the user can with previous
-	 * commands.
+	 * Allows other classes to print text to the terminal display.
 	 * 
 	 * @param text
 	 *            the text to print to the Terminal display.
@@ -124,13 +116,18 @@ class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 	 *            commands to print and execute
 	 */
 	void runCommands(String commands) {
-		commandToRun.setValue(commands);
-		commandToRun.setValue("");
+		commandToRun.setValue(commands); // notifies listeners to run the new
+											// command
+		commandToRun.setValue(""); // set commandToRun to empty while it waits
+									// for the user to enter new commands. This
+									// ensures that if the user tries to run the
+									// same command again, the client code that
+									// is listening gets notified.
 	}
 
 	/**
 	 * Returns all of the text currently held in the Terminal Display, including
-	 * all prompts, user input, and output.
+	 * all prompts, error messages, user input, and output.
 	 * 
 	 * @return all text currently in the Terminal Display.
 	 */
@@ -140,6 +137,22 @@ class TerminalDisplayManager extends SlogoBaseUIManager<Parent> {
 			text += textInputArea.getText();
 		}
 		return text;
+	}
+
+	/**
+	 * Changes the language that the Terminal Display uses to display its
+	 * contents. The display will use a resource file with the words in that
+	 * language to populate its contents.
+	 */
+	private void languageResourceBundleDidChange() {
+		prompt = getLanguage().getValue().getString("Prompt");
+		run.setText(getLanguage().getValue().getString("Run"));
+		clear.setText(getLanguage().getValue().getString("Clear"));
+		clearAll.setText(getLanguage().getValue().getString("ClearAll"));
+		if (textInputAreas.size() == 0) {
+			addTextArea(new TextInputArea());
+		}
+		textInputAreas.get(0).setPrompt(prompt);
 	}
 
 	private void textInputAreasDidChange() {
