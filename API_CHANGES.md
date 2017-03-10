@@ -8,6 +8,17 @@
 
 ###Major Changes:
 
+- Created abstract class `SlogoBaseUIManager`. This class was created to unify the front end classes and improve code consistency. It is designed to implement the behavior that is common to all of the classes in the front end of the Slogo API. Specifically, it implements 4 important behaviors:
+
+1. It implements the ObjectManager interface, with the object it manages being a subclass of Parent. There is more information about the ObjectManager interface in the internal API changes section, but essentially implementing this interface enforces consistency in the way that the UI classes set up and return UI objects.
+2. Every UI class in the Slogo application is styleable with CSS. Therefore, we abstracted this functionality into the SlogoBaseUIManager class. Importantly, the SlogoBaseUIManager class has a `private static final` field variable that specifies the default stylesheet. This ensures that every class in the frontend hierarchy is instantiated with the correct stylesheet, without them all having duplicated code to set up. Furthermore, it means that we only need to make a change in one place in order to change the default stylesheet.
+3. Every UI class in the Slogo application is also able to use ResourceBundles to dispay text to the user in multiple languages. We abstracted this functionality into the SlogoBaseUIManager as well, resulting in reduced duplicated code, better code consistency, and easier changes to code, similar to the benefits described above for the stylesheets.
+4. The stylesheet and language variables were put into ObjectProperties (StringProperty in the case of the stylesheet). A getter was provided for the properties so that other classes can get the stylesheet and language and can make changes or listen for changes. This allows classes to bind stylesheets and ensure that they all display in the same style, and similarly for languages. Furthermore, classes can extend the getStylesheet or getLanguage methods and make them return a readonly property to allow other classes to view the variables but not change them.
+
+We believe that the SlogoBaseUIManager offers many benefits including increased code consistency, decreased duplicated code, and an inheritence hierarchy to unify the front end. Furthermore, it solves the problem we had with the delegate interfaces; for example, for a menu bar item to communicate with another class that the user has changed the language, it need only change its own language variable, and any class that is interested in that change can listen for changes to it. This has the added benefit of being able to have an arbitrary number of listeners, rather than the limit of one that was enforced using the delegate interfaces. This is an external change because the SlogoBaseUIManager is a public class in order to allow other code to interact with any public Slogo UI classes through the methods provided in the abstract class.
+
+- Created `public class TabbedSlogoView`. This class creates a way for other classes to easily run the Slogo IDE. This way, client code does not have to set up or understand how the Workspace class or the EditorPaneManager or the SimulationPaneManager works. Instead, the TabbedSlogoView is a single class that creates multiple workspaces and allows the user to interact with them. It uses the `show()`, `hide()`, and `close()` methods that are used with the Stage class, so it is straightforward for client classes to use. The only public methods are the constructors, and the `show()`, `hide()`, and `close()` methods. Therefore, it does not allow significant customization of the IDE, but instead is designed to create a very simple way to instantiate the IDE. If more flexibility is desired, client code can use the Workspace class to set up more customized views.
+
 ###Minor Changes:
 
 ##Frontend Internal API Changes
@@ -21,19 +32,16 @@
 3. The `EditorMenuBarManager` contains a field called delegate that is of type EditorMenuBarDelegate. Within the `EditorMenuBarDelegate` interface, there is a method called didChangeLanguage(ResourceBundle newLanguage). The `EditorMenuBarManager` calls delegate.didChangeLanguage(ResourceBundle newLanguage).
 4. The `EditorPaneManager` implements the `EditorMenuBarDelegate` interface, and is set as the EditorMenuBarManager's delegate. Therefore, when the menu bar calls the delegate method, the pane manager executes the code necessary to change language.
 
-This design worked at the beginning, but as the code got more complex, the number of delegates increased, and the code became harder to read. Furthermore, we noticed that this design limits each class to having just a single delegate that it can notify when something changes. This limitation is arbitrary and unnecessary. To fix this limitation, we deprecated all of the delegate interfaces (in our repository we have deleted all of these files for the sake of making the repository organized and easy for the graders to inspect, but if this were a production API, we would simply mark those interfaces as depreicated) and created the next major change:
+This design worked at the beginning, but as the code got more complex, the number of delegates increased, and the code became harder to read. Furthermore, we noticed that this design limits each class to having just a single delegate that it can notify when something changes. This limitation is arbitrary and unnecessary. To fix this limitation, we deprecated all of the delegate interfaces (in our repository we have deleted all of these files for the sake of making the repository organized and easy for the graders to inspect, but if this were a production API, we would simply mark those interfaces as depreicated), and we created the `SlogoBaseUIManager` abstract class, which uses properties that other classes can view in order to listen for changes.
 
-- Created abstract class `SlogoBaseUIManager`. This class was created to unify the front end classes and improve code consistency. It is designed to implement the behavior that is common to all of the classes in the front end of the Slogo API. Specifically, it implements 3 important behaviors:
 
-1. behavior 1
-2. behavior 2
-3. behavior 3
 
 ###Minor Changes:
 
 ##Backend External API Changes
 
 ###Major Changes:
+
 
 ###Minor Changes:
 
