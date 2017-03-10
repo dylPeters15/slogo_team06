@@ -1,11 +1,14 @@
 package frontend.simulation;
 
 import java.io.File;
+import java.util.ResourceBundle;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -44,6 +47,13 @@ class SimulationMenuBarManager extends SlogoBaseUIManager<Parent> {
 	private BooleanProperty home;
 
 	public SimulationMenuBarManager() {
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(ObservableValue<? extends ResourceBundle> arg0,
+					ResourceBundle arg1, ResourceBundle arg2) {
+				populateMenuBar();
+			}
+		});
 		populateMenuBar();
 	}
 

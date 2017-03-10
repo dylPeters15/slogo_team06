@@ -28,7 +28,7 @@ package frontend;
  * @author Dylan Peters
  *
  */
-public interface ObjectManager<T extends Object> {
+interface ObjectManager<T extends Object> {
 
 	/**
 	 * Returns the object that is managed by the class implementing the
