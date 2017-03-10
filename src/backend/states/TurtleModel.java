@@ -22,11 +22,8 @@ public class TurtleModel extends ActorModel {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Default constructor of the TurtleModel class.
-=======
 	 * 
->>>>>>> master
 	 */
 	public TurtleModel() {
 		setVector(DEF_POS.getY(),DEF_POS.getY(),DEF_HEADING);

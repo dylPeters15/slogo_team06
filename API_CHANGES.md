@@ -41,12 +41,15 @@ This design worked at the beginning, but as the code got more complex, the numbe
 ##Backend External API Changes
 
 ###Major Changes:
-
-
+- Restructuring the API of `StatesList` . We orginally had the methods for states list, such as `peek` and `poll`, accessable directly in the model class. However, it made more sense to instead include a getter for `StatesList` itself, named `getStatesList()`. The front-end could then call the appriopate methods from the observable list itself. This improved the overall orginization to make the API more intuitive.
 ###Minor Changes:
-
+- We added a few extra public methods in our model to handle additional dependencies between the front-end and the backend. `setResourceBundle()` allowed the front end to change which property file the back end utilized, to support interpreting commands in different languages. `getVariables` passed an observable Map of `<String,String>`, containing the slogo defined varaibles. The list could be modified by both the front and backend, allowing manipulation vis the GUI or Slogo commands. The final two methods added were `getPastCommands()` and `setPastCommands()`. The two methods were intended to retrive and set a list of the past commands runs, as stored by the model. This simplifies how we could save workstation text to a file.
 ##Backend Internal API Changes
 
 ###Major Changes:
+- We orginally did not define an internal API, but we later did as we found it was extremely helpful for organizing the structure and implementing new features. The main classes of the backend consist of `Interpreter`, which handles all the parsing of text to slogo commands, the abstract `Command` class, which holds the basic structure and common methods of all the implemented slogo commands, the `ActorModel`, which contains all information specific to a Turtle such as it's position, heading, and visiblity state, the `State` class, which holds the `ActorModel`s in map and information relevent to the current state but not a turtle (such the variable map), and the `StateList` class, which implements an ObservableList via a queue to make it easy to add and retrive states from opposite ends of a list.
 
 ###Minor Changes:
+- To handle multiple turtles without signficanly changing the commands already implemented, we created `ActorCompositeModel`. This class mirrored the methods of `ActorModel`, but was not actually an instance. Instead, any change applied to the `ActorCompositeModel` was applied to all the active turtles. For retriving information specific to an actor, the composite retrived the info from the last active turtle. The class meant we only had to make minimal modifications to our existing command classes to ensure they were functional with multiple turtles, and without having to iterate throw all the active turtles in the command classes themselves. 
+
+- A custom exception class, `SlogoException`. This class held an editable string containing the error message, which could be modified according to the conditions that led to the error and then translated into the appriopate language using the resource bundles.

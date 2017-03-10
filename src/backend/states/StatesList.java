@@ -23,18 +23,12 @@ public class StatesList<E> extends ObservableListBase<E> implements Queue<E> {
      * 
      * @param queue
      */
-    /**
-     * @param queue
-     */
     public StatesList(Queue<E> queue) {
         this.queue = queue ;
     }
 
     /**
      * Creates an ObservableQueue backed by a LinkedList.
-     */
-    /**
-     * 
      */
     public StatesList() {
         this(new LinkedList<>());
