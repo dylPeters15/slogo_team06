@@ -36,7 +36,7 @@ import frontend.simulation.SimulationPaneManager;
  * @author Dylan Peters
  *
  */
-class Workspace extends SlogoBaseUIManager<Parent> {
+public class Workspace extends SlogoBaseUIManager<Parent> {
 
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
