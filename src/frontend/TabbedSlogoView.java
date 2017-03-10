@@ -82,8 +82,33 @@ public class TabbedSlogoView {
 		initializeTabPanes();
 		initializeStages(stage);
 		initializeWorkspaces();
+	}
+
+	/**
+	 * Shows all the windows required to display the TabbedSlogoView to the
+	 * user.
+	 */
+	public void show() {
 		editorStage.show();
 		simulationStage.show();
+	}
+
+	/**
+	 * Hides all the windows of the TabbedSlogoView.
+	 */
+	public void hide() {
+		editorStage.hide();
+		simulationStage.hide();
+	}
+
+	/**
+	 * Closes all the windows of the TabbedSlogoView. If the TabbedSlogoView is
+	 * the only process running, this exits the application.
+	 */
+	public void close() {
+		requestAllClose();
+		editorStage.close();
+		simulationStage.close();
 	}
 
 	/**
