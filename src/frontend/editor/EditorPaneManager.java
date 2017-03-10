@@ -3,6 +3,8 @@
  */
 package frontend.editor;
 
+import java.util.ResourceBundle;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
@@ -236,6 +238,13 @@ public class EditorPaneManager extends SlogoBaseUIManager<Parent> {
 						processCommand(newValue);
 					}
 				});
+		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
+			@Override
+			public void changed(ObservableValue<? extends ResourceBundle> observable,
+					ResourceBundle oldValue, ResourceBundle newValue) {
+				model.setResourceBundle(newValue.getBaseBundleName());
+			}
+		});
 	}
 
 }
