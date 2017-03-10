@@ -9,11 +9,11 @@ import java.util.Map;
 
 
 /**
+ * The class to represent a state of the turtle.
+ * A new state instant will be generated after a new command is parsed.
+ * States will be read by the front end to display on the GUI.
  * @author Tavo
- *
  */
-
-
 public class State {
 	
 	private int maxId;
@@ -32,6 +32,11 @@ public class State {
 	private boolean turtleShapeChanged;
 	private ShapeList turtleShape;
 	
+	/**
+	 * Constructor of the State class.
+	 * Take an existing state to initialize the new one.
+	 * @param state
+	 */
 	public State(State state){
 	    initFields();
 	    // default changed indicators are all false;
@@ -44,31 +49,15 @@ public class State {
 		maxId = state.getMaxId();
 		state.getActorMap().keySet().forEach((id)-> addActor(id,state.getActorMap().get(id)));	
 	}
-	
-	public void addActor(){
-		maxId++;
-		setActor(maxId,new TurtleModel());
-	}
-	
-	public void addActor(ActorModel actor){
-		maxId++;
-		setActor(maxId,actor);
-	}
-	
-	public void addActor(int id, ActorModel actor){
-		ActorModel newActor = new TurtleModel(actor);
-		actors.put(id, newActor);
-	}
-	
-	public void setActor(int id, ActorModel actor){
-		actors.put(id, actor);
-	}
-	
+
+	/**
+	 * Default constructor of the State class.
+	 */
 	public State() {
 		initFields();
 		addActor();
 	}
-
+	
 	private void initFields() {
 		maxId = 0;
 		clear = false;
@@ -87,7 +76,44 @@ public class State {
 	}
 	
 	/**
-	 * @return the activeList
+	 * The method to add a new actor to the internal map.
+	 */
+	public void addActor(){
+		maxId++;
+		setActor(maxId,new TurtleModel());
+	}
+	
+	/**
+	 * The method to add an input actor to the internal map.
+	 * @param actor
+	 */
+	public void addActor(ActorModel actor){
+		maxId++;
+		setActor(maxId,actor);
+	}
+	
+	/**
+	 * The method to add a pair of id and actor to the internal map.
+	 * @param id
+	 * @param actor
+	 */
+	public void addActor(int id, ActorModel actor){
+		ActorModel newActor = new TurtleModel(actor);
+		actors.put(id, newActor);
+	}
+	
+	/**
+	 * The method to put a pair of id and actor to the internal map.
+	 * @param id
+	 * @param actor
+	 */
+	public void setActor(int id, ActorModel actor){
+		actors.put(id, actor);
+	}
+	
+	
+	/**
+	 * @return the activeList of current active turtles
 	 */
 	public List<Integer> getActiveList() {
 		return activeList;
@@ -111,31 +137,64 @@ public class State {
 		}
 	}
 
+	/**
+	 * The method to get the maximum turtle id.
+	 * @return
+	 */
 	public int getMaxId() {
 		return maxId;
 	}
 
+	/**
+	 * The method to get the actor map.
+	 * @return
+	 */
 	public Map<Integer, ActorModel> getActorMap() {
 		return actors;
 	}
 
+	/**
+	 * The method to set the current actorList map.
+	 * @param actors
+	 */
 	public void setActors(Map<Integer, ActorModel> actors) {
 		this.actors = actors;
 	}
 
+	/**
+	 * The method to get the default actor.
+	 * @return
+	 */
 	public ActorModel getActor() {
 		return actors.get(DEF_ID);
 	}
 	
+	/**
+	 * The method to get the actor composite model.
+	 * @return
+	 */
 	public ActorCompositeModel getActors() {
 		return multiActor;
 	}
 	
+	/**
+	 * The method to set the default actorModel.
+	 * @param actorModel
+	 */
 	public void setActor(ActorModel actorModel) {
 		actors.put(DEF_ID, actorModel);
 	}
 
 	/**
+	 * The method to get the number of turtles.
+	 * @return
+	 */
+	public double getNumTurtles() {
+		return actors.keySet().size();
+	}
+	
+	/**
+	 * The method to get if the command is to clear the screen.
 	 * @return the clear
 	 */
 	public boolean clearscreen() {
@@ -157,6 +216,10 @@ public class State {
 		return bgColor;
 	}
 	
+	/**
+	 * The method to get the current background color.
+	 * @return javafx.scene.paint.Color
+	 */
 	public Color getBGColor() {
 		return bgColor.getColor();
 	}
@@ -177,6 +240,10 @@ public class State {
 		return penColor;
 	}
 	
+	/**
+	 * The method to get the current pen color.
+	 * @return javafx.scene.paint.Color
+	 */
 	public Color getPenColor() {
 		return penColor.getColor();
 	}
@@ -193,6 +260,10 @@ public class State {
 		return penSizeChanged;
 	}
 	
+	/**
+	 * The method to get the current pen size.
+	 * @return Double
+	 */
 	public Double getPenSize() {
 		return penSize;
 	}
@@ -217,6 +288,10 @@ public class State {
 		return turtleShape;
 	}
 	
+	/**
+	 * The method to get the current Shape.
+	 * @return javafx.scene.image.Image
+	 */
 	public Image getTurtleShapeImage() {
 		return turtleShape.getImage();
 	}
@@ -225,8 +300,5 @@ public class State {
 		turtleShape = shape;
 	}
 
-	public double getNumTurtles() {
-		return actors.keySet().size();
-	}
 }
 
