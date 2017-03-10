@@ -40,7 +40,7 @@ import frontend.simulation.SimulationPaneManager;
  * @author Dylan Peters
  *
  */
-public class Workspace extends SlogoBaseUIManager<Parent> {
+class Workspace extends SlogoBaseUIManager<Parent> {
 
 	private EditorPaneManager editor;
 	private SimulationPaneManager simulation;
@@ -49,7 +49,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	/**
 	 * Creates a new instance of Workspace. Sets all values to default.
 	 */
-	public Workspace() {
+	Workspace() {
 		Model model = new Model();
 
 		simulation = new SimulationPaneManager(model.getStatesList());
@@ -61,26 +61,12 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 		split = new SplitPane();
 		split.getItems().add(editor.getObject());
 		split.getItems().add(simulation.getObject());
-		
+
 		getLanguage().bind(editor.getLanguage());
 		getStyleSheet().bind(editor.getStyleSheet());
-		
-		getLanguage().addListener(new ChangeListener<ResourceBundle>() {
-			@Override
-			public void changed(ObservableValue<? extends ResourceBundle> observable,
-					ResourceBundle oldValue, ResourceBundle newValue) {
-				simulation.getLanguage().setValue(newValue);
-			}
-		});
-		getStyleSheet().addListener(new ChangeListener<String>(){
-			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				simulation.getStyleSheet().setValue(newValue);
-			}
-			
-		});
-		simulation.getStyleSheet().setValue(getStyleSheet().getValue());
+
+		simulation.getLanguage().bind(getLanguage());
+		simulation.getStyleSheet().bind(getStyleSheet());
 	}
 
 	/**
@@ -102,7 +88,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the SimulationPaneManager that is created within
 	 *         the workspace.
 	 */
-	public Parent getEditorParent() {
+	Parent getEditorParent() {
 		return editor.getObject();
 	}
 
@@ -113,7 +99,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * @return the Parent from the EditorPaneManager that is created within the
 	 *         workspace.
 	 */
-	public Parent getSimulationParent() {
+	Parent getSimulationParent() {
 		return simulation.getObject();
 	}
 
@@ -122,7 +108,7 @@ public class Workspace extends SlogoBaseUIManager<Parent> {
 	 * ensures that all windows created by the workspace are closed when the
 	 * workspace closes.
 	 */
-	public void pepareToClose() {
+	void pepareToClose() {
 		editor.closeAllChildWindows();
 	}
 
