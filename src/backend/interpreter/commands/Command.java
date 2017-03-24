@@ -1,12 +1,21 @@
 package backend.interpreter.commands;
+// This entire file is part of my masterpiece.
+// Tavo Loaiza
+/**
+* This class is follows designed principle of hierarchy, as it is an abstract 
+* class that is implemented by specific command classes. It severly reduces the
+* duplicated code of the child classes by holding commonly used methods 
+* (such as checking if the command parameters have the correct number of brackets).
+* It also uses advanced java techniques to simply the code. 
+* For example, it uses reflection to instanstiate instances of the class, which
+* avoid relying on a huge block of if statements.
+*/
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-
 import Exceptions.SlogoException;
 import backend.states.*;
 import javafx.collections.ObservableMap;
